@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "../raylib/src/raylib.h"
 #include "grid.hpp"
 
@@ -16,6 +18,8 @@ class Hex {
 		Hex add(Hex a);
 		Hex subtract(Hex a);
 		Hex multiply(int k);
+
+		std::vector<Vector2> corners(Grid grid);
 
 	public:
 		void draw(Grid grid);

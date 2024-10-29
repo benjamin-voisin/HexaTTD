@@ -1,5 +1,6 @@
 #include <math.h>
 #include <assert.h>
+#include <vector>
 
 #include "hex.hpp"
 #include "../raylib/src/raylib.h"
@@ -79,10 +80,33 @@ Vector2 Hex::center(Grid grid) {
     return Vector2 {x + grid.origin.x, y + grid.origin.y};
 }
 
+Vector2 corner_offset(Grid grid, int corner) {
+    float angle = 2.0 * M_PI *
+             (grid.orientation.start_angle + corner) / 6;
+    return Vector2 {grid.size.x * cos(angle), grid.size.y * sin(angle) };
+}
+
+std::vector<Vector2> Hex::corners(Grid grid) {
+	std::vector<Vector2> corners = {};
+    Vector2 c = center(grid);
+    for (int i = 0; i < 6; i++) {
+        Vector2 offset = corner_offset(grid, i);
+        corners.push_back(Vector2 {c.x + offset.x, c.y + offset.y});
+    }
+	corners.push_back(corners[0]);
+    return corners;
+}
+
 
 void Hex::draw(Grid grid) {
-	// Calculate position center from coordinates
-	Vector2 c = center(grid);
-    DrawPoly( c, 6, _radius, 0, WHITE);
-    DrawPolyLinesEx(c, 6, _radius, 0, 10, RED);
+	std::vector<Vector2> corners_list = corners(grid);
+	Vector2 fan[8];
+	fan[0] = center(grid);
+	for (int i = 1; i < 7; i++) {
+		fan[7 - i] = corners_list[i];
+	}
+	fan[7] = corners_list[0];
+	DrawTriangleFan(fan, 8, WHITE);
+	DrawLineStrip(&corners_list[0], 7, RED);
+
 }
