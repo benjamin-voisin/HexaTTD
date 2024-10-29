@@ -1,5 +1,5 @@
 CXX = g++
-DEBUGFLAGS = -g -fsanitize=address
+DEBUGFLAGS = -g3 -fsanitize=address -fsanitize=leak
 CXXFLAGS = -Wall -Wextra -O2 $(DEBUGFLAGS)
 
 RAYLIB_DIR = ./raylib/src/
