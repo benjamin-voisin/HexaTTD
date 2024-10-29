@@ -5,12 +5,12 @@
 #include "../raylib/src/raylib.h"
 
 struct Orientation {
-    const double f0, f1, f2, f3;
-    const double b0, b1, b2, b3;
-    const double start_angle; // in multiples of 60°
-    Orientation(double f0_, double f1_, double f2_, double f3_,
-                double b0_, double b1_, double b2_, double b3_,
-                double start_angle_)
+    const float f0, f1, f2, f3;
+    const float b0, b1, b2, b3;
+    const float start_angle; // in multiples of 60°
+    Orientation(float f0_, float f1_, float f2_, float f3_,
+                float b0_, float b1_, float b2_, float b3_,
+                float start_angle_)
     : f0(f0_), f1(f1_), f2(f2_), f3(f3_),
       b0(b0_), b1(b1_), b2(b2_), b3(b3_),
       start_angle(start_angle_) {}
