@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "../raylib/src/raylib.h"
-#include "grid.hpp"
+#include "layout.hpp"
 
 class Hex {
 	private:
@@ -12,20 +12,19 @@ class Hex {
 		int _q;
 		int _r;
 		int _s;
-		int _radius;
 		int coordinates[3];
 
 		Hex add(Hex a);
 		Hex subtract(Hex a);
 		Hex multiply(int k);
 
-		std::vector<Vector2> corners(Grid grid);
+		std::vector<Vector2> corners(Layout layout);
 
 	public:
-		void draw(Grid grid);
-		Hex(int q, int r, int s, int radius);
+		void draw(Layout layout);
+		Hex(int q, int r, int s);
 		// As q + r + s = 0, we can build a constructor that computes s
-		Hex(int q, int r, int radius);
+		Hex(int q, int r);
 		friend bool operator == (Hex a, Hex b);
 		friend bool operator != (Hex a, Hex b);
 		friend Hex operator + (Hex a, Hex b);
@@ -34,7 +33,7 @@ class Hex {
 
 		int length();
 		int distance(Hex a);
-		Vector2 center(Grid grid);
+		Vector2 center(Layout layout);
 
 		Hex neighbor(int direction);
 
