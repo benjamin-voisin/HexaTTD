@@ -100,12 +100,12 @@ std::vector<Vector2> Hex::corners(Layout layout) {
 
 void Hex::draw(Layout layout) {
 	std::vector<Vector2> corners_list = corners(layout);
-	Vector2 fan[8];
-	fan[0] = center(layout);
-	for (int i = 1; i < 7; i++) {
-		fan[7 - i] = corners_list[i];
-	}
-	fan[7] = corners_list[0];
-	DrawTriangleFan(fan, 8, WHITE);
+	/* Vector2 fan[8]; */
+	/* fan[0] = center(layout); */
+	/* for (int i = 1; i < 7; i++) { */
+	/* 	fan[7 - i] = corners_list[i]; */
+	/* } */
+	/* fan[7] = corners_list[0]; */
+	/* DrawTriangleFan(fan, 8, WHITE); */
 	DrawLineStrip(&corners_list[0], 7, RED);
 }

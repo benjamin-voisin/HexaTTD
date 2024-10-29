@@ -18,7 +18,6 @@ class Hex {
 		Hex subtract(Hex a);
 		Hex multiply(int k);
 
-		std::vector<Vector2> corners(Layout layout);
 
 	public:
 		void draw(Layout layout);
@@ -34,6 +33,7 @@ class Hex {
 		int length();
 		int distance(Hex a);
 		Vector2 center(Layout layout);
+		std::vector<Vector2> corners(Layout layout);
 
 		Hex neighbor(int direction);
 

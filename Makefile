@@ -6,7 +6,7 @@ RAYLIB_DIR = ./raylib/src/
 
 default: hexattd
 
-hexattd: src/main.o src/hex.o src/grid.o $(RAYLIB_DIR)libraylib.a
+hexattd: src/main.o src/hex.o src/grid.o src/rail.o $(RAYLIB_DIR)libraylib.a
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(DEPS) 
 
 raylib: $(RAYLIB_DIR)libraylib.a
