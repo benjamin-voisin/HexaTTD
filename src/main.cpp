@@ -13,7 +13,7 @@ int main() {
 			Vector2 {(float) GetScreenWidth() / 2, (float) GetScreenHeight() / 2},
 			-10, 10, -10, 10);
 
-	Rail rail = Rail(Hex(0,0), 0, 0, 10);
+	Rail rail = Rail(Hex(0,0), 0, 0, 5);
 
 	SetTargetFPS(60);
 
