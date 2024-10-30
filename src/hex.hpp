@@ -20,7 +20,7 @@ class Hex {
 
 
 	public:
-		void draw(Layout layout);
+		void draw(Layout layout, Color color);
 		Hex(int q, int r, int s);
 		// As q + r + s = 0, we can build a constructor that computes s
 		Hex(int q, int r);

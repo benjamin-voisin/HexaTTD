@@ -22,6 +22,7 @@ int main() {
 		BeginDrawing();
 		ClearBackground(WHITE);
 		grid1.draw();
+		grid1.hightlight(grid1.xy_to_hex(GetMouseX(), GetMouseY()));
 		rail.draw(*grid1.layout);
 		rail1.draw(*grid1.layout);
 		DrawFPS(10, 10);

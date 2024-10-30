@@ -98,7 +98,7 @@ std::vector<Vector2> Hex::corners(Layout layout) {
 }
 
 
-void Hex::draw(Layout layout) {
+void Hex::draw(Layout layout, Color color) {
 	std::vector<Vector2> corners_list = corners(layout);
 	/* Vector2 fan[8]; */
 	/* fan[0] = center(layout); */
@@ -107,5 +107,5 @@ void Hex::draw(Layout layout) {
 	/* } */
 	/* fan[7] = corners_list[0]; */
 	/* DrawTriangleFan(fan, 8, WHITE); */
-	DrawLineStrip(&corners_list[0], 7, RED);
+	DrawLineStrip(&corners_list[0], 7, color);
 }
