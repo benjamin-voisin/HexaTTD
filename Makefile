@@ -1,24 +1,41 @@
 CXX = g++
-DEBUGFLAGS = -g3 -fsanitize=address -fsanitize=leak
-CXXFLAGS = -Wall -Wextra -O2 $(DEBUGFLAGS)
-
+VPATH = ./src
 RAYLIB_DIR = ./raylib/src/
+
+CXXBASEFLAGS = -Wall -Wextra
+DEBUGFLAGS = -g -fsanitize=address -fsanitize=leak
+RELEASEFLAGS = -flto -O3
+
+MODE ?= DEBUG# Default is Debug, any other value will build for release
+
+# Raylib has some warnings that we don’t want to see when compiling in debug
+RAYLIB_IGNORE_WARNINGS = -Wno-unused-result -Wno-unused-but-set-variable
+ifeq ($(MODE),DEBUG)
+	CXXFLAGS = $(CXXBASEFLAGS) $(DEBUGFLAGS)
+	CUSTOM_CFLAGS = $(RAYLIB_IGNORE_WARNINGS) $(DEBUGFLAGS)
+else
+	CXXFLAGS = $(CXXBASEFLAGS) $(RELEASEFLAGS)
+	CUSTOM_CFLAGS = $(RELEASEFLAGS)
+endif
+
+# for raylib
+RAYLIB_RELEASE_PATH = ../../
+export CUSTOM_CFLAGS
+export RAYLIB_RELEASE_PATH
 
 default: hexattd
 
-hexattd: src/main.o src/hex.o src/grid.o src/rail.o $(RAYLIB_DIR)libraylib.a
+hexattd: main.o hex.o grid.o rail.o libraylib.a
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(DEPS) 
 
-raylib: $(RAYLIB_DIR)libraylib.a
-
-$(RAYLIB_DIR)libraylib.a:
+libraylib.a:
 	$(MAKE) -C $(RAYLIB_DIR)
 
 clean: clean_hex clean_raylib
 
 clean_hex:
-	$(MAKE) clean -C ./src
 	rm -f ./hexattd
+	rm -f *.o
 
 clean_raylib:
 	$(MAKE) clean -C $(RAYLIB_DIR)
