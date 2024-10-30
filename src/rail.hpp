@@ -11,7 +11,7 @@ class Rail {
 		int _width;		// The spacing between two rails
 	public:
 		Rail(Hex tile, int entry_point, int exit_point, int width) :
-			_tile{tile}, _entry_point{entry_point}, _exit_point{exit_point}, _width{width} {};
+			_tile{tile}, _entry_point{entry_point % 6}, _exit_point{exit_point % 6}, _width{width} {};
 
 		void draw(Layout layout);
 };

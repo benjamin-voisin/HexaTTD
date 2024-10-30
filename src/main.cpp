@@ -13,7 +13,8 @@ int main() {
 			Vector2 {(float) GetScreenWidth() / 2, (float) GetScreenHeight() / 2},
 			-10, 10, -10, 10);
 
-	Rail rail = Rail(Hex(0,0), 0, 0, 5);
+	Rail rail = Rail(Hex(0,0), 1, 5, 5);
+	Rail rail1 = Rail(Hex(1,-1), 2, 4, 5);
 
 	SetTargetFPS(60);
 
@@ -22,6 +23,7 @@ int main() {
 		ClearBackground(WHITE);
 		grid1.draw();
 		rail.draw(*grid1.layout);
+		rail1.draw(*grid1.layout);
 		DrawFPS(10, 10);
 		EndDrawing();
 	}
