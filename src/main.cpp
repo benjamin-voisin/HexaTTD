@@ -25,6 +25,11 @@ int main() {
 		rail.draw(*grid1.layout);
 		rail1.draw(*grid1.layout);
 		DrawFPS(10, 10);
+		if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
+			Vector2 delta = GetMouseDelta();
+			grid1.layout->origin.x += delta.x;
+			grid1.layout->origin.y += delta.y;
+		}
 		EndDrawing();
 	}
 	CloseWindow();
