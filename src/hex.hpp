@@ -4,6 +4,7 @@
 
 #include "../raylib/src/raylib.h"
 #include "layout.hpp"
+#include "base.hpp"
 
 class Hex {
 	private:
@@ -33,6 +34,7 @@ class Hex {
 		int length();
 		int distance(Hex a);
 		Vector2 center(Layout layout);
+		Base base_sides(Layout layout, int i);
 		std::vector<Vector2> corners(Layout layout);
 
 		Hex neighbor(int direction);
