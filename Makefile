@@ -25,7 +25,7 @@ export RAYLIB_RELEASE_PATH
 
 default: hexattd
 
-hexattd: main.o hex.o grid.o rail.o libraylib.a
+hexattd: main.o hex.o grid.o rail.o base.o vector.o libraylib.a
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(DEPS) 
 
 libraylib.a:
