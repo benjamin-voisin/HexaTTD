@@ -7,7 +7,13 @@
 
 #define WHEEL_FACTOR 5
 
+float max(float a, float b) {
+	return (a > b) ? a : b;
+}
+
+
 int main() {
+	char* texte = (char*) malloc(100 * sizeof(char));
 	InitWindow(1000, 1000, "HexaTTD");
 
 	Grid grid1 = Grid(
@@ -38,8 +44,8 @@ int main() {
 			start_construct = under_cursor;	
 		}
 		auto wheel_move = GetMouseWheelMoveV().y;
-		grid1.layout->size.x += wheel_move * WHEEL_FACTOR;
-		grid1.layout->size.y += wheel_move * WHEEL_FACTOR;
+		grid1.layout->size.x = max(5, grid1.layout->size.x + wheel_move * WHEEL_FACTOR);
+		grid1.layout->size.y = max(5, grid1.layout->size.y + wheel_move * WHEEL_FACTOR);
 		if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
 			if (last_cursor_pers.is_neighbor(start_construct) && last_cursor_pers.is_neighbor(under_cursor)) {
 				if ((start_construct != last_cursor_pers) && (start_construct != under_cursor)) {
@@ -75,9 +81,14 @@ int main() {
 		grid1.hightlight(under_cursor, GREEN);
 		grid1.hightlight(last_cursor_pers, BLUE);
 		grid1.hightlight(start_construct, BLACK);
+
+		
+		snprintf(texte, 100, "layout.x=%.2f", grid1.layout->size.x);
+		DrawText(texte, 10, 40, 30, BLACK);
 		EndDrawing();
 		last_cursor = under_cursor;
 	}
 	CloseWindow();
+	free(texte);
 	return 0;
 }
