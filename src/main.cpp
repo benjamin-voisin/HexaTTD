@@ -52,8 +52,7 @@ int main() {
 					Hex diff_src = start_construct - last_cursor_pers;
 					Hex diff_dst = under_cursor - last_cursor_pers;
 					if (   (diff_src.direction() != diff_dst.direction()) 
-						&& (diff_src.direction() != 1+diff_dst.direction())
-						&& (diff_src.direction()+1 != diff_dst.direction()) ) {
+						&& !(start_construct.is_neighbor(under_cursor)) ) {
 						Rail r = Rail(last_cursor_pers, diff_src.direction(), diff_dst.direction(), 4);
 						rails.push_back(r);
 						start_construct = last_cursor_pers;
