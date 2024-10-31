@@ -10,7 +10,7 @@ class ArcTrack {
         float angle_max;
 
         ArcTrack(Vector center, float radius, float gauge, float angle_min, float angle_max);
-        void draw();
+        void draw(Layout layout);
 
 };
 
@@ -21,7 +21,7 @@ class StraighTrack {
         float gauge;
 
         StraighTrack(Vector src, Vector dst, float gauge);
-        void draw();
+        void draw(Layout layout);
 
 
 };
