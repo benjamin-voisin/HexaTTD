@@ -16,8 +16,8 @@ void Grid::draw() {
 	}
 }
 
-void Grid::hightlight(Hex hex) {
-	hex.draw( *layout, GREEN);
+void Grid::hightlight(Hex hex, Color c) {
+	hex.draw( *layout, c);
 }
 
 Hex round(float q, float r, float s) {

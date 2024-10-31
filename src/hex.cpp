@@ -67,6 +67,7 @@ Vector hex_directions[6] = {
 };
 
 Hex hex_direction(int direction) {
+	direction = ((direction % 6) + 6) % 6;
 	assert (0 <= direction && direction < 6);
     return Hex(hex_directions[direction]);
 }
@@ -74,7 +75,22 @@ Hex hex_direction(int direction) {
 Hex Hex::neighbor(int direction) {
 	return add(hex_direction(direction));
 }
-
+int Hex::direction() {
+	Vector v = to_Vector();
+	if (v == Vector(1, 0))
+		return 0;
+	if (v == Vector(0, 1))
+		return 1;
+	if (v == Vector(-1, 1))
+		return 2;
+	if (v == Vector(-1, 0))
+		return 3;
+	if (v == Vector(0, -1))
+		return 4;
+	if (v == Vector(1, -1))
+		return 5;
+	assert(false);
+}
 
 Vector2 raw_center(Layout layout, Vector v) {
 	float x = (layout.orientation.f0 * v.x + layout.orientation.f1 * v.y) * layout.size.x;

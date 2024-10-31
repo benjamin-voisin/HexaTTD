@@ -42,6 +42,7 @@ class Hex {
 		Vector2 corner(Layout layout, int corner);
 		static float corner_angle(Layout layout, int corner);
 		Hex neighbor(int direction);
+		int direction();
 
 };
 

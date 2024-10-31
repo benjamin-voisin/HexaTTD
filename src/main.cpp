@@ -18,8 +18,8 @@ int main() {
 
 	Rail rail = Rail(Hex(0,0), 1, 5, 5);
 	Rail rail1 = Rail(Hex(1,-1), 2, 4, 5);
-	Rail rail3 = Rail(Hex(0,0), 1, 4, 5);
-	Rail rail2 = Rail(Hex(0,0), 1, 3, 5);
+	Rail rail3 = Rail(Hex(1,1), 1, 3, 5);
+	Rail rail2 = Rail(Hex(1,0), 1, 4, 5);
 
 	SetTargetFPS(60);
 
@@ -27,13 +27,29 @@ int main() {
 		auto wheel_move = GetMouseWheelMove();
 		grid1.layout->size.x += wheel_move * ZOOM_FACTOR;
 		grid1.layout->size.y += wheel_move * ZOOM_FACTOR;
+		Hex under_cursor = grid1.xy_to_hex(GetMouseX(), GetMouseY());
+		if (under_cursor != last_cursor)
+			last_cursor_pers = last_cursor;
+		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+			start_construct = under_cursor;	
+		}
+		if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+			if ((start_construct != last_cursor_pers) && (start_construct != under_cursor)) {
+				Hex diff_src = start_construct - last_cursor_pers;
+				Hex diff_dst = under_cursor - last_cursor_pers;
+				Rail r = Rail(last_cursor_pers, diff_src.direction(), diff_dst.direction(), 4);
+				rails.push_back(r);
+				start_construct = last_cursor_pers;
+			}
+		}
+
 		BeginDrawing();
 		ClearBackground(WHITE);
 		grid1.draw();
 		rail.draw(*grid1.layout);
-		rail1.draw(*grid1.layout);
-		rail2.draw(*grid1.layout);
-		rail3.draw(*grid1.layout);
+		//rail1.draw(*grid1.layout);
+		//rail2.draw(*grid1.layout);
+		//rail3.draw(*grid1.layout);
 		Hex under_cursor = grid1.xy_to_hex(GetMouseX(), GetMouseY());
 		grid1.hightlight(under_cursor);
 		DrawFPS(10, 10);
@@ -42,7 +58,13 @@ int main() {
 			grid1.layout->origin.x += delta.x;
 			grid1.layout->origin.y += delta.y;
 		}
+
+		
+		grid1.hightlight(under_cursor, GREEN);
+		grid1.hightlight(last_cursor_pers, BLUE);
+		grid1.hightlight(start_construct, BLACK);
 		EndDrawing();
+		last_cursor = under_cursor;
 	}
 	CloseWindow();
 	return 0;
