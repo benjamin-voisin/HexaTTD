@@ -5,8 +5,6 @@
 #include "grid.hpp"
 #include "rail.hpp"
 
-#define ZOOM_FACTOR 5
-
 int main() {
 	InitWindow(1000, 1000, "HexaTTD");
 
@@ -18,15 +16,19 @@ int main() {
 
 	Rail rail = Rail(Hex(0,0), 1, 5, 5);
 	Rail rail1 = Rail(Hex(1,-1), 2, 4, 5);
-	Rail rail3 = Rail(Hex(1,1), 1, 3, 5);
 	Rail rail2 = Rail(Hex(1,0), 1, 4, 5);
+	Rail rail3 = Rail(Hex(1,1), 1, 3, 5);
+
+	std::vector<Rail> rails = {rail, rail1, rail2, rail3};
+
+	Hex last_cursor =     grid1.xy_to_hex(GetMouseX(), GetMouseY());
+	Hex last_cursor_pers =     grid1.xy_to_hex(GetMouseX(), GetMouseY());
+	
+	Hex start_construct = grid1.xy_to_hex(GetMouseX(), GetMouseY());
 
 	SetTargetFPS(60);
 
 	while(!WindowShouldClose()) {
-		auto wheel_move = GetMouseWheelMove();
-		grid1.layout->size.x += wheel_move * ZOOM_FACTOR;
-		grid1.layout->size.y += wheel_move * ZOOM_FACTOR;
 		Hex under_cursor = grid1.xy_to_hex(GetMouseX(), GetMouseY());
 		if (under_cursor != last_cursor)
 			last_cursor_pers = last_cursor;
@@ -46,12 +48,11 @@ int main() {
 		BeginDrawing();
 		ClearBackground(WHITE);
 		grid1.draw();
-		rail.draw(*grid1.layout);
-		//rail1.draw(*grid1.layout);
-		//rail2.draw(*grid1.layout);
-		//rail3.draw(*grid1.layout);
-		Hex under_cursor = grid1.xy_to_hex(GetMouseX(), GetMouseY());
-		grid1.hightlight(under_cursor);
+		for (auto r = rails.begin(); r != rails.end(); ++r) {
+			r->draw(*grid1.layout);
+		}
+		
+		
 		DrawFPS(10, 10);
 		if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
 			Vector2 delta = GetMouseDelta();
