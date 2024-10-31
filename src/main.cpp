@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <cstdio>
 
 #include "../raylib/src/raylib.h"
 #include "grid.hpp"
@@ -22,8 +23,8 @@ int main() {
 		BeginDrawing();
 		ClearBackground(WHITE);
 		grid1.draw();
-		grid1.hightlight(grid1.xy_to_hex(GetMouseX(), GetMouseY()));
-		rail.draw(*grid1.layout);
+		Hex under_cursor = grid1.xy_to_hex(GetMouseX(), GetMouseY());
+		grid1.hightlight(under_cursor);
 		rail1.draw(*grid1.layout);
 		DrawFPS(10, 10);
 		if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
