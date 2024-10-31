@@ -5,6 +5,8 @@
 #include "grid.hpp"
 #include "rail.hpp"
 
+#define WHEEL_FACTOR 5
+
 int main() {
 	InitWindow(1000, 1000, "HexaTTD");
 
@@ -35,6 +37,9 @@ int main() {
 		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 			start_construct = under_cursor;	
 		}
+		auto wheel_move = GetMouseWheelMoveV().y;
+		grid1.layout->size.x += wheel_move * WHEEL_FACTOR;
+		grid1.layout->size.y += wheel_move * WHEEL_FACTOR;
 		if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
 			if ((start_construct != last_cursor_pers) && (start_construct != under_cursor)) {
 				Hex diff_src = start_construct - last_cursor_pers;
