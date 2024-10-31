@@ -41,12 +41,18 @@ int main() {
 		grid1.layout->size.x += wheel_move * WHEEL_FACTOR;
 		grid1.layout->size.y += wheel_move * WHEEL_FACTOR;
 		if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-			if ((start_construct != last_cursor_pers) && (start_construct != under_cursor)) {
-				Hex diff_src = start_construct - last_cursor_pers;
-				Hex diff_dst = under_cursor - last_cursor_pers;
-				Rail r = Rail(last_cursor_pers, diff_src.direction(), diff_dst.direction(), 4);
-				rails.push_back(r);
-				start_construct = last_cursor_pers;
+			if (last_cursor_pers.is_neighbor(start_construct) && last_cursor_pers.is_neighbor(under_cursor)) {
+				if ((start_construct != last_cursor_pers) && (start_construct != under_cursor)) {
+					Hex diff_src = start_construct - last_cursor_pers;
+					Hex diff_dst = under_cursor - last_cursor_pers;
+					if (   (diff_src.direction() != diff_dst.direction()) 
+						&& (diff_src.direction() != 1+diff_dst.direction())
+						&& (diff_src.direction()+1 != diff_dst.direction()) ) {
+						Rail r = Rail(last_cursor_pers, diff_src.direction(), diff_dst.direction(), 4);
+						rails.push_back(r);
+						start_construct = last_cursor_pers;
+					}
+				}
 			}
 		}
 
