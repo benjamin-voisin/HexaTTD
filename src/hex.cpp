@@ -61,6 +61,9 @@ int Hex::distance(Hex a) {
 	return subtract(a).length();
 }
 
+bool Hex::is_neighbor(Hex other) {
+	return distance(other) == 1;
+}
 
 Vector hex_directions[6] = {
     Vector(1, 0), Vector(0, 1), Vector(-1, 1), Vector(-1, 0), Vector(0, -1), Vector(1, -1)
