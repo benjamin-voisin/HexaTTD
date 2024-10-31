@@ -15,6 +15,8 @@ int main() {
 
 	Rail rail = Rail(Hex(0,0), 1, 5, 5);
 	Rail rail1 = Rail(Hex(1,-1), 2, 4, 5);
+	Rail rail3 = Rail(Hex(1,1), 1, 3, 5);
+	Rail rail2 = Rail(Hex(1,0), 1, 4, 5);
 
 	SetTargetFPS(60);
 
@@ -23,7 +25,12 @@ int main() {
 		ClearBackground(WHITE);
 		grid1.draw();
 		rail.draw(*grid1.layout);
-		rail1.draw(*grid1.layout);
+		//rail1.draw(*grid1.layout);
+		//rail2.draw(*grid1.layout);
+		//rail3.draw(*grid1.layout);
+
+
+
 		DrawFPS(10, 10);
 		if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
 			Vector2 delta = GetMouseDelta();

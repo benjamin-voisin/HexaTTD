@@ -37,6 +37,7 @@ class Hex {
 		Base base_sides(Layout layout, int i);
 		std::vector<Vector2> corners(Layout layout);
 
+		static float corner_angle(Layout layout, int corner);
 		Hex neighbor(int direction);
 
 };

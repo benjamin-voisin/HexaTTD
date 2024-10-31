@@ -80,13 +80,13 @@ Vector2 Hex::center(Layout layout) {
     return Vector2 {x + layout.origin.x, y + layout.origin.y};
 }
 
-float corner_angle(Layout layout, int corner) {
+float Hex::corner_angle(Layout layout, int corner) {
 	return 2.0 * M_PI *
              (layout.orientation.start_angle + corner) / 6;
 }
 
 Vector2 corner_offset(Layout layout, int corner) {
-    float angle = corner_angle(layout, corner);
+    float angle = Hex::corner_angle(layout, corner);
     return Vector2 {layout.size.x * cos(angle), layout.size.y * sin(angle) };
 }
 
