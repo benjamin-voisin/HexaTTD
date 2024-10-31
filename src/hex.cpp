@@ -5,20 +5,17 @@
 #include "hex.hpp"
 #include "../raylib/src/raylib.h"
 
-
-Hex::Hex(int q, int r) : _q{q}, _r{r} {
-	_s = -q -r;
-	coordinates[0] = _q;
-	coordinates[1] = _r;
-	coordinates[2] = _s;
-}
-
 Hex::Hex(int q, int r, int s) : _q{q}, _r{r}, _s{s} {
 	assert(q + r + s == 0);
 	coordinates[0] = _q;
 	coordinates[1] = _r;
 	coordinates[2] = _s;
 };
+
+Hex::Hex(int q, int r) : Hex(q, r, -q-r) {};
+
+Hex::Hex(Vector v) : Hex(v.x, v.y) {};
+
 
 bool operator == (Hex a, Hex b) {
 	return a._q == b._q && a._r == b._r && a._s == b._s;
@@ -40,8 +37,12 @@ Hex operator * (Hex a, int k) {
 	return a.multiply(k);
 }
 
+Vector Hex::to_Vector() {
+	return Vector(_q, _r);
+}
+
 Hex Hex::add(Hex a) {
-    return Hex(_q + a._q, _r + a._r);
+    return Hex(to_Vector() + a.to_Vector());
 }
 
 Hex Hex::subtract(Hex a) {
@@ -60,24 +61,31 @@ int Hex::distance(Hex a) {
 	return subtract(a).length();
 }
 
-Hex hex_directions[6] = {
-    Hex(1, 0), Hex(1, -1), Hex(0, -1),
-    Hex(-1, 0), Hex(-1, 1), Hex(0, 1)
+
+Vector hex_directions[6] = {
+    Vector(1, 0), Vector(0, 1), Vector(-1, 1), Vector(-1, 0), Vector(0, -1), Vector(1, -1)
 };
 
 Hex hex_direction(int direction) {
 	assert (0 <= direction && direction < 6);
-    return hex_directions[direction];
+    return Hex(hex_directions[direction]);
 }
 
 Hex Hex::neighbor(int direction) {
 	return add(hex_direction(direction));
 }
 
-Vector2 Hex::center(Layout layout) {
-    float x = (layout.orientation.f0 * _q + layout.orientation.f1 * _r) * layout.size.x;
-    float y = (layout.orientation.f2 * _q + layout.orientation.f3 * _r) * layout.size.y;
+
+Vector2 raw_center(Layout layout, Vector v) {
+	float x = (layout.orientation.f0 * v.x + layout.orientation.f1 * v.y) * layout.size.x;
+    float y = (layout.orientation.f2 * v.x + layout.orientation.f3 * v.y) * layout.size.y;
     return Vector2 {x + layout.origin.x, y + layout.origin.y};
+}
+Vector2 Hex::center_side(Layout layout, int direction) {
+	return raw_center(layout, to_Vector() + hex_directions[direction] / 2);
+}
+Vector2 Hex::center(Layout layout) {
+    return raw_center(layout, to_Vector());
 }
 
 float Hex::corner_angle(Layout layout, int corner) {
@@ -90,12 +98,16 @@ Vector2 corner_offset(Layout layout, int corner) {
     return Vector2 {layout.size.x * cos(angle), layout.size.y * sin(angle) };
 }
 
+Vector2 Hex::corner(Layout layout, int corner) {
+	Vector2 c = center(layout);
+	Vector2 offset = corner_offset(layout, (corner+6) % 6);
+    return Vector2 {c.x + offset.x, c.y + offset.y};
+}
+
 std::vector<Vector2> Hex::corners(Layout layout) {
 	std::vector<Vector2> corners = {};
-    Vector2 c = center(layout);
     for (int i = 0; i < 6; i++) {
-        Vector2 offset = corner_offset(layout, i);
-        corners.push_back(Vector2 {c.x + offset.x, c.y + offset.y});
+        corners.push_back(corner(layout, i));
     }
 	corners.push_back(corners[0]);
     return corners;

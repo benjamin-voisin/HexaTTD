@@ -13,3 +13,15 @@ class ArcTrack {
         void draw();
 
 };
+
+class StraighTrack {
+    public:
+        Vector src;
+        Vector dst;
+        float gauge;
+
+        StraighTrack(Vector src, Vector dst, float gauge);
+        void draw();
+
+
+};

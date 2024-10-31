@@ -32,6 +32,9 @@ Vector operator / (Vector a, float k) {
 float Vector::norme() {
 	return sqrt(x * x + y * y);
 }
+Vector Vector::orthogonal() {
+	return Vector(-y, x);
+}
 Vector Vector::normalise() {
 	return *this / (this->norme());
 }

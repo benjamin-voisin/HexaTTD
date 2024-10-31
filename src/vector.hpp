@@ -23,6 +23,7 @@ class Vector {
 
         float norme();
         Vector normalise();
+        Vector orthogonal();
         Vector proj(Vector a);
         Vector2 to_Vector2();
 };

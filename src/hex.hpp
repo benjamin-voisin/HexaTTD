@@ -25,6 +25,7 @@ class Hex {
 		Hex(int q, int r, int s);
 		// As q + r + s = 0, we can build a constructor that computes s
 		Hex(int q, int r);
+		Hex(Vector v);
 		friend bool operator == (Hex a, Hex b);
 		friend bool operator != (Hex a, Hex b);
 		friend Hex operator + (Hex a, Hex b);
@@ -34,9 +35,11 @@ class Hex {
 		int length();
 		int distance(Hex a);
 		Vector2 center(Layout layout);
+		Vector to_Vector();
 		Base base_sides(Layout layout, int i);
 		std::vector<Vector2> corners(Layout layout);
-
+		Vector2 center_side(Layout layout, int direction);
+		Vector2 corner(Layout layout, int corner);
 		static float corner_angle(Layout layout, int corner);
 		Hex neighbor(int direction);
 

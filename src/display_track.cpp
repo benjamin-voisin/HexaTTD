@@ -24,3 +24,18 @@ void ArcTrack::draw() {
 	DrawCircleSectorLines(center.to_Vector2(), radius-gauge/2, angle_min, angle_max, DISCRETISATION, BLACK);
 
 }
+
+StraighTrack::StraighTrack(Vector src, Vector dst, float gauge)
+    : src{src}, dst{dst}, gauge{gauge} {};
+
+void StraighTrack::draw() {
+    Vector ortho = (dst-src).orthogonal().normalise();
+    int delta = 5;
+    for (float i=0; i<=30; ++i) {
+        Vector v = (dst - src) * (i / 30) + src; 
+        DrawLineEx((v + ortho * (gauge / 2 + delta)).to_Vector2(), (v - ortho * (gauge / 2 + delta)).to_Vector2(), 2, BROWN);
+    }
+
+    DrawLineV((src+ortho*gauge/2).to_Vector2(), (dst+ortho*gauge/2).to_Vector2(), BLACK);
+    DrawLineV((src-ortho*gauge/2).to_Vector2(), (dst-ortho*gauge/2).to_Vector2(), BLACK);
+}
