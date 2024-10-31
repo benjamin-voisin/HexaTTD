@@ -4,6 +4,7 @@
 #include "../raylib/src/raylib.h"
 #include "grid.hpp"
 #include "rail.hpp"
+#include "vector.hpp"
 
 #define WHEEL_FACTOR 5
 
@@ -43,9 +44,33 @@ int main() {
 		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 			start_construct = under_cursor;	
 		}
+
+		// Change the zoom level
 		auto wheel_move = GetMouseWheelMoveV().y;
-		grid1.layout->size.x = max(5, grid1.layout->size.x + wheel_move * WHEEL_FACTOR);
-		grid1.layout->size.y = max(5, grid1.layout->size.y + wheel_move * WHEEL_FACTOR);
+		auto new_size = Vector(
+			max(5, (grid1.layout->size.x + wheel_move * WHEEL_FACTOR)),
+			max(5, grid1.layout->size.y + wheel_move * WHEEL_FACTOR)
+		);
+		if (new_size.x != grid1.layout->size.x && new_size.y != grid1.layout->size.y) {
+			// Coordinates of the cursor :
+			Vector cursor = Vector(
+				GetMouseX() - grid1.layout->origin.x,
+				GetMouseY() - grid1.layout->origin.y
+
+			);
+			// It’s new position after offset will be
+			Vector new_center = Vector(
+				cursor.x * (new_size.x / grid1.layout->size.x),
+				cursor.y * (new_size.x / grid1.layout->size.x)
+			);
+			Vector offset = new_center - cursor;
+			grid1.layout->origin.x -= offset.x;
+			grid1.layout->origin.y -= offset.y;
+			grid1.layout->size.x = new_size.x;
+			grid1.layout->size.y = new_size.y;
+		}
+
+		// Build rails
 		if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
 			if (last_cursor_pers.is_neighbor(start_construct) && last_cursor_pers.is_neighbor(under_cursor)) {
 				if ((start_construct != last_cursor_pers) && (start_construct != under_cursor)) {
@@ -62,6 +87,14 @@ int main() {
 			}
 		}
 
+		// Move the map
+		if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
+			Vector2 delta = GetMouseDelta();
+			grid1.layout->origin.x += delta.x;
+			grid1.layout->origin.y += delta.y;
+		}
+
+
 		BeginDrawing();
 		ClearBackground(WHITE);
 		grid1.draw();
@@ -71,12 +104,6 @@ int main() {
 		
 		
 		DrawFPS(10, 10);
-		if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
-			Vector2 delta = GetMouseDelta();
-			grid1.layout->origin.x += delta.x;
-			grid1.layout->origin.y += delta.y;
-		}
-
 		
 		grid1.hightlight(under_cursor, GREEN);
 		grid1.hightlight(last_cursor_pers, BLUE);
