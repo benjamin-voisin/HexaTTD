@@ -27,7 +27,6 @@ int main() {
 	grid1.add_rail(Hex(0,0), 1, 5, 5);
 	grid1.add_rail(Hex(1,-1), 2, 4, 5);
 	grid1.add_rail(Hex(1,0), 1, 4, 5);
-	grid1.add_rail(Hex(1,1), 1, 3, 5);
 
 	Hex last_cursor =     grid1.xy_to_hex(GetMouseX(), GetMouseY());
 	Hex last_cursor_pers =     grid1.xy_to_hex(GetMouseX(), GetMouseY());
