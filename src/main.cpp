@@ -15,7 +15,7 @@ float max(float a, float b) {
 
 
 int main() {
-	char* texte = (char*) malloc(100 * sizeof(char));
+	char* texte = (char*) malloc(1000 * sizeof(char));
 	InitWindow(1000, 1000, "HexaTTD");
 
 	Grid grid1 = Grid(
@@ -104,7 +104,7 @@ int main() {
 		grid1.hightlight(start_construct, BLACK);
 
 		
-		FILE* f = fmemopen(texte, 100, "w");
+		FILE* f = fmemopen(texte, 1000, "w");
 		Tile* t = grid1.tile_from_hex(under_cursor);
 		fprintf(f, "layout.x=%.2f\n", grid1.layout->size.x);
 		t->pp(f);

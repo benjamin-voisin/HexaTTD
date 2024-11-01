@@ -79,6 +79,7 @@ void Grid::add_rail(Hex hex, int src_side, int dst_side, int width) {
 	edges.insert(edges.end(), dst_edges.begin(), dst_edges.end());
 	
 	int track_id = graph.add(edges);
+	tile->add_on_tile_track(track_id);
 	src_neighbor->add_rail(Hex::opposite_direction(src_side), track_id);
 	dst_neighbor->add_rail(Hex::opposite_direction(dst_side), track_id);
 	
