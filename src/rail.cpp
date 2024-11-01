@@ -26,11 +26,11 @@ Rail::Rail(Hex tile, int src_side, int dst_side, int width) :
 
 
 void Rail::draw(Layout layout) {
-	Vector center = Vector(_tile.center(layout));
+	//Vector center = Vector(_tile.center(layout));
 	std::vector<Vector2> corners = _tile.corners(layout);
 
-	Hex tile_src = _tile.neighbor(_src_neighbor);
-	Hex tile_dst = _tile.neighbor(_dst_neighbor);
+	//Hex tile_src = _tile.neighbor(_src_neighbor);
+	//Hex tile_dst = _tile.neighbor(_dst_neighbor);
 
 	/* DEBUG STRUCT RAILS */	
 	/*
@@ -57,11 +57,11 @@ void Rail::draw(Layout layout) {
 	} else {
 		if (_dst_neighbor == _src_neighbor + 2) {
 			Hex tile_curb = _tile.neighbor(_src_neighbor+1);
-			ArcTrack track = ArcTrack{BROWN, tile_curb.center(layout), layout.size.x * 1.5f, GAUGE, _tile.corner_angle(layout, _dst_neighbor+3) * 180 / M_PI, _tile.corner_angle(layout, _src_neighbor+4) * 180 / M_PI};
+			ArcTrack track = ArcTrack{BROWN, tile_curb.center(layout), layout.size.x * 1.5f, GAUGE, _tile.corner_angle(layout, _dst_neighbor+3) * 180 / (float) M_PI, _tile.corner_angle(layout, _src_neighbor+4) * 180 / (float) M_PI};
 			track.draw(layout);
 		} else {
 			Hex tile_curb = _tile.neighbor(_src_neighbor-1);
-			ArcTrack track = ArcTrack{PURPLE, tile_curb.center(layout), layout.size.x * 1.5f, GAUGE, _tile.corner_angle(layout, _dst_neighbor-2) * 180 / M_PI, _tile.corner_angle(layout, _src_neighbor+3) * 180 / M_PI};
+			ArcTrack track = ArcTrack{PURPLE, tile_curb.center(layout), layout.size.x * 1.5f, GAUGE, _tile.corner_angle(layout, _dst_neighbor-2) * 180 / (float) M_PI, _tile.corner_angle(layout, _src_neighbor+3) * 180 / (float) M_PI};
 			track.draw(layout);
 		}
 	}
