@@ -25,7 +25,7 @@ Rail::Rail(Hex tile, int src_side, int dst_side, int width) :
 };
 
 
-void Rail::draw(Layout layout) {
+void Rail::draw(Layout layout, Color c) {
 	//Vector center = Vector(_tile.center(layout));
 	std::vector<Vector2> corners = _tile.corners(layout);
 
@@ -50,18 +50,18 @@ void Rail::draw(Layout layout) {
 
 	if (_src_neighbor + 3  == _dst_neighbor) {
 		// Si l'on doit faire une ligne droite
-		StraighTrack track = StraighTrack(RED, _tile.center_side(layout, _src_neighbor), _tile.center_side(layout, _dst_neighbor), GAUGE);
+		StraighTrack track = StraighTrack(c, _tile.center_side(layout, _src_neighbor), _tile.center_side(layout, _dst_neighbor), GAUGE);
 		track.draw(layout);
 		//DrawLineEx(coffset_droite_src.to_Vector2(), coffset_droite_dst.to_Vector2(), _width, BLACK);
 		//DrawLineEx(coffset_gauche_src.to_Vector2(), coffset_gauche_dst.to_Vector2(), _width, BLACK);
 	} else {
 		if (_dst_neighbor == _src_neighbor + 2) {
 			Hex tile_curb = _tile.neighbor(_src_neighbor+1);
-			ArcTrack track = ArcTrack{BROWN, tile_curb.center(layout), layout.size.x * 1.5f, GAUGE, _tile.corner_angle(layout, _dst_neighbor+3) * 180 / (float) M_PI, _tile.corner_angle(layout, _src_neighbor+4) * 180 / (float) M_PI};
+			ArcTrack track = ArcTrack{c, tile_curb.center(layout), layout.size.x * 1.5f, GAUGE, _tile.corner_angle(layout, _dst_neighbor+3) * 180 / (float) M_PI, _tile.corner_angle(layout, _src_neighbor+4) * 180 / (float) M_PI};
 			track.draw(layout);
 		} else {
 			Hex tile_curb = _tile.neighbor(_src_neighbor-1);
-			ArcTrack track = ArcTrack{PURPLE, tile_curb.center(layout), layout.size.x * 1.5f, GAUGE, _tile.corner_angle(layout, _dst_neighbor-2) * 180 / (float) M_PI, _tile.corner_angle(layout, _src_neighbor+3) * 180 / (float) M_PI};
+			ArcTrack track = ArcTrack{c, tile_curb.center(layout), layout.size.x * 1.5f, GAUGE, _tile.corner_angle(layout, _dst_neighbor-2) * 180 / (float) M_PI, _tile.corner_angle(layout, _src_neighbor+3) * 180 / (float) M_PI};
 			track.draw(layout);
 		}
 	}

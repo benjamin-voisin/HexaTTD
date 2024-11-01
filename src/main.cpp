@@ -7,6 +7,7 @@
 #include "vector.hpp"
 
 #define WHEEL_FACTOR 5
+const char dotfile[20] = "graph.dot" ;
 
 float max(float a, float b) {
 	return (a > b) ? a : b;
@@ -23,12 +24,10 @@ int main() {
 			Vector2 {(float) GetScreenWidth() / 2, (float) GetScreenHeight() / 2},
 			-10, 10, -10, 10);
 
-	Rail rail = Rail(Hex(0,0), 1, 5, 5);
-	Rail rail1 = Rail(Hex(1,-1), 2, 4, 5);
-	Rail rail2 = Rail(Hex(1,0), 1, 4, 5);
-	Rail rail3 = Rail(Hex(1,1), 1, 3, 5);
-
-	std::vector<Rail> rails = {rail, rail1, rail2, rail3};
+	grid1.add_rail(Hex(0,0), 1, 5, 5);
+	grid1.add_rail(Hex(1,-1), 2, 4, 5);
+	grid1.add_rail(Hex(1,0), 1, 4, 5);
+	grid1.add_rail(Hex(1,1), 1, 3, 5);
 
 	Hex last_cursor =     grid1.xy_to_hex(GetMouseX(), GetMouseY());
 	Hex last_cursor_pers =     grid1.xy_to_hex(GetMouseX(), GetMouseY());
@@ -78,8 +77,7 @@ int main() {
 					Hex diff_dst = under_cursor - last_cursor_pers;
 					if (   (diff_src.direction() != diff_dst.direction()) 
 						&& !(start_construct.is_neighbor(under_cursor)) ) {
-						Rail r = Rail(last_cursor_pers, diff_src.direction(), diff_dst.direction(), 4);
-						rails.push_back(r);
+						grid1.add_rail(last_cursor_pers, diff_src.direction(), diff_dst.direction(), 4);
 						start_construct = last_cursor_pers;
 					}
 				}
@@ -97,9 +95,7 @@ int main() {
 		BeginDrawing();
 		ClearBackground(WHITE);
 		grid1.draw();
-		for (auto r = rails.begin(); r != rails.end(); ++r) {
-			r->draw(*grid1.layout);
-		}
+		
 		
 		
 		DrawFPS(10, 10);
@@ -109,12 +105,17 @@ int main() {
 		grid1.hightlight(start_construct, BLACK);
 
 		
-		snprintf(texte, 100, "layout.x=%.2f", grid1.layout->size.x);
+		FILE* f = fmemopen(texte, 100, "w");
+		Tile* t = grid1.tile_from_hex(under_cursor);
+		fprintf(f, "layout.x=%.2f\n", grid1.layout->size.x);
+		t->pp(f);
+		fclose(f);
 		DrawText(texte, 10, 40, 30, BLACK);
 		EndDrawing();
 		last_cursor = under_cursor;
 	}
 	CloseWindow();
+	grid1.graph.to_dot(dotfile);
 	free(texte);
 	return 0;
 }

@@ -16,6 +16,18 @@ Hex::Hex(int q, int r) : Hex(q, r, -q-r) {};
 
 Hex::Hex(Vector v) : Hex(v.x, v.y) {};
 
+int Hex::get_q() {
+	return _q;
+}
+
+int Hex::get_r() {
+	return _r;
+}
+
+int Hex::get_s() {
+	return _s;
+}
+
 
 bool operator == (Hex a, Hex b) {
 	return a._q == b._q && a._r == b._r && a._s == b._s;
@@ -68,6 +80,10 @@ bool Hex::is_neighbor(Hex other) {
 Vector hex_directions[6] = {
     Vector(1, 0), Vector(0, 1), Vector(-1, 1), Vector(-1, 0), Vector(0, -1), Vector(1, -1)
 };
+
+int Hex::opposite_direction(int direction) {
+	return (direction + 3) % 6;
+}
 
 Hex hex_direction(int direction) {
 	direction = ((direction % 6) + 6) % 6;

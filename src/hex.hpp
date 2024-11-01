@@ -26,6 +26,11 @@ class Hex {
 		// As q + r + s = 0, we can build a constructor that computes s
 		Hex(int q, int r);
 		Hex(Vector v);
+
+		int get_q();
+		int get_r();
+		int get_s();
+
 		friend bool operator == (Hex a, Hex b);
 		friend bool operator != (Hex a, Hex b);
 		friend Hex operator + (Hex a, Hex b);
@@ -43,6 +48,7 @@ class Hex {
 		static float corner_angle(Layout layout, int corner);
 		bool is_neighbor(Hex other);
 		Hex neighbor(int direction);
+		static int opposite_direction(int direction);
 		int direction();
 
 };

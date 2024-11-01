@@ -2,10 +2,12 @@
 #include "hex.hpp"
 
 #include <math.h>
+#include <assert.h>
 
 Grid::Grid(Orientation orientation, Vector2 size, Vector2 origin, int q_min, int q_max, int r_min, int r_max) :
-	q_min{q_min}, q_max{q_max}, r_min{r_min}, r_max{r_max} {
-	layout = new Layout(orientation, size, origin);
+	q_min{q_min}, q_max{q_max}, r_min{r_min}, r_max{r_max}
+	, tiles((r_max - r_min) * (q_max - q_min)) {
+	this->layout = new Layout(orientation, size, origin);
 }
 
 void Grid::draw() {
@@ -13,6 +15,10 @@ void Grid::draw() {
 		for (int r = r_min; r <= r_max; r++) {
 			Hex(q, r).draw(*layout, RED);
 		}
+	}
+	for (long unsigned i=0; i<rails.size(); ++i) {
+		int r_class = graph.get_class(i);
+		rails[i].draw(*this->layout, ColorFromHSV(r_class*80, 0.7f, 0.5f));
 	}
 }
 
@@ -52,4 +58,30 @@ Hex Grid::xy_to_hex(float x, float y) {
 	// values
 
     return round(q, r, -q -r);
+}
+
+Tile* Grid::tile_from_hex(Hex hex) {
+	assert((q_min <= hex.get_q()) && (hex.get_q() <= q_max));
+	assert((r_min <= hex.get_r()) && (hex.get_r() <= r_max));
+	return &tiles[(hex.get_q() - q_min) * (q_max - q_min) + (hex.get_r() - r_min)];
+}
+
+void Grid::add_rail(Hex hex, int src_side, int dst_side, int width) {
+	Tile* src_neighbor = tile_from_hex(hex.neighbor(src_side));
+	Tile* tile = tile_from_hex(hex);
+	Tile* dst_neighbor = tile_from_hex(hex.neighbor(dst_side));
+
+	std::vector<int> src_edges = tile->get_rails(src_side);
+	std::vector<int> dst_edges = tile->get_rails(dst_side);
+		 	
+	std::vector<int> edges = {};
+	edges.insert(edges.end(), src_edges.begin(), src_edges.end());
+	edges.insert(edges.end(), dst_edges.begin(), dst_edges.end());
+	
+	int track_id = graph.add(edges);
+	src_neighbor->add_rail(Hex::opposite_direction(src_side), track_id);
+	dst_neighbor->add_rail(Hex::opposite_direction(dst_side), track_id);
+	
+	assert(rails.size() == (long unsigned) track_id);
+	rails.push_back(Rail(hex, src_side, dst_side, width));
 }

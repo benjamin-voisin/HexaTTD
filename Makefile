@@ -1,5 +1,5 @@
-CXX = g++
-VPATH = ./src
+CXX = g++ --std=c++20 
+VPATH = ./src:./src/track_graph
 RAYLIB_DIR = ./raylib/src/
 
 CXXBASEFLAGS = -Wall -Wextra
@@ -25,13 +25,15 @@ export RAYLIB_RELEASE_PATH
 
 default: hexattd
 
-hexattd: main.o hex.o grid.o rail.o base.o vector.o display_track.o libraylib.a
+hexattd: main.o grid.o hex.o  rail.o base.o vector.o display_track.o tile.o track_graph.o track_union_find.o libraylib.a
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(DEPS) 
 
 libraylib.a:
 	$(MAKE) -C $(RAYLIB_DIR)
 
-clean: clean_hex clean_raylib
+clean: clean_hex
+
+cleanall : clean clean_raylib
 
 clean_hex:
 	rm -f ./hexattd

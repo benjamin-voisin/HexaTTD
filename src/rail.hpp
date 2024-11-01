@@ -12,5 +12,5 @@ class Rail {
 	public:
 		Rail(Hex tile, int src_side, int dst_side, int width);
 		
-		void draw(Layout layout);
+		void draw(Layout layout, Color c);
 };
