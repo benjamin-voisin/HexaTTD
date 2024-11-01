@@ -28,6 +28,6 @@ void TrackUF::ens_union(int node1, int node2) {
     int classe1 = find(node1);
     int classe2 = find(node2);
     if (classe1 != classe2) {
-        parent[classe1] = classe2;
+        parent[classe2] = classe1;
     }
 }
