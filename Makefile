@@ -25,7 +25,8 @@ export RAYLIB_RELEASE_PATH
 
 default: hexattd
 
-hexattd: main.o grid.o hex.o  rail.o base.o vector.o display_track.o tile.o track_graph.o track_union_find.o libraylib.a
+DEPENDS = main.o grid.o hex.o  rail.o base.o vector.o display_track.o tile.o track_graph.o track_union_find.o train.o
+hexattd: $(DEPENDS) libraylib.a
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(DEPS) 
 
 libraylib.a:

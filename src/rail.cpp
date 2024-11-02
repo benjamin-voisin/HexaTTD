@@ -9,7 +9,7 @@
 #define GAUGE 25
 
 Rail::Rail(Hex tile, int src_side, int dst_side, int width) :
-	_tile{tile}, _width{width} {
+	_hex{tile}, _width{width} {
 	int src_side_mod = src_side % 6;
 	int dst_side_mod = dst_side % 6;
 	assert(src_side_mod != dst_side_mod);
@@ -24,44 +24,48 @@ Rail::Rail(Hex tile, int src_side, int dst_side, int width) :
 	}
 };
 
+Hex Rail::get_hex() {
+	return _hex;
+}
+
 
 void Rail::draw(Layout layout, Color c) {
-	//Vector center = Vector(_tile.center(layout));
-	std::vector<Vector2> corners = _tile.corners(layout);
+	//Vector center = Vector(_hex.center(layout));
+	std::vector<Vector2> corners = _hex.corners(layout);
 
-	//Hex tile_src = _tile.neighbor(_src_neighbor);
-	//Hex tile_dst = _tile.neighbor(_dst_neighbor);
+	//Hex tile_src = _hex.neighbor(_src_neighbor);
+	//Hex tile_dst = _hex.neighbor(_dst_neighbor);
 
 	/* DEBUG STRUCT RAILS */	
 	/*
-	DrawLineEx(_tile.center_side(layout, _src_neighbor), _tile.center(layout), _width, GREEN);
-	DrawLineEx(_tile.center(layout), _tile.center_side(layout, _dst_neighbor), _width, PURPLE);
+	DrawLineEx(_hex.center_side(layout, _src_neighbor), _hex.center(layout), _width, GREEN);
+	DrawLineEx(_hex.center(layout), _hex.center_side(layout, _dst_neighbor), _width, PURPLE);
 	
-	DrawCircleV(_tile.center_side(layout, _src_neighbor), 6, PURPLE);
-	DrawCircleV(_tile.corner(layout, _src_neighbor), 6, BLUE);
-	DrawCircleV(_tile.corner(layout, _src_neighbor+1), 6, BLUE);
+	DrawCircleV(_hex.center_side(layout, _src_neighbor), 6, PURPLE);
+	DrawCircleV(_hex.corner(layout, _src_neighbor), 6, BLUE);
+	DrawCircleV(_hex.corner(layout, _src_neighbor+1), 6, BLUE);
 	
 
-	DrawCircleV(_tile.center_side(layout, _dst_neighbor), 6, GREEN);
-	DrawCircleV(_tile.corner(layout, _dst_neighbor), 6, YELLOW);
-	DrawCircleV(_tile.corner(layout, _dst_neighbor+1), 6, YELLOW);
+	DrawCircleV(_hex.center_side(layout, _dst_neighbor), 6, GREEN);
+	DrawCircleV(_hex.corner(layout, _dst_neighbor), 6, YELLOW);
+	DrawCircleV(_hex.corner(layout, _dst_neighbor+1), 6, YELLOW);
 	*/
 
 
 	if (_src_neighbor + 3  == _dst_neighbor) {
 		// Si l'on doit faire une ligne droite
-		StraighTrack track = StraighTrack(c, _tile.center_side(layout, _src_neighbor), _tile.center_side(layout, _dst_neighbor), GAUGE);
+		StraighTrack track = StraighTrack(c, _hex.center_side(layout, _src_neighbor), _hex.center_side(layout, _dst_neighbor), GAUGE);
 		track.draw(layout);
 		//DrawLineEx(coffset_droite_src.to_Vector2(), coffset_droite_dst.to_Vector2(), _width, BLACK);
 		//DrawLineEx(coffset_gauche_src.to_Vector2(), coffset_gauche_dst.to_Vector2(), _width, BLACK);
 	} else {
 		if (_dst_neighbor == _src_neighbor + 2) {
-			Hex tile_curb = _tile.neighbor(_src_neighbor+1);
-			ArcTrack track = ArcTrack{c, tile_curb.center(layout), layout.size.x * 1.5f, GAUGE, _tile.corner_angle(layout, _dst_neighbor+3) * 180 / (float) M_PI, _tile.corner_angle(layout, _src_neighbor+4) * 180 / (float) M_PI};
+			Hex tile_curb = _hex.neighbor(_src_neighbor+1);
+			ArcTrack track = ArcTrack{c, tile_curb.center(layout), layout.size.x * 1.5f, GAUGE, _hex.corner_angle(layout, _dst_neighbor+3) * 180 / (float) M_PI, _hex.corner_angle(layout, _src_neighbor+4) * 180 / (float) M_PI};
 			track.draw(layout);
 		} else {
-			Hex tile_curb = _tile.neighbor(_src_neighbor-1);
-			ArcTrack track = ArcTrack{c, tile_curb.center(layout), layout.size.x * 1.5f, GAUGE, _tile.corner_angle(layout, _dst_neighbor-2) * 180 / (float) M_PI, _tile.corner_angle(layout, _src_neighbor+3) * 180 / (float) M_PI};
+			Hex tile_curb = _hex.neighbor(_src_neighbor-1);
+			ArcTrack track = ArcTrack{c, tile_curb.center(layout), layout.size.x * 1.5f, GAUGE, _hex.corner_angle(layout, _dst_neighbor-2) * 180 / (float) M_PI, _hex.corner_angle(layout, _src_neighbor+3) * 180 / (float) M_PI};
 			track.draw(layout);
 		}
 	}
@@ -89,22 +93,22 @@ void Rail::draw(Layout layout, Color c) {
 		//assert(_entry_neighbor == _exit_neighbor + 2);
 		//assert(_entry_neighbor + 2 == _exit_neighbor);
 	
-		Hex tile_circle = _tile.neighbor((_entry_neighbor+1) / 2);
+		Hex tile_circle = _hex.neighbor((_entry_neighbor+1) / 2);
 
-		Hex tile_circle2 = _tile.neighbor(3);
+		Hex tile_circle2 = _hex.neighbor(3);
 
-		Hex neighbor_src = _tile.neighbor(_entry_neighbor);
-		Hex neighbor_dst = _tile.neighbor(_exit_neighbor);
+		Hex neighbor_src = _hex.neighbor(_entry_neighbor);
+		Hex neighbor_dst = _hex.neighbor(_exit_neighbor);
 
-		//DrawLineEx(neighbor_src.center(layout), _tile.center(layout), _width, BLACK);
-		//DrawLineEx(neighbor_dst.center(layout), _tile.center(layout), _width, BLACK);
+		//DrawLineEx(neighbor_src.center(layout), _hex.center(layout), _width, BLACK);
+		//DrawLineEx(neighbor_dst.center(layout), _hex.center(layout), _width, BLACK);
 
-		ArcTrack track = ArcTrack{tile_circle.center(layout), 150, 25, _tile.corner_angle(layout, _exit_neighbor-2) * 180 / M_PI, _tile.corner_angle(layout, _entry_neighbor+3) * 180 / M_PI};
+		ArcTrack track = ArcTrack{tile_circle.center(layout), 150, 25, _hex.corner_angle(layout, _exit_neighbor-2) * 180 / M_PI, _hex.corner_angle(layout, _entry_neighbor+3) * 180 / M_PI};
 		track.draw();
 
 		DrawCircleV(tile_circle.center(layout), 4, GREEN);
 		DrawCircleV(tile_circle2.center(layout), 4, RED);
-		DrawCircleV(_tile.center(layout), 4, PURPLE);
+		DrawCircleV(_hex.center(layout), 4, PURPLE);
 		
 
 		Vector2 p1[3];

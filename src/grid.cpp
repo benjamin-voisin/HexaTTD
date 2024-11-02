@@ -25,6 +25,9 @@ void Grid::draw() {
 		int r_class = graph.get_class(i);
 		rails[i].draw(*this->layout, ColorFromHSV(r_class*80, 0.7f, 0.5f));
 	}
+	for (long unsigned i=0; i<trains.size(); i++) {
+		trains[i].draw(*layout);
+	}
 }
 
 void Grid::hightlight(Hex hex, Color c) {
@@ -90,4 +93,8 @@ void Grid::add_rail(Hex hex, int src_side, int dst_side, int width) {
 	
 	assert(rails.size() == (long unsigned) track_id);
 	rails.push_back(Rail(hex, src_side, dst_side, width));
+}
+
+void Grid::add_train(int rail_id) {
+	trains.push_back(Train(&rails[rail_id]));
 }
