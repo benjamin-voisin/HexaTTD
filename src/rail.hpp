@@ -14,4 +14,5 @@ class Rail {
 		Rail(Hex tile, int src_side, int dst_side, int width);
 		
 		void draw(Layout layout, Color c);
+		Vector get_position(Layout layout, float progression);
 };

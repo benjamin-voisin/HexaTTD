@@ -28,6 +28,10 @@ Hex Rail::get_hex() {
 	return _hex;
 }
 
+Vector Rail::get_position(Layout layout, float progression) {
+	return _hex.center(layout);
+}
+
 
 void Rail::draw(Layout layout, Color c) {
 	//Vector center = Vector(_hex.center(layout));
