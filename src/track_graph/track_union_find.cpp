@@ -11,6 +11,7 @@ int TrackUF::track_number() {
 int TrackUF::add() {
     int id = parent.size();
     parent.push_back(id);
+    rang.push_back(0);
     ++n_classes;
     return id;
 }
@@ -28,6 +29,13 @@ void TrackUF::ens_union(int node1, int node2) {
     int classe1 = find(node1);
     int classe2 = find(node2);
     if (classe1 != classe2) {
-        parent[classe2] = classe1;
+        if (rang[classe1] == rang[classe2]) {
+            parent[classe2] = classe1;
+            rang[classe2] += 1;
+        } else if (rang[classe1] > rang[classe2]) {
+            parent[classe2] = classe1;
+        } else {
+            parent[classe1] = classe2;
+        }
     }
 }
