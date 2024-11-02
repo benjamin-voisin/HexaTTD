@@ -10,6 +10,11 @@ Grid::Grid(Orientation orientation, Vector2 size, Vector2 origin, int q_min, int
 	this->layout = new Layout(orientation, size, origin);
 }
 
+Grid::~Grid() {
+	delete layout;
+}
+
+
 void Grid::draw() {
 	for (int q = q_min; q <= q_max; q++) {
 		for (int r = r_min; r <= r_max; r++) {
