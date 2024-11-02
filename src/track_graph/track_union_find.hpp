@@ -5,6 +5,7 @@
 class TrackUF {
     private:
         std::vector<int> parent;
+        std::vector<int> rang;
         int n_classes;
 
     public:
