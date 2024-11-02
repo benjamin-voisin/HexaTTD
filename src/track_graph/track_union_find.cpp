@@ -31,7 +31,7 @@ void TrackUF::ens_union(int node1, int node2) {
     if (classe1 != classe2) {
         if (rang[classe1] == rang[classe2]) {
             parent[classe2] = classe1;
-            rang[classe2] += 1;
+            rang[classe1] += 1;
         } else if (rang[classe1] > rang[classe2]) {
             parent[classe2] = classe1;
         } else {
