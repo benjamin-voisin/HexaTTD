@@ -1,5 +1,5 @@
 CXX = g++ --std=c++20 
-VPATH = ./src:./src/track_graph
+VPATH = ./src:./src/track_graph:./src/graphics/
 RAYLIB_DIR = ./raylib/src/
 
 CXXBASEFLAGS = -Wall -Wextra

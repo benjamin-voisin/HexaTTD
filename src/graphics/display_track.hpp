@@ -1,5 +1,7 @@
-#include "vector.hpp"
-#include "layout.hpp"
+#pragma once 
+
+#include "../vector.hpp"
+#include "../layout.hpp"
 
 class ArcTrack {
     public:
