@@ -1,6 +1,7 @@
 #include "train.hpp"
 
 #include "../raylib/src/raylib.h"
+#include "graphics/display_train.hpp"
 
 Train::Train(Rail *rail) :
 	_position{rail} {
@@ -13,5 +14,6 @@ Train::Train(Rail *rail) :
 void Train::draw(Layout layout) {
 	// First put the train in the center of the tile
 	auto center = _position->get_hex().center(layout);
-	DrawRectangle(center.x, center.y, 30, 70, RED);
+	DrawTrain train = DrawTrain(center, {30, 70}, 0);
+	train.draw();
 }
