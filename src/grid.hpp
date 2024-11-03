@@ -26,4 +26,5 @@ class Grid {
 
 		Tile* tile_from_hex(Hex hex);
 		void add_rail(Hex tile, int src_side, int dst_side, int width);
+		~Grid();
 };
