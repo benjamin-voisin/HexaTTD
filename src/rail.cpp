@@ -28,8 +28,19 @@ Hex Rail::get_hex() {
 	return _hex;
 }
 
-Vector Rail::get_position(Layout layout, float progression) {
-	return _hex.center(layout);
+train_pos Rail::get_position(Layout layout, float progression) {
+	if (_src_neighbor + 3 == _dst_neighbor) {
+		// The rail is a straight line
+		Vector src = _hex.center_side(layout, _src_neighbor);
+		Vector dst = _hex.center_side(layout, _dst_neighbor);
+		Vector position = (dst - src) * progression + src;
+		Vector orientation = (dst - src).normalise();
+		return {position, orientation} ;
+	} else {
+		Vector center = _hex.center(layout);
+		Vector orientation = Vector(1,1);
+		return {center, orientation};
+	}
 }
 
 

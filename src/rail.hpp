@@ -3,6 +3,11 @@
 #include "hex.hpp"
 #include "layout.hpp"
 
+struct train_pos {
+	Vector position;
+	Vector direction;
+};
+
 class Rail {
 	private:
 		Hex _hex;
@@ -14,5 +19,5 @@ class Rail {
 		Rail(Hex tile, int src_side, int dst_side, int width);
 		
 		void draw(Layout layout, Color c);
-		Vector get_position(Layout layout, float progression);
+		train_pos get_position(Layout layout, float progression);
 };

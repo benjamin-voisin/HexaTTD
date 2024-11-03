@@ -58,7 +58,7 @@ float Vector::angle() {
     else if (y == 0) // special cases
         return (x >= 0)? 90
             : 270;
-    float ret = rad_to_deg(atanf((float)y/x));
+    float ret = rad_to_deg(atanf(y/x));
     if (x < 0 && y < 0) // quadrant Ⅲ
         ret = 180 + ret;
     else if (x < 0) // quadrant Ⅱ
