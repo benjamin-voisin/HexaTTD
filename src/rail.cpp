@@ -37,9 +37,23 @@ train_pos Rail::get_position(Layout layout, float progression) {
 		Vector orientation = (dst - src).normalise();
 		return {position, orientation} ;
 	} else {
-		Vector center = _hex.center(layout);
-		Vector orientation = Vector(1,1);
-		return {center, orientation};
+		if (_dst_neighbor == _src_neighbor + 2) {
+			Vector center = _hex.neighbor(_src_neighbor+1).center(layout);
+			float angle_min = _hex.corner_angle(layout, _dst_neighbor+3) * 180.f / M_PI;
+			float angle_max = _hex.corner_angle(layout, _src_neighbor+4) * 180.f / M_PI;
+			float angle = (progression) * (angle_max - angle_min) + angle_min;
+			Vector v1 = Vector{center.x + cosf(DEG2RAD*angle)*(layout.size.x), center.y + sinf(DEG2RAD*angle)*(layout.size.x)};
+			Vector orientation = Vector(1,0);
+			return {v1, orientation};
+		} else {
+			Vector center = _hex.neighbor(_src_neighbor-1).center(layout);
+			float angle_min = _hex.corner_angle(layout, _dst_neighbor-2) * 180.f / M_PI;
+			float angle_max = _hex.corner_angle(layout, _src_neighbor+3) * 180.f / M_PI;
+			float angle = (progression) * (angle_max - angle_min) + angle_min;
+			Vector v1 = Vector{center.x + cosf(DEG2RAD*angle)*(layout.size.x*1.5f), center.y + sinf(DEG2RAD*angle)*(layout.size.x*1.5f)};
+			Vector orientation = Vector(1,0);
+			return {v1, orientation};
+		}
 	}
 }
 
