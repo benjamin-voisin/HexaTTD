@@ -42,8 +42,8 @@ train_pos Rail::get_position(Layout layout, float progression) {
 			float angle_min = _hex.corner_angle(layout, _dst_neighbor+3) * 180.f / M_PI;
 			float angle_max = _hex.corner_angle(layout, _src_neighbor+4) * 180.f / M_PI;
 			float angle = (progression) * (angle_max - angle_min) + angle_min;
-			Vector v1 = Vector{center.x + cosf(DEG2RAD*angle)*(layout.size.x), center.y + sinf(DEG2RAD*angle)*(layout.size.x)};
-			return {v1, Vector(angle)};
+			Vector v1 = Vector{center.x + cosf(DEG2RAD*angle)*(layout.size.x*1.5f), center.y + sinf(DEG2RAD*angle)*(layout.size.x*1.5f)};
+			return {v1, Vector(angle*DEG2RAD).orthogonal()};
 		} else {
 			Vector center = _hex.neighbor(_src_neighbor-1).center(layout);
 			float angle_min = _hex.corner_angle(layout, _dst_neighbor-2) * 180.f / M_PI;
