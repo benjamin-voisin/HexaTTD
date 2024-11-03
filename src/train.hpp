@@ -5,7 +5,8 @@
 
 class Train {
 	private:
-		Rail *_position;
+		Rail* _position;
+		std::vector<Rail*> _path;
 		std::shared_ptr<Texture2D> _sprite;
 		float _orientation;
 		float _current_speed;
@@ -14,6 +15,6 @@ class Train {
 
 	public:
 		void draw(Layout layout);
-		Train(Rail *rail);
+		Train(std::vector<Rail*> path);
 		void update();
 };

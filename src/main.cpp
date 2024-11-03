@@ -25,10 +25,10 @@ int main() {
 			Vector2 {(float) GetScreenWidth() / 2, (float) GetScreenHeight() / 2},
 			-10, 10, -10, 10);
 
-	grid1.add_rail(Hex(0,0), 2, 5, 5);
-	grid1.add_rail(Hex(1,-1), 2, 4, 5);
-	grid1.add_rail(Hex(1,0), 1, 4, 5);
-	grid1.add_train(0);
+	grid1.add_rail(Hex(0,0), 1, 5, 5);
+	grid1.add_rail(Hex(1,-1), 2, 5, 5);
+	grid1.add_rail(Hex(1,-1) + Hex(1,-1), 2, 0, 5);
+	grid1.add_train({0,1,2});
 
 	Hex last_cursor =     grid1.xy_to_hex(GetMouseX(), GetMouseY());
 	Hex last_cursor_pers =     grid1.xy_to_hex(GetMouseX(), GetMouseY());

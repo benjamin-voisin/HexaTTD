@@ -3,6 +3,7 @@
 
 #include <math.h>
 #include <assert.h>
+#include <memory>
 
 Grid::Grid(Orientation orientation, Vector2 size, Vector2 origin, int q_min, int q_max, int r_min, int r_max) :
 	q_min{q_min}, q_max{q_max}, r_min{r_min}, r_max{r_max}
@@ -95,8 +96,12 @@ void Grid::add_rail(Hex hex, int src_side, int dst_side, int width) {
 	rails.push_back(Rail(hex, src_side, dst_side, width));
 }
 
-void Grid::add_train(int rail_id) {
-	trains.push_back(Train(&rails[rail_id]));
+void Grid::add_train(std::vector<int> path) {
+	std::vector<Rail*> rail_path;
+	for (auto i=0; i < path.size(); i++) {
+		rail_path.push_back(&rails[path[i]]);
+	}
+	trains.push_back(Train(rail_path));
 }
 
 void Grid::update() {
