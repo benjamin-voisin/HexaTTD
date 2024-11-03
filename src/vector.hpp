@@ -26,4 +26,5 @@ class Vector {
         Vector orthogonal();
         Vector proj(Vector a);
         Vector2 to_Vector2();
+		float angle();
 };
