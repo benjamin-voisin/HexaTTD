@@ -14,6 +14,7 @@ class Graph {
         Graph();
         int size();
         int add(std::vector<int> neighbor);
+        int get_max_class();
         int get_class(int node);
         void to_dot(const char* filename);
         

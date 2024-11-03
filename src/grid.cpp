@@ -16,9 +16,10 @@ void Grid::draw() {
 			Hex(q, r).draw(*layout, RED);
 		}
 	}
+	int n_classes = graph.get_max_class();
 	for (long unsigned i=0; i<rails.size(); ++i) {
 		int r_class = graph.get_class(i);
-		rails[i].draw(*this->layout, ColorFromHSV(r_class*80, 0.7f, 0.5f));
+		rails[i].draw(*this->layout, ColorFromHSV(((float) r_class/ (float) n_classes)*360, 0.7f, 0.5f));
 	}
 }
 

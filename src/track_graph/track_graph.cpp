@@ -20,7 +20,11 @@ int Graph::add(std::vector<int> neighbor) {
 }
 
 int Graph::get_class(int node) {
-    return uf.find(node);
+    return uf.classe(node);
+}
+
+int Graph::get_max_class() {
+    return uf.n_classe();
 }
 
 #include <stdio.h>
