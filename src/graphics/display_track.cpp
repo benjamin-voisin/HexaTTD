@@ -19,7 +19,7 @@ void ArcTrack::draw(Layout layout) {
     if (layout.size.x > 100) {
         for (float i=0; i<30; ++i) {
             float angle = (i / 30) * (angle_max - angle_min) + angle_min;
-            DrawRing(center.to_Vector2(), radius-display_gauge/2-delta, radius+display_gauge/2+delta, angle, angle+1, 10, color);
+            DrawRing(center.to_Vector2(), radius-display_gauge/2-delta, radius+display_gauge/2+delta, angle, angle+1, 1, color);
         }
     } else if (layout.size.x > 40) {
         for (float i=0; i<=30; ++i) {
