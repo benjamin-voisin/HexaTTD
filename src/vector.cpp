@@ -6,6 +6,11 @@ Vector::Vector(float x, float y) : x{x}, y{y} {};
 
 Vector::Vector(Vector2 v) : Vector(v.x, v.y) {};
 
+Vector::Vector(float angle) {
+	x = cos(angle);
+	y = sin(angle);
+}
+
 bool operator == (Vector a, Vector b) {
 	return (a.x == b.x) && (a.y == b.y);
 }
