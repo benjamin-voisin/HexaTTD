@@ -15,4 +15,5 @@ class Train {
 	public:
 		void draw(Layout layout);
 		Train(Rail *rail);
+		void update();
 };

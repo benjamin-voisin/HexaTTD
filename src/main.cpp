@@ -38,6 +38,7 @@ int main() {
 	SetTargetFPS(60);
 
 	while(!WindowShouldClose()) {
+		grid1.update();
 		Hex under_cursor = grid1.xy_to_hex(GetMouseX(), GetMouseY());
 		if (under_cursor != last_cursor)
 			last_cursor_pers = last_cursor;

@@ -98,3 +98,9 @@ void Grid::add_rail(Hex hex, int src_side, int dst_side, int width) {
 void Grid::add_train(int rail_id) {
 	trains.push_back(Train(&rails[rail_id]));
 }
+
+void Grid::update() {
+	for (long unsigned i=0; i<trains.size(); i++) {
+		trains[i].update();
+	}
+}
