@@ -14,6 +14,6 @@ Train::Train(Rail *rail) :
 void Train::draw(Layout layout) {
 	// First put the train in the center of the tile
 	auto position = _position->get_position(layout, _progression);
-	DrawTrain train = DrawTrain(position.position.to_Vector2(), {30, 70}, position.direction.angle());
+	DrawTrain train = DrawTrain(position.position, Vector(30, 70) * layout.size.x / 100, position.direction);
 	train.draw();
 }

@@ -1,13 +1,14 @@
 #pragma once
 
 #include "../../raylib/src/raylib.h"
+#include "../vector.hpp"
 
 class DrawTrain {
 	private:
-		Vector2 _position;
-		Vector2 _size;
-		float _angle;
+		Vector _position;
+		Vector _size;
+		Vector _direction;
 	public:
 		void draw();
-		DrawTrain(Vector2 position, Vector2 size, float angle);
+		DrawTrain(Vector position, Vector size, Vector direction);
 };

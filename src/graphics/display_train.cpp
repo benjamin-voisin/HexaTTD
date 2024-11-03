@@ -1,8 +1,11 @@
 #include "display_train.hpp"
 
-DrawTrain::DrawTrain(Vector2 position, Vector2 size, float angle)
-	: _position{position}, _size{size}, _angle{angle} {}
+DrawTrain::DrawTrain(Vector position, Vector size, Vector direction)
+	: _position{position}, _size{size}, _direction{direction.normalise()} {}
 
 void DrawTrain::draw() {
-	DrawRectanglePro({_position.x, _position.y, 30, 70}, {0,0}, _angle, RED);
+	Vector position  = _position - (_direction.orthogonal() * _size.x / 2) + (_direction * _size.y / 2);
+	DrawRectanglePro({position.x, position.y, _size.x, _size.y}, {0,0}, _direction.angle(), RED);
+	/* DrawCircleV(_position.to_Vector2(), 10, BLUE); // Draw "position" point */
+	/* DrawCircleV(position.to_Vector2(), 10, GREEN); // Draw start of the draw point */ 
 }
