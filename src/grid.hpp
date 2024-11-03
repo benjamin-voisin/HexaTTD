@@ -28,7 +28,9 @@ class Grid {
 
 		Tile* tile_from_hex(Hex hex);
 		void add_rail(Hex tile, int src_side, int dst_side, int width);
-		void add_train(std::vector<int> path);
+		void add_train(Train train);
+
+		Rail get_rail(int track_id);
 
 		void update();
 

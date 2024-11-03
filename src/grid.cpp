@@ -27,7 +27,7 @@ void Grid::draw() {
 		rails[i].draw(*this->layout, ColorFromHSV(r_class*80, 0.7f, 0.5f));
 	}
 	for (long unsigned i=0; i<trains.size(); i++) {
-		trains[i].draw(*layout);
+		trains[i].draw(*layout, rails);
 	}
 }
 
@@ -96,16 +96,16 @@ void Grid::add_rail(Hex hex, int src_side, int dst_side, int width) {
 	rails.push_back(Rail(hex, src_side, dst_side, width));
 }
 
-void Grid::add_train(std::vector<int> path) {
-	std::vector<Rail*> rail_path;
-	for (auto i=0; i < path.size(); i++) {
-		rail_path.push_back(&rails[path[i]]);
-	}
-	trains.push_back(Train(rail_path));
+void Grid::add_train(Train train) {
+	trains.push_back(train);
+}
+
+Rail Grid::get_rail(int track_id) {
+	return rails[track_id];
 }
 
 void Grid::update() {
 	for (long unsigned i=0; i<trains.size(); i++) {
-		trains[i].update();
+		trains[i].update(rails);
 	}
 }
