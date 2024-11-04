@@ -27,7 +27,7 @@ void Train::draw(Layout layout, std::vector<Rail> rails) {
 void Train::update(std::vector<Rail> rails) {
 	_progression += 0.01 * _direction;
 	if (_progression > 1.f || _progression < 0.f) {
-		if (_position < _path.size() - 1) {
+		if ((long unsigned int) _position < _path.size() - 1) {
 			int new_src_dir;
 			if (_direction == 1) {
 				// Dans ce cas,  le tain à traversé le dernier rail de la source vers la destination
