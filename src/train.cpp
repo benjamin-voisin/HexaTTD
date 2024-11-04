@@ -14,7 +14,7 @@ Train::Train(std::vector<int> path) :
 		_direction = 1;
 		_current_speed = 0;
 		_max_speed = 100;
-		_progression = 0.5f;
+		_progression = 0.f;
 }
 
 void Train::draw(Layout layout, std::vector<Rail> rails) {
@@ -25,7 +25,7 @@ void Train::draw(Layout layout, std::vector<Rail> rails) {
 }
 
 void Train::update(std::vector<Rail> rails) {
-	_progression += 0.0 * _direction;
+	_progression += 0.01 * _direction;
 	if (_progression > 1.f || _progression < 0.f) {
 		if (_position < _path.size() - 1) {
 			int new_src_dir;
