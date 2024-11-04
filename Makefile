@@ -3,8 +3,8 @@ VPATH = ./src:./src/track_graph:./src/graphics/
 RAYLIB_DIR = ./raylib/src/
 
 CXXBASEFLAGS = -Wall -Wextra
-DEBUGFLAGS = -g -fsanitize=address -fsanitize=leak
-RELEASEFLAGS = -flto -O3
+DEBUGFLAGS = -g3 -fsanitize=address
+RELEASEFLAGS = -flto -O3 -DNDEBUG
 
 MODE ?= DEBUG# Default is Debug, any other value will build for release
 
