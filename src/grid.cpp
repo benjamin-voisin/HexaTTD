@@ -3,6 +3,7 @@
 
 #include <math.h>
 #include <assert.h>
+#include <memory>
 
 Grid::Grid(Orientation orientation, Vector2 size, Vector2 origin, int q_min, int q_max, int r_min, int r_max) :
 	q_min{q_min}, q_max{q_max}, r_min{r_min}, r_max{r_max}
@@ -25,6 +26,9 @@ void Grid::draw() {
 	for (long unsigned i=0; i<rails.size(); ++i) {
 		int r_class = graph.get_class(i);
 		rails[i].draw(*this->layout, ColorFromHSV(((float) r_class/ (float) n_classes)*360, 0.7f, 0.5f));
+	}
+	for (long unsigned i=0; i<trains.size(); i++) {
+		trains[i].draw(*layout, rails);
 	}
 }
 
@@ -91,4 +95,18 @@ void Grid::add_rail(Hex hex, int src_side, int dst_side, int width) {
 	
 	assert(rails.size() == (long unsigned) track_id);
 	rails.push_back(Rail(hex, src_side, dst_side, width));
+}
+
+void Grid::add_train(Train train) {
+	trains.push_back(train);
+}
+
+Rail Grid::get_rail(int track_id) {
+	return rails[track_id];
+}
+
+void Grid::update() {
+	for (long unsigned i=0; i<trains.size(); i++) {
+		trains[i].update(rails);
+	}
 }

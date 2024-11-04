@@ -11,6 +11,7 @@ class Vector {
         float y;
         Vector(Vector2 v);
         Vector(float x, float y);
+		Vector(float angle); // Build a normalized vector from an angle in rad
 
         friend bool operator == (Vector a, Vector b);
 		friend bool operator != (Vector a, Vector b);
@@ -26,4 +27,5 @@ class Vector {
         Vector orthogonal();
         Vector proj(Vector a);
         Vector2 to_Vector2();
+		float angle();
 };

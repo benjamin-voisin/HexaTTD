@@ -5,6 +5,7 @@
 #include "grid.hpp"
 #include "rail.hpp"
 #include "vector.hpp"
+#include "train.hpp"
 
 #define WHEEL_FACTOR 5
 const char dotfile[20] = "graph.dot" ;
@@ -25,8 +26,9 @@ int main() {
 			-10, 10, -10, 10);
 
 	grid1.add_rail(Hex(0,0), 1, 5, 5);
-	grid1.add_rail(Hex(1,-1), 2, 4, 5);
-	grid1.add_rail(Hex(1,0), 1, 4, 5);
+	grid1.add_rail(Hex(1,-1), 2, 5, 5);
+	grid1.add_rail(Hex(1,-1) + Hex(1,-1), 2, 0, 5);
+	grid1.add_train(Train({0,1,2}));
 
 	Hex last_cursor =     grid1.xy_to_hex(GetMouseX(), GetMouseY());
 	Hex last_cursor_pers =     grid1.xy_to_hex(GetMouseX(), GetMouseY());
@@ -36,6 +38,7 @@ int main() {
 	SetTargetFPS(60);
 
 	while(!WindowShouldClose()) {
+		grid1.update();
 		Hex under_cursor = grid1.xy_to_hex(GetMouseX(), GetMouseY());
 		if (under_cursor != last_cursor)
 			last_cursor_pers = last_cursor;
