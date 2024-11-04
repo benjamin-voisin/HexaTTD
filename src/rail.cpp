@@ -174,3 +174,11 @@ void Rail::draw(Layout layout, Color c) {
 	} */
 	
 }
+
+int Rail::get_src_neighbor() {
+	return _src_neighbor;
+}
+
+int Rail::get_dst_neighbor() {
+	return _dst_neighbor;
+}

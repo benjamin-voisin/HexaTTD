@@ -17,6 +17,9 @@ class Rail {
 	public:
 		Hex get_hex();
 		Rail(Hex tile, int src_side, int dst_side, int width);
+
+		int get_src_neighbor();
+		int get_dst_neighbor();
 		
 		void draw(Layout layout, Color c);
 		train_pos get_position(Layout layout, float progression);

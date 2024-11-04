@@ -8,6 +8,7 @@ class Train {
 		int _position;
 		std::vector<int> _path;
 		std::shared_ptr<Texture2D> _sprite;
+		int _direction;
 		float _orientation;
 		float _current_speed;
 		float _max_speed;
