@@ -39,16 +39,13 @@ void Train::next_rail(Graph graph, std::vector<Rail> rails) {
 
 	if (neighbor.size() > 0) {
 		_rail_id = neighbor[std::rand() % neighbor.size()];
-		printf("next rail = %d\n", _rail_id);
 		if (new_src_dir == rails[_rail_id].get_src_neighbor()) {
 			// Dans ce cas, on vas maintenant aller de la source à la destination
-			printf("dir=destination\n");
 			_progression = 0.f;
 			_direction = 1;
 		} else {
 			assert(new_src_dir == rails[_rail_id].get_dst_neighbor());
 			// Dans ce cas, on vas alors aller de la destination vers la source
-			printf("dir=source\n");
 			_progression = 1.f;
 			_direction = -1;
 		}
