@@ -8,7 +8,9 @@ std::vector<int> Tile::get_rails(int direction) {
     assert((0 <= direction) && (direction < 6));
     return this->neighbor_tracks[direction];
 }
-
+std::vector<int> Tile::get_rails_on_tile() {
+    return this->on_tile_tracks;
+}
 void Tile::add_rail(int direction, int id_rail) {
     assert((0 <= direction) && (direction < 6));
     this->neighbor_tracks[direction].push_back(id_rail);

@@ -4,19 +4,28 @@
 #define DISCRETISATION 100
 #endif
 
-#define GAUGE_FACTOR 100
-#define N_TRAVERSES 20
 #define MAX(a, b) ((a)>(b)? (a) : (b))
 
 #include <stdio.h>
 
+DSPTrack::DSPTrack(Color color, float gauge) : 
+    color{color}, gauge{gauge} {};
+
+float DSPTrack::get_display_gauge(Layout layout) {
+    return gauge * (layout.size.x / GAUGE_FACTOR);
+}
+int DSPTrack::get_delta(Layout layout) {
+    return layout.size.x / 20;
+}
+
 ArcTrack::ArcTrack(Color color, Vector center, float radius, float gauge, float angle_min, float angle_max) : 
-    color{color}, center{center}, radius{radius}, gauge{gauge},
+    DSPTrack(color, gauge),
+    center{center}, radius{radius},
     angle_min{angle_min}, angle_max{angle_max} {}
 
 void ArcTrack::draw(Layout layout) {
-	auto display_gauge = gauge * (layout.size.x / GAUGE_FACTOR);
-    int delta = layout.size.x / 20;
+	float display_gauge = get_display_gauge(layout);
+    int delta = get_delta(layout);
 
     if (layout.size.x > 100) {
         for (float i=0; i<N_TRAVERSES; ++i) {
@@ -39,11 +48,13 @@ void ArcTrack::draw(Layout layout) {
 }
 
 StraighTrack::StraighTrack(Color color, Vector src, Vector dst, float gauge)
-    : color{color}, src{src}, dst{dst}, gauge{gauge} {};
+    : DSPTrack(color, gauge),
+    src{src}, dst{dst} {};
 
 void StraighTrack::draw(Layout layout) {
-    auto display_gauge = gauge * (layout.size.x / GAUGE_FACTOR);
-    int delta = layout.size.x / 20;
+    float display_gauge = get_display_gauge(layout);
+    int delta = get_delta(layout);
+    
     Vector ortho = (dst-src).orthogonal().normalise();
     int delta_traverses = layout.size.x / 40;
     if (layout.size.x > 100) {
@@ -65,7 +76,6 @@ void StraighTrack::draw(Layout layout) {
 	float rail_angle = (debut1-fin1).angle();
 	DrawRectanglePro({debut1.x, debut1.y, rail_delta, layout.size.x*sqrt(3.f)}, {0,0}, rail_angle, BLACK);
 	Vector debut2 = src-(ortho*(display_gauge/2 - rail_delta/2.f));
-	Vector fin2 = dst-(ortho*(display_gauge/2 - rail_delta/2.f));
 	DrawRectanglePro({debut2.x, debut2.y, rail_delta, layout.size.x*sqrt(3.f)}, {0,0}, rail_angle, BLACK);
    
 }
