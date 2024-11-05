@@ -14,6 +14,15 @@ float max(float a, float b) {
 	return (a > b) ? a : b;
 }
 
+void pp_int_vector(FILE* f, std::vector<int> v) {
+	fprintf(f, "[");
+	for (long unsigned i=0; i<v.size(); ++i) {
+		if (i > 0)
+			fprintf(f, ", ");
+		fprintf(f, "%d", v[i]);
+	}
+	fprintf(f, "]\n");
+}
 
 int main() {
 	char* texte = (char*) malloc(1000 * sizeof(char));
@@ -41,6 +50,8 @@ int main() {
 	while(!WindowShouldClose()) {
 		grid1.update();
 		Hex under_cursor = grid1.xy_to_hex(GetMouseX(), GetMouseY());
+		
+
 		if (under_cursor != last_cursor)
 			last_cursor_pers = last_cursor;
 		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
@@ -107,9 +118,24 @@ int main() {
 		grid1.hightlight(last_cursor_pers, BLUE);
 		grid1.hightlight(start_construct, BLACK);
 
+		Vector pos = {(float) GetMouseX(), (float) GetMouseY()};
 		
 		FILE* f = fmemopen(texte, 1000, "w");
 		Tile* t = grid1.tile_from_hex(under_cursor);
+		std::vector<int> on_tile_tracks = t->get_rails_on_tile();
+		std::vector<int> selected_rails = {};
+		for (long unsigned i=0; i<on_tile_tracks.size(); ++i) {
+			Rail r = grid1.get_rail(on_tile_tracks[i]);
+			if (r.is_on_track(*grid1.layout, pos)) {
+				selected_rails.push_back(on_tile_tracks[i]);
+			}
+		}
+		for (long unsigned i=0; i<selected_rails.size(); ++i) {
+			Rail r = grid1.get_rail(selected_rails[i]);
+			r.draw(*grid1.layout, ORANGE);
+		}
+		fprintf(f, "selected_rails= ");
+		pp_int_vector(f, selected_rails);
 		fprintf(f, "layout.x=%.2f\n", grid1.layout->size.x);
 		t->pp(f);
 		fclose(f);

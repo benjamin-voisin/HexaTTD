@@ -13,5 +13,6 @@ class Tile {
         std::vector<int> get_rails(int direction);
         void add_rail(int direction, int id_rail);
         void add_on_tile_track(int id_rail);
+        std::vector<int> get_rails_on_tile();
         void pp(FILE* f);
 };

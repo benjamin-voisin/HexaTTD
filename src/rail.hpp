@@ -23,4 +23,5 @@ class Rail {
 		
 		void draw(Layout layout, Color c);
 		train_pos get_position(Layout layout, float progression);
+		bool is_on_track(Layout layout, Vector v);
 };
