@@ -5,6 +5,7 @@
 #endif
 
 #define GAUGE_FACTOR 100
+#define N_TRAVERSES 20
 
 #include <stdio.h>
 
@@ -17,13 +18,13 @@ void ArcTrack::draw(Layout layout) {
     int delta = layout.size.x / 20;
 
     if (layout.size.x > 100) {
-        for (float i=0; i<30; ++i) {
-            float angle = (i / 30) * (angle_max - angle_min) + angle_min;
+        for (float i=0; i<N_TRAVERSES; ++i) {
+            float angle = (i / N_TRAVERSES) * (angle_max - angle_min) + angle_min;
             DrawRing(center.to_Vector2(), radius-display_gauge/2-delta, radius+display_gauge/2+delta, angle, angle+1, 1, color);
         }
     } else if (layout.size.x > 40) {
-        for (float i=0; i<=30; ++i) {
-            float angle = (i / 30) * (angle_max - angle_min) + angle_min;
+        for (float i=0; i<=N_TRAVERSES; ++i) {
+            float angle = (i / N_TRAVERSES) * (angle_max - angle_min) + angle_min;
             Vector v1 = Vector{center.x + cosf(DEG2RAD*angle)*(radius+display_gauge/2+delta), center.y + sinf(DEG2RAD*angle)*(radius+display_gauge/2+delta)};
             Vector v2 = Vector{center.x + cosf(DEG2RAD*angle)*(radius-display_gauge/2-delta), center.y + sinf(DEG2RAD*angle)*(radius-display_gauge/2-delta)};
             DrawLineEx(v1.to_Vector2(), v2.to_Vector2(), 2, color);
@@ -44,13 +45,13 @@ void StraighTrack::draw(Layout layout) {
     Vector ortho = (dst-src).orthogonal().normalise();
     int delta_traverses = layout.size.x / 40;
     if (layout.size.x > 100) {
-        for (float i=0; i<=30; ++i) {
-            Vector v = (dst - src) * (i / 30) + src; 
+        for (float i=0; i <=N_TRAVERSES; ++i) {
+            Vector v = (dst - src) * (i / N_TRAVERSES) + src; 
             DrawLineEx((v + ortho * (display_gauge / 2 + delta)).to_Vector2(), (v - ortho * (display_gauge / 2 + delta)).to_Vector2(), delta_traverses, color);
         }
     } else if (layout.size.x > 40) {
-        for (float i=0; i<=30; ++i) {
-            Vector v = (dst - src) * (i / 30) + src; 
+        for (float i=0; i<=N_TRAVERSES; ++i) {
+            Vector v = (dst - src) * (i / N_TRAVERSES) + src; 
             DrawLineEx((v + ortho * (display_gauge / 2 + delta)).to_Vector2(), (v - ortho * (display_gauge / 2 + delta)).to_Vector2(), 2, color);
         }
     } else {
