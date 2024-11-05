@@ -6,6 +6,7 @@
 
 #define GAUGE_FACTOR 100
 #define N_TRAVERSES 20
+#define MAX(a, b) ((a)>(b)? (a) : (b))
 
 #include <stdio.h>
 
@@ -32,8 +33,9 @@ void ArcTrack::draw(Layout layout) {
     } else {
         DrawRing(center.to_Vector2(), radius-display_gauge/2-delta, radius+display_gauge/2+delta, angle_min, angle_max, 30, color);
     }
-    DrawCircleSectorLines(center.to_Vector2(), radius+display_gauge/2, angle_min, angle_max, DISCRETISATION, BLACK);
-    DrawCircleSectorLines(center.to_Vector2(), radius-display_gauge/2, angle_min, angle_max, DISCRETISATION, BLACK);
+	float rail_delta = MAX(delta / 5.f, 1.f);
+	DrawRing(center.to_Vector2(), (radius-display_gauge/2)-rail_delta, (radius-display_gauge/2)+rail_delta, angle_min, angle_max, DISCRETISATION, BLACK);
+	DrawRing(center.to_Vector2(), (radius+display_gauge/2)-rail_delta, (radius+display_gauge/2)+rail_delta, angle_min, angle_max, DISCRETISATION, BLACK);
 }
 
 StraighTrack::StraighTrack(Color color, Vector src, Vector dst, float gauge)
@@ -57,7 +59,13 @@ void StraighTrack::draw(Layout layout) {
     } else {
         DrawLineEx(src.to_Vector2(), dst.to_Vector2(), display_gauge+2*delta, color);
     }
-    DrawLineV((src+ortho*display_gauge/2).to_Vector2(), (dst+ortho*display_gauge/2).to_Vector2(), BLACK);
-    DrawLineV((src-ortho*display_gauge/2).to_Vector2(), (dst-ortho*display_gauge/2).to_Vector2(), BLACK);
+	float rail_delta = MAX((float)delta / 2.5f, 1.f);
+	Vector debut1 = src+(ortho*(display_gauge/2 + rail_delta/2.f));
+	Vector fin1 = dst+(ortho*(display_gauge/2 + rail_delta/2.f));
+	float rail_angle = (debut1-fin1).angle();
+	DrawRectanglePro({debut1.x, debut1.y, rail_delta, layout.size.x*sqrt(3.f)}, {0,0}, rail_angle, BLACK);
+	Vector debut2 = src-(ortho*(display_gauge/2 - rail_delta/2.f));
+	Vector fin2 = dst-(ortho*(display_gauge/2 - rail_delta/2.f));
+	DrawRectanglePro({debut2.x, debut2.y, rail_delta, layout.size.x*sqrt(3.f)}, {0,0}, rail_angle, BLACK);
    
 }
