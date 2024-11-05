@@ -28,7 +28,7 @@ void Grid::draw() {
 		rails[i].draw(*this->layout, ColorFromHSV(((float) r_class/ (float) n_classes)*360, 0.7f, 0.5f));
 	}
 	for (long unsigned i=0; i<trains.size(); i++) {
-		trains[i].draw(*layout, rails);
+		trains[i]->draw(*layout, rails);
 	}
 }
 
@@ -77,27 +77,25 @@ Tile* Grid::tile_from_hex(Hex hex) {
 }
 
 void Grid::add_rail(Hex hex, int src_side, int dst_side, int width) {
-	Tile* src_neighbor = tile_from_hex(hex.neighbor(src_side));
-	Tile* tile = tile_from_hex(hex);
-	Tile* dst_neighbor = tile_from_hex(hex.neighbor(dst_side));
-
-	std::vector<int> src_edges = tile->get_rails(src_side);
-	std::vector<int> dst_edges = tile->get_rails(dst_side);
-		 	
-	std::vector<int> edges = {};
-	edges.insert(edges.end(), src_edges.begin(), src_edges.end());
-	edges.insert(edges.end(), dst_edges.begin(), dst_edges.end());
-	
-	int track_id = graph.add(edges);
-	tile->add_on_tile_track(track_id);
-	src_neighbor->add_rail(Hex::opposite_direction(src_side), track_id);
-	dst_neighbor->add_rail(Hex::opposite_direction(dst_side), track_id);
-	
-	assert(rails.size() == (long unsigned) track_id);
 	rails.push_back(Rail(hex, src_side, dst_side, width));
-}
+	Rail r = rails[rails.size()-1];
+	printf("New rail %ld: src=%d dst=%d\n", rails.size()-1, r.get_src_neighbor(), r.get_dst_neighbor());
+	Tile* src_neighbor = tile_from_hex(hex.neighbor(r.get_src_neighbor()));
+	Tile* tile = tile_from_hex(hex);
+	Tile* dst_neighbor = tile_from_hex(hex.neighbor(r.get_dst_neighbor()));
 
-void Grid::add_train(Train train) {
+	std::vector<int> src_edges = tile->get_rails(r.get_src_neighbor());
+	std::vector<int> dst_edges = tile->get_rails(r.get_dst_neighbor());
+		 	
+	int track_id = graph.add(rails[rails.size()-1], rails, src_edges, dst_edges);
+	tile->add_on_tile_track(track_id);
+	src_neighbor->add_rail(Hex::opposite_direction(r.get_src_neighbor()), track_id);
+	dst_neighbor->add_rail(Hex::opposite_direction(r.get_dst_neighbor()), track_id);
+	
+	assert(rails.size()-1 == (long unsigned) track_id);
+	}
+
+void Grid::add_train(Train* train) {
 	trains.push_back(train);
 }
 
@@ -107,6 +105,6 @@ Rail Grid::get_rail(int track_id) {
 
 void Grid::update() {
 	for (long unsigned i=0; i<trains.size(); i++) {
-		trains[i].update(rails);
+		trains[i]->update(graph, rails);
 	}
 }

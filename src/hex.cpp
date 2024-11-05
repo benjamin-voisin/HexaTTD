@@ -82,7 +82,7 @@ Vector hex_directions[6] = {
 };
 
 int Hex::opposite_direction(int direction) {
-	return (direction + 3) % 6;
+	return ((direction + 3) % 6 + 6) % 6;
 }
 
 Hex hex_direction(int direction) {
