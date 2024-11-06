@@ -18,6 +18,12 @@ class TrackUF {
         int track_number();
         int add();
         void ens_union(int a, int b);
+        
+        // O(n) get the full a class
+        std::vector<int> get_class(int a);
+        // O(n) reset the full a class
+        std::vector<int> del(int a);
+        
         int find(int a);
         int classe(int a);
         int n_classe();

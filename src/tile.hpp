@@ -1,18 +1,20 @@
 #pragma once
 
-#include <vector>
+#include <set>
 #include <stdio.h>
 
 class Tile {
     protected:
-        std::vector<int> neighbor_tracks[6];
-        std::vector<int> on_tile_tracks;
+        std::set<int> neighbor_tracks[6];
+        std::set<int> on_tile_tracks;
 
     public:
         Tile();
-        std::vector<int> get_rails(int direction);
+        std::set<int> get_rails(int direction);
         void add_rail(int direction, int id_rail);
+        void del_rail(int direction, int id_rail);
         void add_on_tile_track(int id_rail);
-        std::vector<int> get_rails_on_tile();
+        void del_on_tile_track(int id_rail);
+        std::set<int> get_rails_on_tile();
         void pp(FILE* f);
 };

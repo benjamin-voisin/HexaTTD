@@ -24,8 +24,10 @@ void Grid::draw() {
 	}
 	int n_classes = graph.get_max_class();
 	for (long unsigned i=0; i<rails.size(); ++i) {
-		int r_class = graph.get_class(i);
-		rails[i].draw(*this->layout, ColorFromHSV(((float) r_class/ (float) n_classes)*360, 0.7f, 0.5f));
+		if (!rails[i].deleted) {
+			int r_class = graph.get_class(i);
+			rails[i].draw(*this->layout, ColorFromHSV(((float) r_class/ (float) n_classes)*360, 0.7f, 0.5f));
+		}
 	}
 	for (long unsigned i=0; i<trains.size(); i++) {
 		trains[i]->draw(*layout, rails);
@@ -76,6 +78,24 @@ Tile* Grid::tile_from_hex(Hex hex) {
 	return &tiles[(hex.get_q() - q_min) * (q_max - q_min) + (hex.get_r() - r_min)];
 }
 
+void Grid::del_rail(int track_id) {
+	assert((0 <= track_id) && ((long unsigned) track_id < rails.size()));
+	Rail r = rails[track_id];
+
+	Hex hex = r.get_hex();
+	Tile* src_neighbor = tile_from_hex(hex.neighbor(r.get_src_neighbor()));
+	Tile* tile = tile_from_hex(hex);
+	Tile* dst_neighbor = tile_from_hex(hex.neighbor(r.get_dst_neighbor()));
+
+	tile->del_on_tile_track(track_id);
+	src_neighbor->del_rail(Hex::opposite_direction(r.get_src_neighbor()), track_id);
+	dst_neighbor->del_rail(Hex::opposite_direction(r.get_dst_neighbor()), track_id);
+
+	rails[track_id].deleted = true;
+
+	graph.delete_rail(track_id);
+}
+
 void Grid::add_rail(Hex hex, int src_side, int dst_side, int width) {
 	rails.push_back(Rail(hex, src_side, dst_side, width));
 	Rail r = rails[rails.size()-1];
@@ -84,8 +104,8 @@ void Grid::add_rail(Hex hex, int src_side, int dst_side, int width) {
 	Tile* tile = tile_from_hex(hex);
 	Tile* dst_neighbor = tile_from_hex(hex.neighbor(r.get_dst_neighbor()));
 
-	std::vector<int> src_edges = tile->get_rails(r.get_src_neighbor());
-	std::vector<int> dst_edges = tile->get_rails(r.get_dst_neighbor());
+	std::set<int> src_edges = tile->get_rails(r.get_src_neighbor());
+	std::set<int> dst_edges = tile->get_rails(r.get_dst_neighbor());
 		 	
 	int track_id = graph.add(rails[rails.size()-1], rails, src_edges, dst_edges);
 	tile->add_on_tile_track(track_id);
@@ -93,7 +113,7 @@ void Grid::add_rail(Hex hex, int src_side, int dst_side, int width) {
 	dst_neighbor->add_rail(Hex::opposite_direction(r.get_dst_neighbor()), track_id);
 	
 	assert(rails.size()-1 == (long unsigned) track_id);
-	}
+}
 
 void Grid::add_train(Train* train) {
 	trains.push_back(train);

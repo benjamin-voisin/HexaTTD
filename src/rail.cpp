@@ -9,7 +9,7 @@
 #define GAUGE 25
 
 Rail::Rail(Hex tile, int src_side, int dst_side, int width) :
-	_hex{tile}, _width{width} {
+	_hex{tile}, _width{width}, deleted{false} {
 	int src_side_mod = src_side % 6;
 	int dst_side_mod = dst_side % 6;
 	assert(src_side_mod != dst_side_mod);

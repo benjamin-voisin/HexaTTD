@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <cstdio>
+#include <set>
 
 #include "../raylib/src/raylib.h"
 #include "grid.hpp"
@@ -122,17 +123,24 @@ int main() {
 		
 		FILE* f = fmemopen(texte, 1000, "w");
 		Tile* t = grid1.tile_from_hex(under_cursor);
-		std::vector<int> on_tile_tracks = t->get_rails_on_tile();
+		std::set<int> on_tile_tracks = t->get_rails_on_tile();
 		std::vector<int> selected_rails = {};
-		for (long unsigned i=0; i<on_tile_tracks.size(); ++i) {
-			Rail r = grid1.get_rail(on_tile_tracks[i]);
+		for (auto n = on_tile_tracks.begin(); n != on_tile_tracks.end(); ++n) {
+			Rail r = grid1.get_rail(*n);
 			if (r.is_on_track(*grid1.layout, pos)) {
-				selected_rails.push_back(on_tile_tracks[i]);
+				selected_rails.push_back(*n);
 			}
 		}
-		for (long unsigned i=0; i<selected_rails.size(); ++i) {
-			Rail r = grid1.get_rail(selected_rails[i]);
-			r.draw(*grid1.layout, ORANGE);
+		if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+			for (long unsigned i=0; i<selected_rails.size(); ++i) {
+				grid1.del_rail(selected_rails[i]);
+			}
+		} else {
+			for (long unsigned i=0; i<selected_rails.size(); ++i) {
+				Rail r = grid1.get_rail(selected_rails[i]);
+				if (!r.deleted)
+					r.draw(*grid1.layout, ORANGE);
+			}
 		}
 		fprintf(f, "selected_rails= ");
 		pp_int_vector(f, selected_rails);

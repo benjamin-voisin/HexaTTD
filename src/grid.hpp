@@ -31,7 +31,8 @@ class Grid {
 		void add_train(Train* train);
 
 		Rail get_rail(int track_id);
-
+		void del_rail(int rail_id);
+	
 		void update();
 
 		~Grid();

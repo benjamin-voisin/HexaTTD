@@ -24,7 +24,7 @@ void Train::draw(Layout layout, std::vector<Rail> rails) {
 }
 
 void Train::next_rail(Graph graph, std::vector<Rail> rails) {
-	std::vector<int> neighbor;
+	std::set<int> neighbor;
 	int new_src_dir;
 	if (_direction == 1) {
 		// Dans ce cas,  le tain à traversé le dernier rail de la source vers la destination
@@ -38,7 +38,7 @@ void Train::next_rail(Graph graph, std::vector<Rail> rails) {
 	}
 
 	if (neighbor.size() > 0) {
-		_rail_id = neighbor[std::rand() % neighbor.size()];
+		_rail_id = *(std::next(neighbor.begin(), rand() % neighbor.size()));
 		if (new_src_dir == rails[_rail_id].get_src_neighbor()) {
 			// Dans ce cas, on vas maintenant aller de la source à la destination
 			_progression = 0.f;

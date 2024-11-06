@@ -31,7 +31,28 @@ int TrackUF::classe(int a) {
     return classes[id];
 }
 
+std::vector<int> TrackUF::get_class(int a) {
+    int classe_a = find(a);
+    std::vector<int> member_classe_a = {};
+    for (auto i=0; i<parent.size(); ++i)
+        if ((parent[i] != -1) && (find(parent[i]) == classe_a))
+            member_classe_a.push_back(i);
+    return member_classe_a;
+}
+
+std::vector<int> TrackUF::del(int a) {
+    int classe_a = find(a);
+    std::vector<int> member_classe_a = get_class(a);
+    for (auto i=0; i<member_classe_a.size(); ++i)
+        parent[member_classe_a[i]] = member_classe_a[i];
+    parent[a] = -1;
+    if (member_classe_a.size() == 1)
+        --n_classes;
+    return member_classe_a;
+}
+
 int TrackUF::find(int node) {
+    assert(node != -1);
     assert((long unsigned) node < parent.size());
     if (node == parent[node])
         return node;
