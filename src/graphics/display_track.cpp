@@ -25,6 +25,8 @@ ArcTrack::ArcTrack(Color color, Vector center, float radius, float gauge, float 
     angle_min{angle_min}, angle_max{angle_max} {}
 
 void ArcTrack::draw_base(Layout layout) {
+	float display_gauge = get_display_gauge(layout) * 1.5f;
+	DrawRing(center.to_Vector2(), (radius-display_gauge/2), (radius+display_gauge/2), angle_min, angle_max, DISCRETISATION, GRAY);
 }
 
 void ArcTrack::draw_traverse(Layout layout) {
@@ -93,6 +95,14 @@ StraighTrack::StraighTrack(Color color, Vector src, Vector dst, float gauge)
     src{src}, dst{dst} {};
 
 void StraighTrack::draw_base(Layout layout) {
+    float display_gauge = get_display_gauge(layout) * 1.5f;
+    Vector ortho = (dst-src).orthogonal().normalise();
+
+	Vector debut1 = src+(ortho*(display_gauge/2));
+	Vector fin1 = dst+(ortho*(display_gauge/2));
+	float rail_angle = (debut1-fin1).angle();
+	DrawRectanglePro({debut1.x, debut1.y, display_gauge, layout.size.x*sqrt(3.f)}, {0,0}, rail_angle, GRAY);
+
 }
 
 void StraighTrack::draw_traverse(Layout layout) {
