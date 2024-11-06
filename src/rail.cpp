@@ -56,14 +56,15 @@ train_pos Rail::get_position(Layout layout, float progression) {
 }
 
 bool Rail::is_on_track(Layout layout, Vector v) {
+	auto display_gauge = GAUGE * (layout.size.x / GAUGE_FACTOR);
+	int delta = layout.size.x / 20;	
 	if (_src_neighbor + 3 == _dst_neighbor) {
 		// The rail is a straight line
 		Vector src = _hex.center_side(layout, _src_neighbor);
 		Vector dst = _hex.center_side(layout, _dst_neighbor);
-		Vector dir = (dst - src).orthogonal().normalise();
-		Vector pr = dir.proj(v);
-		printf("straith dist norm = %f\n", pr.norme());
-		return pr.norme() < 20;
+		Vector dir = (dst - src).orthogonal();
+		Vector pr = dir.proj(v - src);
+		return pr.norme() < display_gauge/2+delta;
 	} else {
 		Vector center = {0, 0};
 		if (_dst_neighbor == _src_neighbor + 2) {
@@ -71,8 +72,6 @@ bool Rail::is_on_track(Layout layout, Vector v) {
 		} else {
 			center = _hex.neighbor(_src_neighbor-1).center(layout);
 		}
-		auto display_gauge = GAUGE * (layout.size.x / GAUGE_FACTOR);
-		int delta = layout.size.x / 20;
 		Vector dist = v - center;
 		float norm = dist.norme();
 		return (norm > layout.size.x*1.5f-display_gauge/2-delta) && (norm < layout.size.x*1.5f+display_gauge/2+delta);
