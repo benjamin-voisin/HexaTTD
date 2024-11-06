@@ -1,6 +1,7 @@
 #include "track_union_find.hpp"
 
 #include <assert.h>
+#include <stdio.h>
 
 TrackUF::TrackUF() {
 	n_current_classes = 0;
@@ -38,21 +39,26 @@ int TrackUF::classe(int a) {
 std::vector<int> TrackUF::get_class(int a) {
     int classe_a = find(a);
     std::vector<int> member_classe_a = {};
-    for (auto i=0; i<parent.size(); ++i)
-        if ((parent[i] != -1) && (find(parent[i]) == classe_a))
+    for (long unsigned i=0; i<parent.size(); ++i)
+        if ((parent[i] != -1) && (find(i) == classe_a))
             member_classe_a.push_back(i);
     return member_classe_a;
 }
 
 std::vector<int> TrackUF::del(int a) {
     int classe_a = find(a);
-    std::vector<int> member_classe_a = get_class(a);
-    for (auto i=0; i<member_classe_a.size(); ++i)
+    std::vector<int> member_classe_a = get_class(classe_a);
+    for (long unsigned i=0; i<member_classe_a.size(); ++i)
         parent[member_classe_a[i]] = member_classe_a[i];
     parent[a] = -1;
-    version += 1;
+    n_current_classes = 0;
+    ++version;
     // Not adding a real class but a possible one
-    n_classes += 1;
+    printf("%ld\n", member_classe_a.size());
+    if (member_classe_a.size() == 1)
+        --n_classes;
+    if (member_classe_a.size() > 2)
+        ++n_classes;
     return member_classe_a;
 }
 
