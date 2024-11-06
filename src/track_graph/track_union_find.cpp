@@ -48,17 +48,12 @@ std::vector<int> TrackUF::get_class(int a) {
 std::vector<int> TrackUF::del(int a) {
     int classe_a = find(a);
     std::vector<int> member_classe_a = get_class(classe_a);
-    for (long unsigned i=0; i<member_classe_a.size(); ++i)
-        parent[member_classe_a[i]] = member_classe_a[i];
-    parent[a] = -1;
-    n_current_classes = 0;
-    ++version;
-    // Not adding a real class but a possible one
-    printf("%ld\n", member_classe_a.size());
-    if (member_classe_a.size() == 1)
-        --n_classes;
-    if (member_classe_a.size() > 2)
+    for (long unsigned i=0; i<member_classe_a.size(); ++i) {
         ++n_classes;
+        parent[member_classe_a[i]] = member_classe_a[i];
+    }
+    parent[a] = -1;
+    n_classes -= 2;
     return member_classe_a;
 }
 
