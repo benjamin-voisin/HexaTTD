@@ -132,7 +132,7 @@ int main() {
 		}
 		for (long unsigned i=0; i<selected_rails.size(); ++i) {
 			Rail r = grid1.get_rail(selected_rails[i]);
-			r.draw(*grid1.layout, ORANGE);
+			r.draw(*grid1.layout, ORANGE, 1);
 		}
 		fprintf(f, "selected_rails= ");
 		pp_int_vector(f, selected_rails);
