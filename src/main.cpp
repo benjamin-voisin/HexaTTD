@@ -131,9 +131,6 @@ int main() {
 				selected_rails.push_back(*n);
 			}
 		}
-		for (long unsigned i=0; i<selected_rails.size(); ++i) {
-			Rail r = grid1.get_rail(selected_rails[i]);
-			r.draw(*grid1.layout, ORANGE, 1);
 		if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
 			for (long unsigned i=0; i<selected_rails.size(); ++i) {
 				grid1.del_rail(selected_rails[i]);
@@ -142,7 +139,7 @@ int main() {
 			for (long unsigned i=0; i<selected_rails.size(); ++i) {
 				Rail r = grid1.get_rail(selected_rails[i]);
 				if (!r.deleted)
-					r.draw(*grid1.layout, ORANGE);
+					r.draw(*grid1.layout, ORANGE, 1);
 			}
 		}
 		fprintf(f, "selected_rails= ");

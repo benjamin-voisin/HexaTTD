@@ -27,7 +27,7 @@ void Grid::draw() {
 		for (long unsigned i=0; i<rails.size(); ++i) {
 			if (!rails[i].deleted) {
 				int r_class = graph.get_class(i);
-				rails[i].draw(*this->layout, ColorFromHSV(((float) r_class/ (float) n_classes)*360, 0.7f, 0.5f, phase));
+				rails[i].draw(*this->layout, ColorFromHSV(((float) r_class/ (float) n_classes)*360, 0.7f, 0.5f), phase);
 			}
 		}
 	}
