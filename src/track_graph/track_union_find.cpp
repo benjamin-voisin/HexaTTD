@@ -2,7 +2,11 @@
 
 #include <assert.h>
 
-TrackUF::TrackUF() {};
+TrackUF::TrackUF() {
+	n_current_classes = 0;
+	n_classes = 0;
+	version = 0;
+};
 
 int TrackUF::track_number() {
     return parent.size();
