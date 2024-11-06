@@ -21,7 +21,9 @@ class Rail {
 		int get_src_neighbor();
 		int get_dst_neighbor();
 		
+		void draw(Layout layout, Color c, int phase);
 		void draw(Layout layout, Color c);
 		train_pos get_position(Layout layout, float progression);
 		bool is_on_track(Layout layout, Vector v);
+		static int number_phases();
 };

@@ -23,9 +23,11 @@ void Grid::draw() {
 		}
 	}
 	int n_classes = graph.get_max_class();
-	for (long unsigned i=0; i<rails.size(); ++i) {
-		int r_class = graph.get_class(i);
-		rails[i].draw(*this->layout, ColorFromHSV(((float) r_class/ (float) n_classes)*360, 0.7f, 0.5f));
+	for (int phase = 0; phase < Rail::number_phases(); phase++) {
+		for (long unsigned i=0; i<rails.size(); ++i) {
+			int r_class = graph.get_class(i);
+			rails[i].draw(*this->layout, ColorFromHSV(((float) r_class/ (float) n_classes)*360, 0.7f, 0.5f), phase);
+		}
 	}
 	for (long unsigned i=0; i<trains.size(); i++) {
 		trains[i]->draw(*layout, rails);
