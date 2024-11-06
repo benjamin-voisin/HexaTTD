@@ -50,6 +50,9 @@ std::vector<int> TrackUF::del(int a) {
     for (auto i=0; i<member_classe_a.size(); ++i)
         parent[member_classe_a[i]] = member_classe_a[i];
     parent[a] = -1;
+    version += 1;
+    // Not adding a real class but a possible one
+    n_classes += 1;
     return member_classe_a;
 }
 
