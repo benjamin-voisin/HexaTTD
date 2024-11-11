@@ -13,6 +13,9 @@ Grid::Grid(Orientation orientation, Vector2 size, Vector2 origin, int q_min, int
 
 Grid::~Grid() {
 	delete layout;
+	for (unsigned long i = 0; i < trains.size(); i++) {
+		delete trains[i];
+	}
 }
 
 

@@ -23,6 +23,7 @@ class Train {
 		void draw(Layout layout, std::vector<Rail>);
 		Train(int track_id);
 		virtual void update(Graph graph, std::vector<Rail> rails);
+		virtual ~Train();
 };
 
 class ItineraryTrain : public Train {
@@ -33,4 +34,5 @@ class ItineraryTrain : public Train {
 	
 	public:
 		ItineraryTrain(std::vector<int> path);
+		virtual ~ItineraryTrain();
 };

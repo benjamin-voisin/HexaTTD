@@ -16,6 +16,8 @@ Train::Train(int track_id) {
 	_direction = 1;
 }
 
+Train::~Train() { }
+
 void Train::draw(Layout layout, std::vector<Rail> rails) {
 	// First put the train in the center of the tile
 	auto position = rails[_rail_id].get_position(layout, _progression);
@@ -64,6 +66,8 @@ void Train::update(Graph graph, std::vector<Rail> rails) {
 ItineraryTrain::ItineraryTrain(std::vector<int> path) :
 	Train(path[0]), _path{path}, _position{0}
 	{ assert(path.size() > 0); }
+
+ItineraryTrain::~ItineraryTrain() {}
 
 void ItineraryTrain::next_rail(__attribute__((unused)) Graph graph, std::vector<Rail> rails) {
 	if ((long unsigned) _position < _path.size() - 1) {
