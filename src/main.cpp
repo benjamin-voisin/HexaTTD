@@ -41,6 +41,8 @@ int main() {
 	grid1.add_train(new ItineraryTrain({0,1,2}));
 	grid1.add_train(new Train(0));
 
+	grid1.add_station(0, "Test");
+
 	Hex last_cursor =     grid1.xy_to_hex(GetMouseX(), GetMouseY());
 	Hex last_cursor_pers =     grid1.xy_to_hex(GetMouseX(), GetMouseY());
 	

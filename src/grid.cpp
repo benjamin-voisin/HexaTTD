@@ -34,6 +34,9 @@ void Grid::draw() {
 			}
 		}
 	}
+	for (long unsigned i=0; i < stations.size(); i++) {
+		stations[i].draw(*layout);
+	}
 	for (long unsigned i=0; i<trains.size(); i++) {
 		trains[i]->draw(*layout, rails);
 	}
@@ -127,6 +130,11 @@ void Grid::add_train(Train* train) {
 Rail Grid::get_rail(int track_id) {
 	return rails[track_id];
 }
+
+void Grid::add_station(int rail_id, std::string name) {
+	stations.push_back(Station(&rails[rail_id], name));
+}
+
 
 void Grid::update() {
 	for (long unsigned i=0; i<trains.size(); i++) {

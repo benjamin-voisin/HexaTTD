@@ -7,6 +7,7 @@
 #include "track_graph/track_graph.hpp"
 #include "rail.hpp"
 #include "train.hpp"
+#include "station.hpp"
 
 class Grid {
 	private:
@@ -17,6 +18,7 @@ class Grid {
 		std::vector<Tile> tiles;
 		std::vector<Rail> rails;
 		std::vector<Train*> trains;
+		std::vector<Station> stations;
 
 	public:
 		Graph graph;
@@ -32,6 +34,8 @@ class Grid {
 
 		Rail get_rail(int track_id);
 		void del_rail(int rail_id);
+
+		void add_station(int rail_id, std::string name);
 	
 		void update();
 
