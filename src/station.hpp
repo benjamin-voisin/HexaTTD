@@ -5,9 +5,9 @@
 
 class Station {
 	private:
-		Rail *_rail;
+		int _rail_id;
 		std::string _name;
 	public:
-		Station(Rail *rail, std::string name);
-		void draw(Layout layout);
+		Station(int rail_id, std::string name);
+		void draw(Layout layout, std::vector<Rail> rails);
 };
