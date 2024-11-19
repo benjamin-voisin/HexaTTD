@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../raylib/src/raylib.h"
+#include "raylib.h"
 #include "../vector.hpp"
 
 class DrawTrain {

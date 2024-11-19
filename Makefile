@@ -1,11 +1,12 @@
 CXX = g++ --std=c++20 
 VPATH = ./src:./src/track_graph:./src/graphics/:./build
-RAYLIB_DIR = ./raylib/src/
+RAYLIB_DIR ?= ./raylib/src/
+
 
 # This allows the preprocessor to also generate the dependencies in the *.d files
 CPPFLAGS += -MP -MD
 
-CXXFLAGS = -Wall -Wextra
+CXXFLAGS = -Wall -Wextra -I$(RAYLIB_DIR)
 DEBUGFLAGS = -g3 -fsanitize=address
 RELEASEFLAGS = -flto -O3 -DNDEBUG
 
@@ -25,7 +26,7 @@ endif
 default: hexattd
 
 # for raylib
-RAYLIB_RELEASE_PATH = ../../
+RAYLIB_RELEASE_PATH = $(CURDIR)
 export CUSTOM_CFLAGS
 export RAYLIB_RELEASE_PATH
 

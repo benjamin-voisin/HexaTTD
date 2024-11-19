@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <set>
 
-#include "../raylib/src/raylib.h"
+#include "raylib.h"
 #include "grid.hpp"
 #include "rail.hpp"
 #include "vector.hpp"

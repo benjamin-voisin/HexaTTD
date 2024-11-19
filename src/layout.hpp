@@ -2,7 +2,7 @@
 
 #include <math.h>
 
-#include "../raylib/src/raylib.h"
+#include "raylib.h"
 
 class Orientation {
 	public:

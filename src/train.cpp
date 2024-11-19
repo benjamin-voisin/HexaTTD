@@ -3,7 +3,7 @@
 #include <assert.h>
 #include <stdio.h>
 
-#include "../raylib/src/raylib.h"
+#include "raylib.h"
 #include "graphics/display_train.hpp"
 #define MIN(a, b) ((a)<(b)? (a) : (b))
 

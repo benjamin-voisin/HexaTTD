@@ -1,5 +1,5 @@
 #include "rail.hpp"
-#include "../raylib/src/raylib.h"
+#include "raylib.h"
 #include "vector.hpp"
 #include "graphics/display_track.hpp"
 
