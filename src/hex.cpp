@@ -153,6 +153,23 @@ Base Hex::base_sides(Layout layout, int k) {
 	return Base{corner_angle(layout, k)};
 }
 
+bool Hex::is_visible(Layout layout, float screen_width, float screen_height) {
+	auto c = center(layout);
+	if (c.x + layout.size.x > layout.origin.x + screen_width / 2) {
+		return false;
+	}
+	if (c.x - layout.size.x < layout.origin.x - screen_width / 2) {
+		return false;
+	}
+	if (c.y + layout.size.y > layout.origin.y + screen_height / 2) {
+		return false;
+	}
+	if (c.y - layout.size.y < layout.origin.y - screen_height / 2) {
+		return false;
+	}
+	return true;
+}
+
 void Hex::draw(Layout layout, Color color) {
 	std::vector<Vector2> corners_list = corners(layout);
 	/* Vector2 fan[8]; */

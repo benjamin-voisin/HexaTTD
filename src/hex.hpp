@@ -50,6 +50,7 @@ class Hex {
 		Hex neighbor(int direction);
 		static int opposite_direction(int direction);
 		int direction();
+		bool is_visible(Layout layout, float screen_width, float screen_height);
 
 };
 
