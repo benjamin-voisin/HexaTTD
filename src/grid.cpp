@@ -6,7 +6,7 @@
 
 Grid::Grid(Orientation orientation, Vector2 size, Vector2 origin, int q_min, int q_max, int r_min, int r_max) :
 	q_min{q_min}, q_max{q_max}, r_min{r_min}, r_max{r_max}
-	, tiles((r_max - r_min) * (q_max - q_min)), layout{orientation, size, origin} {
+	, tiles((r_max - r_min) * (q_max - q_min)), layout{orientation, size, origin, GetScreenWidth(), GetScreenHeight()} {
 }
 
 Grid::~Grid() {

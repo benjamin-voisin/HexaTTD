@@ -153,18 +153,18 @@ Base Hex::base_sides(Layout layout, int k) {
 	return Base{corner_angle(layout, k)};
 }
 
-bool Hex::is_visible(Layout layout, float screen_width, float screen_height) {
+bool Hex::is_visible(Layout layout) {
 	auto c = center(layout);
-	if (c.x + layout.size.x > layout.origin.x + screen_width / 2) {
+	if (c.x - layout.size.x > layout.screen_width ) {
 		return false;
 	}
-	if (c.x - layout.size.x < layout.origin.x - screen_width / 2) {
+	if (c.x + layout.size.x < 0) {
 		return false;
 	}
-	if (c.y + layout.size.y > layout.origin.y + screen_height / 2) {
+	if (c.y - layout.size.y > layout.screen_height) {
 		return false;
 	}
-	if (c.y - layout.size.y < layout.origin.y - screen_height / 2) {
+	if (c.y + layout.size.y <  0) {
 		return false;
 	}
 	return true;

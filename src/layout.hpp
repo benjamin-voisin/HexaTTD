@@ -31,4 +31,6 @@ class Layout {
 		Orientation orientation;
 		Vector2 size;
 		Vector2 origin;
+		int screen_width;
+		int screen_height;
 };
