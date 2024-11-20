@@ -109,6 +109,7 @@ int Hex::direction() {
 	if (v == Vector(1, -1))
 		return 5;
 	assert(false);
+	return -1;
 }
 
 Vector2 raw_center(Layout layout, Vector v) {
