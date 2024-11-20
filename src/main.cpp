@@ -48,7 +48,7 @@ int main() {
 	
 	Hex start_construct = grid1.xy_to_hex(GetMouseX(), GetMouseY());
 
-	SetTargetFPS(60);
+	/* SetTargetFPS(60); */
 
 	while(!WindowShouldClose()) {
 		grid1.update();

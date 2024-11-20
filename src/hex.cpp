@@ -171,13 +171,8 @@ bool Hex::is_visible(Layout layout) {
 }
 
 void Hex::draw(Layout layout, Color color) {
-	std::vector<Vector2> corners_list = corners(layout);
-	/* Vector2 fan[8]; */
-	/* fan[0] = center(layout); */
-	/* for (int i = 1; i < 7; i++) { */
-	/* 	fan[7 - i] = corners_list[i]; */
-	/* } */
-	/* fan[7] = corners_list[0]; */
-	/* DrawTriangleFan(fan, 8, WHITE); */
-	DrawLineStrip(&corners_list[0], 7, color);
+	if (is_visible(layout)) {
+		std::vector<Vector2> corners_list = corners(layout);
+		DrawLineStrip(&corners_list[0], 7, color);
+	}
 }

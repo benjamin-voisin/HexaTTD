@@ -202,8 +202,10 @@ void Rail::draw(Layout layout, Color c, int phase) {
 }
 
 void Rail::draw(Layout layout, Color c) {
-	for (int phase = 0; phase < number_phases(); phase ++) {
-		draw(layout, c, phase);
+	if (_hex.is_visible(layout)) {
+		for (int phase = 0; phase < number_phases(); phase ++) {
+			draw(layout, c, phase);
+		}
 	}
 }
 

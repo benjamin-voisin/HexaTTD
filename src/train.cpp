@@ -20,9 +20,11 @@ Train::~Train() { }
 
 void Train::draw(Layout layout, std::vector<Rail> rails) {
 	// First put the train in the center of the tile
-	auto position = rails[_rail_id].get_position(layout, _progression);
-	DrawTrain train = DrawTrain(position.position, Vector(30, 70) * layout.size.x / 100, position.direction);
-	train.draw();
+	if (rails[_rail_id].get_hex().is_visible(layout)) {
+		auto position = rails[_rail_id].get_position(layout, _progression);
+		DrawTrain train = DrawTrain(position.position, Vector(30, 70) * layout.size.x / 100, position.direction);
+		train.draw();
+	}
 }
 
 void Train::next_rail(Graph graph, std::vector<Rail> rails) {
