@@ -6,12 +6,10 @@
 
 Grid::Grid(Orientation orientation, Vector2 size, Vector2 origin, int q_min, int q_max, int r_min, int r_max) :
 	q_min{q_min}, q_max{q_max}, r_min{r_min}, r_max{r_max}
-	, tiles((r_max - r_min) * (q_max - q_min)) {
-	this->layout = new Layout(orientation, size, origin);
+	, tiles((r_max - r_min) * (q_max - q_min)), layout{orientation, size, origin} {
 }
 
 Grid::~Grid() {
-	delete layout;
 	for (unsigned long i = 0; i < trains.size(); i++) {
 		delete trains[i];
 	}
@@ -21,7 +19,7 @@ Grid::~Grid() {
 void Grid::draw() {
 	for (int q = q_min; q <= q_max; q++) {
 		for (int r = r_min; r <= r_max; r++) {
-			Hex(q, r).draw(*layout, BLACK);
+			Hex(q, r).draw(layout, BLACK);
 		}
 	}
 	int n_classes = graph.get_max_class();
@@ -29,20 +27,20 @@ void Grid::draw() {
 		for (long unsigned i=0; i<rails.size(); ++i) {
 			if (!rails[i].deleted) {
 				int r_class = graph.get_class(i);
-				rails[i].draw(*this->layout, ColorFromHSV(((float) r_class/ (float) n_classes)*360, 0.7f, 0.5f), phase);
+				rails[i].draw(this->layout, ColorFromHSV(((float) r_class/ (float) n_classes)*360, 0.7f, 0.5f), phase);
 			}
 		}
 	}
 	for (long unsigned i=0; i < stations.size(); i++) {
-		stations[i].draw(*layout, rails);
+		stations[i].draw(layout, rails);
 	}
 	for (long unsigned i=0; i<trains.size(); i++) {
-		trains[i]->draw(*layout, rails);
+		trains[i]->draw(layout, rails);
 	}
 }
 
 void Grid::hightlight(Hex hex, Color c) {
-	hex.draw( *layout, c);
+	hex.draw( layout, c);
 }
 
 Hex round(float q, float r, float s) {
@@ -67,9 +65,9 @@ Hex round(float q, float r, float s) {
 }
 
 Hex Grid::xy_to_hex(float x, float y) {
-    const Orientation& M = layout->orientation;
-    Vector2 pt = Vector2 {(x - layout->origin.x) / layout->size.x,
-                     (y - layout->origin.y) / layout->size.y};
+    const Orientation& M = layout.orientation;
+    Vector2 pt = Vector2 {(x - layout.origin.x) / layout.size.x,
+                     (y - layout.origin.y) / layout.size.y};
     double q = M.b0 * pt.x + M.b1 * pt.y;
     double r = M.b2 * pt.x + M.b3 * pt.y;
 

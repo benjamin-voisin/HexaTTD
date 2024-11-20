@@ -22,7 +22,7 @@ class Grid {
 
 	public:
 		Graph graph;
-		Layout *layout;
+		Layout layout;
 		void draw();
 		void hightlight(Hex hex, Color c);
 		Grid(Orientation orientation, Vector2 size, Vector2 origin, int q_min, int q_max, int r_min, int r_max);

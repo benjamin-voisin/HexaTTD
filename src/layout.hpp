@@ -31,6 +31,4 @@ class Layout {
 		Orientation orientation;
 		Vector2 size;
 		Vector2 origin;
-		Layout(Orientation orientation, Vector2 size, Vector2 origin) :
-			orientation{orientation}, size{size}, origin{origin} {}
 };

@@ -64,26 +64,26 @@ int main() {
 		// Change the zoom level
 		auto wheel_move = GetMouseWheelMoveV().y;
 		auto new_size = Vector(
-			max(5, (grid1.layout->size.x + wheel_move * WHEEL_FACTOR)),
-			max(5, grid1.layout->size.y + wheel_move * WHEEL_FACTOR)
+			max(5, (grid1.layout.size.x + wheel_move * WHEEL_FACTOR)),
+			max(5, grid1.layout.size.y + wheel_move * WHEEL_FACTOR)
 		);
-		if (new_size.x != grid1.layout->size.x && new_size.y != grid1.layout->size.y) {
+		if (new_size.x != grid1.layout.size.x && new_size.y != grid1.layout.size.y) {
 			// Coordinates of the cursor :
 			Vector cursor = Vector(
-				GetMouseX() - grid1.layout->origin.x,
-				GetMouseY() - grid1.layout->origin.y
+				GetMouseX() - grid1.layout.origin.x,
+				GetMouseY() - grid1.layout.origin.y
 
 			);
 			// It’s new position after offset will be
 			Vector new_center = Vector(
-				cursor.x * (new_size.x / grid1.layout->size.x),
-				cursor.y * (new_size.x / grid1.layout->size.x)
+				cursor.x * (new_size.x / grid1.layout.size.x),
+				cursor.y * (new_size.x / grid1.layout.size.x)
 			);
 			Vector offset = new_center - cursor;
-			grid1.layout->origin.x -= offset.x;
-			grid1.layout->origin.y -= offset.y;
-			grid1.layout->size.x = new_size.x;
-			grid1.layout->size.y = new_size.y;
+			grid1.layout.origin.x -= offset.x;
+			grid1.layout.origin.y -= offset.y;
+			grid1.layout.size.x = new_size.x;
+			grid1.layout.size.y = new_size.y;
 		}
 
 		// Build rails
@@ -104,13 +104,13 @@ int main() {
 		// Move the map
 		if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
 			Vector2 delta = GetMouseDelta();
-			grid1.layout->origin.x += delta.x;
-			grid1.layout->origin.y += delta.y;
+			grid1.layout.origin.x += delta.x;
+			grid1.layout.origin.y += delta.y;
 		}
 
 
 		BeginDrawing();
-		ClearBackground(WHITE);
+		ClearBackground(DARKGREEN);
 		grid1.draw();
 		
 		
@@ -126,7 +126,7 @@ int main() {
 		std::vector<int> selected_rails = {};
 		for (auto n = on_tile_tracks.begin(); n != on_tile_tracks.end(); ++n) {
 			Rail r = grid1.get_rail(*n);
-			if (r.is_on_track(*grid1.layout, pos)) {
+			if (r.is_on_track(grid1.layout, pos)) {
 				selected_rails.push_back(*n);
 			}
 		}
@@ -138,7 +138,7 @@ int main() {
 			for (long unsigned i=0; i<selected_rails.size(); ++i) {
 				Rail r = grid1.get_rail(selected_rails[i]);
 				if (!r.deleted)
-					r.draw(*grid1.layout, ORANGE, 1);
+					r.draw(grid1.layout, ORANGE, 1);
 			}
 		}
 #ifndef NDEBUG
@@ -147,7 +147,7 @@ int main() {
 		grid1.hightlight(start_construct, BLACK);
 		fprintf(f, "selected_rails= ");
 		pp_int_vector(f, selected_rails);
-		fprintf(f, "layout.x=%.2f\n", grid1.layout->size.x);
+		fprintf(f, "layout.x=%.2f\n", grid1.layout.size.x);
 		t->pp(f);
 		fclose(f);
 		DrawText(texte, 10, 40, 30, BLACK);
