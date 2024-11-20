@@ -47,7 +47,9 @@ int Graph::add(Rail r, std::vector<Rail> rails, std::set<int> neighbor_src, std:
         if (Hex::opposite_direction(r.get_src_neighbor()) == rails[*n].get_src_neighbor()) {
             adj_list_src[*n].insert(id);
         } else {
+#ifndef NDEBUG
             printf("rsrc=%d, nsrc=%d ndst=%d\n", r.get_src_neighbor(), rails[*n].get_src_neighbor(), rails[*n].get_dst_neighbor());
+#endif // !NDEBUG
             assert(Hex::opposite_direction(r.get_src_neighbor()) == rails[*n].get_dst_neighbor());
             adj_list_dst[*n].insert(id);
         }

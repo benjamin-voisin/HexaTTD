@@ -118,12 +118,9 @@ int main() {
 		DrawFPS(10, 10);
 		
 		grid1.hightlight(under_cursor, GREEN);
-		grid1.hightlight(last_cursor_pers, BLUE);
-		grid1.hightlight(start_construct, BLACK);
 
 		Vector pos = {(float) GetMouseX(), (float) GetMouseY()};
 		
-		FILE* f = fmemopen(texte, 1000, "w");
 		Tile* t = grid1.tile_from_hex(under_cursor);
 		std::set<int> on_tile_tracks = t->get_rails_on_tile();
 		std::vector<int> selected_rails = {};
@@ -144,12 +141,17 @@ int main() {
 					r.draw(*grid1.layout, ORANGE, 1);
 			}
 		}
+#ifndef NDEBUG
+		FILE* f = fmemopen(texte, 1000, "w");
+		grid1.hightlight(last_cursor_pers, BLUE);
+		grid1.hightlight(start_construct, BLACK);
 		fprintf(f, "selected_rails= ");
 		pp_int_vector(f, selected_rails);
 		fprintf(f, "layout.x=%.2f\n", grid1.layout->size.x);
 		t->pp(f);
 		fclose(f);
 		DrawText(texte, 10, 40, 30, BLACK);
+#endif
 		EndDrawing();
 		last_cursor = under_cursor;
 	}

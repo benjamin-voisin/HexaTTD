@@ -21,7 +21,7 @@ Grid::~Grid() {
 void Grid::draw() {
 	for (int q = q_min; q <= q_max; q++) {
 		for (int r = r_min; r <= r_max; r++) {
-			Hex(q, r).draw(*layout, RED);
+			Hex(q, r).draw(*layout, BLACK);
 		}
 	}
 	int n_classes = graph.get_max_class();
@@ -106,7 +106,9 @@ void Grid::del_rail(int track_id) {
 void Grid::add_rail(Hex hex, int src_side, int dst_side, int width) {
 	rails.push_back(Rail(hex, src_side, dst_side, width));
 	Rail r = rails[rails.size()-1];
+#ifndef NDEBUG
 	printf("New rail %ld: src=%d dst=%d\n", rails.size()-1, r.get_src_neighbor(), r.get_dst_neighbor());
+#endif // !NDEBUG
 	Tile* src_neighbor = tile_from_hex(hex.neighbor(r.get_src_neighbor()));
 	Tile* tile = tile_from_hex(hex);
 	Tile* dst_neighbor = tile_from_hex(hex.neighbor(r.get_dst_neighbor()));
