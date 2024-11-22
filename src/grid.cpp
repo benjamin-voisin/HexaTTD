@@ -136,6 +136,8 @@ void Grid::add_station(int rail_id, std::string name) {
 
 
 void Grid::update() {
+	layout.screen_width = GetScreenWidth();
+	layout.screen_height = GetScreenHeight();
 	for (long unsigned i=0; i<trains.size(); i++) {
 		trains[i]->update(graph, rails);
 	}
