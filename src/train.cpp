@@ -5,7 +5,6 @@
 
 #include "raylib.h"
 #include "graphics/display_train.hpp"
-#define MIN(a, b) ((a)<(b)? (a) : (b))
 
 Train::Train(int track_id) {
 	_rail_id = track_id;
