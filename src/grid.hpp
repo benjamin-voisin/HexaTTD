@@ -20,7 +20,7 @@ class Grid {
 		std::vector<Train*> trains;
 		std::vector<Station> stations;
 
-		void update_zoom(int wheel_factor);
+		void update_zoom(int wheel_factor, bool center_on_mouse);
 
 	public:
 		Graph graph;

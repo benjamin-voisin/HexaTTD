@@ -138,7 +138,7 @@ void Grid::add_station(int rail_id, std::string name) {
 	stations.push_back(Station(rail_id, name));
 }
 
-void Grid::update_zoom(int wheel_factor) {
+void Grid::update_zoom(int wheel_factor, bool center_on_mouse) {
 	// Change the zoom level
 	auto wheel_move = GetMouseWheelMoveV().y;
 	auto new_size = Vector(
@@ -147,17 +147,20 @@ void Grid::update_zoom(int wheel_factor) {
 			);
 	if (new_size.x != layout.size.x && new_size.y != layout.size.y) {
 		// Coordinates of the cursor :
-		Vector cursor = Vector(
-				GetMouseX() - layout.origin.x,
-				GetMouseY() - layout.origin.y
-
-				);
+		Vector zoom_point = Vector(0,0);
+		if (center_on_mouse) {
+			zoom_point.x = GetMouseX() - layout.origin.x;
+			zoom_point.y = GetMouseY() - layout.origin.y;
+		} else {
+			zoom_point.x = layout.screen_width / 2.f - layout.origin.x;
+			zoom_point.y = layout.screen_height / 2.f - layout.origin.y;
+		}
 		// It’s new position after offset will be
 		Vector new_center = Vector(
-				cursor.x * (new_size.x / layout.size.x),
-				cursor.y * (new_size.x / layout.size.x)
+				zoom_point.x * (new_size.x / layout.size.x),
+				zoom_point.y * (new_size.x / layout.size.x)
 				);
-		Vector offset = new_center - cursor;
+		Vector offset = new_center - zoom_point;
 		layout.origin.x -= offset.x;
 		layout.origin.y -= offset.y;
 		layout.size.x = new_size.x;
@@ -171,7 +174,7 @@ void Grid::update_zoom(int wheel_factor) {
 void Grid::update() {
 	layout.screen_width = GetScreenWidth();
 	layout.screen_height = GetScreenHeight();
-	update_zoom(WHEEL_FACTOR);
+	update_zoom(WHEEL_FACTOR, true);
 	for (long unsigned i=0; i<trains.size(); i++) {
 		trains[i]->update(graph, rails);
 	}
