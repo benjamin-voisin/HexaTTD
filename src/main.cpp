@@ -8,6 +8,14 @@
 #include "vector.hpp"
 #include "train.hpp"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#pragma GCC diagnostic ignored "-Wenum-compare"
+#define RAYGUI_IMPLEMENTATION
+#include "raygui.h"
+#pragma GCC diagnostic pop
+
 #define WHEEL_FACTOR 5
 const char dotfile[20] = "graph.dot" ;
 
@@ -26,6 +34,7 @@ void pp_int_vector(FILE* f, std::vector<int> v) {
 }
 
 int main() {
+	int normal_mode_active = 0;
 	char* texte = (char*) malloc(1000 * sizeof(char));
 	InitWindow(1000, 1000, "HexaTTD");
 
@@ -48,7 +57,7 @@ int main() {
 	
 	Hex start_construct = grid1.xy_to_hex(GetMouseX(), GetMouseY());
 
-	/* SetTargetFPS(60); */
+	SetTargetFPS(60);
 
 	while(!WindowShouldClose()) {
 		grid1.update();
@@ -142,15 +151,18 @@ int main() {
 			}
 		}
 #ifndef NDEBUG
-		FILE* f = fmemopen(texte, 1000, "w");
-		grid1.hightlight(last_cursor_pers, BLUE);
-		grid1.hightlight(start_construct, BLACK);
-		fprintf(f, "selected_rails= ");
-		pp_int_vector(f, selected_rails);
-		fprintf(f, "layout.x=%.2f\n", grid1.layout.size.x);
-		t->pp(f);
-		fclose(f);
-		DrawText(texte, 10, 40, 30, BLACK);
+		GuiToggleGroup({(float)grid1.layout.screen_width - 200,10, 80, 20}, "normal;debug" , &normal_mode_active);
+		if (normal_mode_active == 1) {
+			FILE* f = fmemopen(texte, 1000, "w");
+			grid1.hightlight(last_cursor_pers, BLUE);
+			grid1.hightlight(start_construct, BLACK);
+			fprintf(f, "selected_rails= ");
+			pp_int_vector(f, selected_rails);
+			fprintf(f, "layout.x=%.2f\n", grid1.layout.size.x);
+			t->pp(f);
+			fclose(f);
+			DrawText(texte, 10, 40, 30, BLACK);
+		}
 #endif
 		EndDrawing();
 		last_cursor = under_cursor;

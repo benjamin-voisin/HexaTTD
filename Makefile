@@ -1,12 +1,14 @@
 CXX = g++ --std=c++20 
 VPATH = ./src:./src/track_graph:./src/graphics/:./build
+
 RAYLIB_DIR ?= ./raylib/src/
+RAYGUI_DIR ?= ./raygui/src/
 
 
 # This allows the preprocessor to also generate the dependencies in the *.d files
 CPPFLAGS += -MP -MD
 
-CXXFLAGS = -Wall -Wextra -I$(RAYLIB_DIR)
+CXXFLAGS = -Wall -Wextra -I$(RAYLIB_DIR) -I$(RAYGUI_DIR)
 DEBUGFLAGS = -g3 -fsanitize=address
 RELEASEFLAGS = -flto -O3 -DNDEBUG
 
