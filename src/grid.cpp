@@ -171,6 +171,7 @@ void Grid::update_zoom(int wheel_factor) {
 void Grid::update() {
 	layout.screen_width = GetScreenWidth();
 	layout.screen_height = GetScreenHeight();
+	update_zoom(WHEEL_FACTOR);
 	for (long unsigned i=0; i<trains.size(); i++) {
 		trains[i]->update(graph, rails);
 	}
