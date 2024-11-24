@@ -33,30 +33,30 @@ int main() {
 	char* texte = (char*) malloc(1000 * sizeof(char));
 	InitWindow(1000, 1000, "HexaTTD");
 
-	Grid grid1 = Grid(
+	Grid grid = Grid(
 			layout_flat,
 			Vector2 { 100, 100},
 			Vector2 {(float) GetScreenWidth() / 2, (float) GetScreenHeight() / 2},
 			-10, 10, -10, 10);
 
-	grid1.add_rail(Hex(0,0), 1, 5, 5);
-	grid1.add_rail(Hex(1,-1), 2, 5, 5);
-	grid1.add_rail(Hex(1,-1) + Hex(1,-1), 2, 0, 5);
-	grid1.add_train(new ItineraryTrain({0,1,2}));
-	grid1.add_train(new Train(0));
+	grid.add_rail(Hex(0,0), 1, 5, 5);
+	grid.add_rail(Hex(1,-1), 2, 5, 5);
+	grid.add_rail(Hex(1,-1) + Hex(1,-1), 2, 0, 5);
+	grid.add_train(new ItineraryTrain({0,1,2}));
+	grid.add_train(new Train(0));
 
-	grid1.add_station(0, "Test");
+	grid.add_station(0, "Test");
 
-	Hex last_cursor =     grid1.xy_to_hex(GetMouseX(), GetMouseY());
-	Hex last_cursor_pers =     grid1.xy_to_hex(GetMouseX(), GetMouseY());
+	Hex last_cursor =     grid.xy_to_hex(GetMouseX(), GetMouseY());
+	Hex last_cursor_pers =     grid.xy_to_hex(GetMouseX(), GetMouseY());
 	
-	Hex start_construct = grid1.xy_to_hex(GetMouseX(), GetMouseY());
+	Hex start_construct = grid.xy_to_hex(GetMouseX(), GetMouseY());
 
 	SetTargetFPS(60);
 
 	while(!WindowShouldClose()) {
-		grid1.update();
-		Hex under_cursor = grid1.xy_to_hex(GetMouseX(), GetMouseY());
+		grid.update();
+		Hex under_cursor = grid.xy_to_hex(GetMouseX(), GetMouseY());
 		
 
 		if (under_cursor != last_cursor)
@@ -73,7 +73,7 @@ int main() {
 					Hex diff_dst = under_cursor - last_cursor_pers;
 					if (   (diff_src.direction() != diff_dst.direction()) 
 						&& !(start_construct.is_neighbor(under_cursor)) ) {
-						grid1.add_rail(last_cursor_pers, diff_src.direction(), diff_dst.direction(), 4);
+						grid.add_rail(last_cursor_pers, diff_src.direction(), diff_dst.direction(), 4);
 						start_construct = last_cursor_pers;
 					}
 				}
@@ -83,52 +83,52 @@ int main() {
 		// Move the map
 		if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
 			Vector2 delta = GetMouseDelta();
-			grid1.layout.origin.x += delta.x;
-			grid1.layout.origin.y += delta.y;
+			grid.layout.origin.x += delta.x;
+			grid.layout.origin.y += delta.y;
 		}
 
 
 		BeginDrawing();
 		ClearBackground(DARKGREEN);
-		grid1.draw();
+		grid.draw();
 		
 		
 		
 		DrawFPS(10, 10);
 		
-		grid1.hightlight(under_cursor, GREEN);
+		grid.hightlight(under_cursor, GREEN);
 
 		Vector pos = {(float) GetMouseX(), (float) GetMouseY()};
 		
-		Tile* t = grid1.tile_from_hex(under_cursor);
+		Tile* t = grid.tile_from_hex(under_cursor);
 		std::set<int> on_tile_tracks = t->get_rails_on_tile();
 		std::vector<int> selected_rails = {};
 		for (auto n = on_tile_tracks.begin(); n != on_tile_tracks.end(); ++n) {
-			Rail r = grid1.get_rail(*n);
-			if (r.is_on_track(grid1.layout, pos)) {
+			Rail r = grid.get_rail(*n);
+			if (r.is_on_track(grid.layout, pos)) {
 				selected_rails.push_back(*n);
 			}
 		}
 		if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
 			for (long unsigned i=0; i<selected_rails.size(); ++i) {
-				grid1.del_rail(selected_rails[i]);
+				grid.del_rail(selected_rails[i]);
 			}
 		} else {
 			for (long unsigned i=0; i<selected_rails.size(); ++i) {
-				Rail r = grid1.get_rail(selected_rails[i]);
+				Rail r = grid.get_rail(selected_rails[i]);
 				if (!r.deleted)
-					r.draw(grid1.layout, ORANGE, 1);
+					r.draw(grid.layout, ORANGE, 1);
 			}
 		}
 #ifndef NDEBUG
-		GuiToggleGroup({(float)grid1.layout.screen_width - 200,10, 80, 20}, "normal;debug" , &normal_mode_active);
+		GuiToggleGroup({(float)grid.layout.screen_width - 200,10, 80, 20}, "normal;debug" , &normal_mode_active);
 		if (normal_mode_active == 1) {
 			FILE* f = fmemopen(texte, 1000, "w");
-			grid1.hightlight(last_cursor_pers, BLUE);
-			grid1.hightlight(start_construct, BLACK);
+			grid.hightlight(last_cursor_pers, BLUE);
+			grid.hightlight(start_construct, BLACK);
 			fprintf(f, "selected_rails= ");
 			pp_int_vector(f, selected_rails);
-			fprintf(f, "layout.x=%.2f\n", grid1.layout.size.x);
+			fprintf(f, "layout.x=%.2f\n", grid.layout.size.x);
 			t->pp(f);
 			fclose(f);
 			DrawText(texte, 10, 40, 30, BLACK);
@@ -138,7 +138,7 @@ int main() {
 		last_cursor = under_cursor;
 	}
 	CloseWindow();
-	grid1.graph.to_dot(dotfile);
+	grid.graph.to_dot(dotfile);
 	free(texte);
 	return 0;
 }
