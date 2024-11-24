@@ -16,12 +16,7 @@
 #include "raygui.h"
 #pragma GCC diagnostic pop
 
-#define WHEEL_FACTOR 5
 const char dotfile[20] = "graph.dot" ;
-
-float max(float a, float b) {
-	return (a > b) ? a : b;
-}
 
 void pp_int_vector(FILE* f, std::vector<int> v) {
 	fprintf(f, "[");
@@ -68,31 +63,6 @@ int main() {
 			last_cursor_pers = last_cursor;
 		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 			start_construct = under_cursor;	
-		}
-
-		// Change the zoom level
-		auto wheel_move = GetMouseWheelMoveV().y;
-		auto new_size = Vector(
-			max(5, (grid1.layout.size.x + wheel_move * WHEEL_FACTOR)),
-			max(5, grid1.layout.size.y + wheel_move * WHEEL_FACTOR)
-		);
-		if (new_size.x != grid1.layout.size.x && new_size.y != grid1.layout.size.y) {
-			// Coordinates of the cursor :
-			Vector cursor = Vector(
-				GetMouseX() - grid1.layout.origin.x,
-				GetMouseY() - grid1.layout.origin.y
-
-			);
-			// It’s new position after offset will be
-			Vector new_center = Vector(
-				cursor.x * (new_size.x / grid1.layout.size.x),
-				cursor.y * (new_size.x / grid1.layout.size.x)
-			);
-			Vector offset = new_center - cursor;
-			grid1.layout.origin.x -= offset.x;
-			grid1.layout.origin.y -= offset.y;
-			grid1.layout.size.x = new_size.x;
-			grid1.layout.size.y = new_size.y;
 		}
 
 		// Build rails

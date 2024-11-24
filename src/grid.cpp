@@ -1,8 +1,12 @@
 #include "grid.hpp"
 #include "hex.hpp"
+#include "utils.hpp"
 
 #include <math.h>
 #include <assert.h>
+
+
+#define WHEEL_FACTOR 5
 
 Grid::Grid(Orientation orientation, Vector2 size, Vector2 origin, int q_min, int q_max, int r_min, int r_max) :
 	q_min{q_min}, q_max{q_max}, r_min{r_min}, r_max{r_max}
@@ -133,6 +137,35 @@ Rail Grid::get_rail(int track_id) {
 void Grid::add_station(int rail_id, std::string name) {
 	stations.push_back(Station(rail_id, name));
 }
+
+void Grid::update_zoom(int wheel_factor) {
+	// Change the zoom level
+	auto wheel_move = GetMouseWheelMoveV().y;
+	auto new_size = Vector(
+			MAX(5, (layout.size.x + wheel_move * wheel_factor)),
+			MAX(5, layout.size.y + wheel_move * wheel_factor)
+			);
+	if (new_size.x != layout.size.x && new_size.y != layout.size.y) {
+		// Coordinates of the cursor :
+		Vector cursor = Vector(
+				GetMouseX() - layout.origin.x,
+				GetMouseY() - layout.origin.y
+
+				);
+		// It’s new position after offset will be
+		Vector new_center = Vector(
+				cursor.x * (new_size.x / layout.size.x),
+				cursor.y * (new_size.x / layout.size.x)
+				);
+		Vector offset = new_center - cursor;
+		layout.origin.x -= offset.x;
+		layout.origin.y -= offset.y;
+		layout.size.x = new_size.x;
+		layout.size.y = new_size.y;
+	}
+
+}
+
 
 
 void Grid::update() {

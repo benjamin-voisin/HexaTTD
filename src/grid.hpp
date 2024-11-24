@@ -20,6 +20,8 @@ class Grid {
 		std::vector<Train*> trains;
 		std::vector<Station> stations;
 
+		void update_zoom(int wheel_factor);
+
 	public:
 		Graph graph;
 		Layout layout;

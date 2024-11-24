@@ -5,7 +5,7 @@
 #define DISCRETISATION 100
 #endif
 
-#define MAX(a, b) ((a)>(b)? (a) : (b))
+#include "../utils.hpp"
 
 #include <stdio.h>
 
