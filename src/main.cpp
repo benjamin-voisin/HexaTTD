@@ -29,7 +29,13 @@ void pp_int_vector(FILE* f, std::vector<int> v) {
 }
 
 int main() {
-	int normal_mode_active = 0;
+	// A variable with the current active mode.
+	// 0 is "normal"
+	// 1 is "debug", with debug information
+	int active_mode = 0;
+#ifndef NDEBUG
+	active_mode = 1;
+#endif
 	char* texte = (char*) malloc(1000 * sizeof(char));
 	InitWindow(1000, 1000, "HexaTTD");
 
@@ -100,40 +106,47 @@ int main() {
 
 		Vector pos = {(float) GetMouseX(), (float) GetMouseY()};
 		
-		Tile* t = grid.tile_from_hex(under_cursor);
-		std::set<int> on_tile_tracks = t->get_rails_on_tile();
-		std::vector<int> selected_rails = {};
-		for (auto n = on_tile_tracks.begin(); n != on_tile_tracks.end(); ++n) {
-			Rail r = grid.get_rail(*n);
-			if (r.is_on_track(grid.layout, pos)) {
-				selected_rails.push_back(*n);
-			}
-		}
-		if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
-			for (long unsigned i=0; i<selected_rails.size(); ++i) {
-				grid.del_rail(selected_rails[i]);
-			}
-		} else {
-			for (long unsigned i=0; i<selected_rails.size(); ++i) {
-				Rail r = grid.get_rail(selected_rails[i]);
-				if (!r.deleted)
-					r.draw(grid.layout, ORANGE, 1);
-			}
-		}
 #ifndef NDEBUG
-		GuiToggleGroup({(float)grid.layout.screen_width - 200,10, 80, 20}, "normal;debug" , &normal_mode_active);
-		if (normal_mode_active == 1) {
-			FILE* f = fmemopen(texte, 1000, "w");
+		GuiToggleGroup({(float)grid.layout.screen_width - 200,10, 80, 20}, "normal;debug" , &active_mode);
+#endif
+		if (active_mode == 1) {
+			// Hightlight 
 			grid.hightlight(last_cursor_pers, BLUE);
 			grid.hightlight(start_construct, BLACK);
-			fprintf(f, "selected_rails= ");
-			pp_int_vector(f, selected_rails);
-			fprintf(f, "layout.x=%.2f\n", grid.layout.size.x);
-			t->pp(f);
-			fclose(f);
-			DrawText(texte, 10, 40, 30, BLACK);
 		}
-#endif
+
+		if (grid.on_grid(under_cursor)) {
+			Tile* t = grid.tile_from_hex(under_cursor);
+			std::set<int> on_tile_tracks = t->get_rails_on_tile();
+			std::vector<int> selected_rails = {};
+			for (auto n = on_tile_tracks.begin(); n != on_tile_tracks.end(); ++n) {
+				Rail r = grid.get_rail(*n);
+				if (r.is_on_track(grid.layout, pos)) {
+					selected_rails.push_back(*n);
+				}
+			}
+			if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+				for (long unsigned i=0; i<selected_rails.size(); ++i) {
+					grid.del_rail(selected_rails[i]);
+				}
+			} else {
+				for (long unsigned i=0; i<selected_rails.size(); ++i) {
+					Rail r = grid.get_rail(selected_rails[i]);
+					if (!r.deleted)
+						r.draw(grid.layout, ORANGE, 1);
+				}
+			}
+			if (active_mode == 1) {
+				// Print selected rails on debug mode
+				FILE* f = fmemopen(texte, 1000, "w");
+				fprintf(f, "selected_rails= ");
+				pp_int_vector(f, selected_rails);
+				fprintf(f, "layout.x=%.2f\n", grid.layout.size.x);
+				t->pp(f);
+				fclose(f);
+				DrawText(texte, 10, 40, 30, BLACK);
+			}
+		}
 		EndDrawing();
 		last_cursor = under_cursor;
 	}

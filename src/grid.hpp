@@ -38,6 +38,8 @@ class Grid {
 		void del_rail(int rail_id);
 
 		void add_station(int rail_id, std::string name);
+
+		bool on_grid(Hex hex);
 	
 		void update();
 

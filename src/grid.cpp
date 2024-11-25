@@ -81,6 +81,12 @@ Hex Grid::xy_to_hex(float x, float y) {
     return round(q, r, -q -r);
 }
 
+bool Grid::on_grid(Hex hex) {
+	return
+		(q_min <= hex.get_q()) && (hex.get_q() <= q_max) &&
+		(r_min <= hex.get_r()) && (hex.get_r() <= r_max) ;
+}
+
 Tile* Grid::tile_from_hex(Hex hex) {
 	assert((q_min <= hex.get_q()) && (hex.get_q() <= q_max));
 	assert((r_min <= hex.get_r()) && (hex.get_r() <= r_max));
