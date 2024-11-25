@@ -17,6 +17,12 @@ MODE ?= RELEASE# Default is Release
 # Raylib has some warnings that we don’t want to see when compiling in debug
 CUSTOM_CFLAGS = -Wno-unused-result -Wno-unused-but-set-variable
 
+# Allow usage of mold linker for faster build time, default to false
+USE_MOLD_LINKER ?= FALSE
+ifeq ($(USE_MOLD_LINKER), TRUE)
+	LDFLAGS += -fuse-ld=mold
+endif
+
 ifeq ($(MODE),DEBUG)
 	CXXFLAGS += $(DEBUGFLAGS)
 	CUSTOM_CFLAGS += $(DEBUGFLAGS)
@@ -40,7 +46,7 @@ MAKEFILES = $(OBJECTS:%.o=%.d)
 -include $(MAKEFILES)
 
 hexattd: $(OBJECTS) libraylib.a
-	$(CXX) $(CXXFLAGS) -o $@ $^
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
 
 build/%.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<
