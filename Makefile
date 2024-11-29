@@ -50,13 +50,12 @@ MAKEFILES = $(OBJECTS:%.o=%.d)
 hexattd: $(OBJECTS) $(LIBRAYLIB)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
 
-$(BUILD_DIR):
-	mkdir -p $@
-
-$(BUILD_DIR)/%.o: %.cpp $(BUILD_DIR)
+$(BUILD_DIR)/%.o: %.cpp
+	@mkdir -p $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<
 
-$(LIBRAYLIB): $(BUILD_DIR)
+$(LIBRAYLIB):
+	@mkdir -p $(BUILD_DIR)
 	$(MAKE) -C $(RAYLIB_DIR)
 
 clean: clean_hex
