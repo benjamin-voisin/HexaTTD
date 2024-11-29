@@ -71,3 +71,5 @@ clean_hex:
 
 clean_raylib:
 	$(MAKE) clean -C $(RAYLIB_DIR)
+
+.PHONY: clean cleanall clean_hex clean_raylib
