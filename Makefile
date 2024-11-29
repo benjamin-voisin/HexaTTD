@@ -1,17 +1,19 @@
-#! /bin/bash
-
-CXX = g++ --std=c++20 
-VPATH = ./src:./src/track_graph:./src/graphics/:./build
 NAME = hexattd
+CXX = g++ --std=c++20 
 
-RAYLIB_DIR ?= ./raylib/src/
-RAYGUI_DIR ?= ./raygui/src/
+BUILD_DIR ?= ./build# Default build directory ./build, but modifiable
 
-BUILD_DIR ?= ./build
+# Don't forget to add a directory here when making one for sources
+VPATH = ./src:./src/track_graph:./src/graphics/:$(BUILD_DIR)
+
+RAYLIB_DIR ?= ./raylib/src/#Path to raylib source code
+RAYGUI_DIR ?= ./raygui/src/#Path to raygui source code
+
 
 # This allows the preprocessor to also generate the dependencies in the *.d files
 CPPFLAGS += -MP -MD
 
+# Our compile flags, with etra warning
 CXXFLAGS = -Wall -Wextra -I$(RAYLIB_DIR) -I$(RAYGUI_DIR)
 DEBUGFLAGS = -g3 -fsanitize=address
 RELEASEFLAGS = -flto -O3 -DNDEBUG
@@ -27,25 +29,26 @@ ifeq ($(USE_MOLD_LINKER), TRUE)
 	LDFLAGS += -fuse-ld=mold
 endif
 
-ifeq ($(MODE),DEBUG)
+ifeq ($(MODE),DEBUG) # Debug mode puts address sanitizer and debug info
 	CXXFLAGS += $(DEBUGFLAGS)
-	CUSTOM_CFLAGS += $(DEBUGFLAGS)
-else
+	CUSTOM_CFLAGS += $(DEBUGFLAGS) # we add our flags to raylib
+else # Release mode compile in -O3 with link time optimization
 	CXXFLAGS += $(RELEASEFLAGS)
-	CUSTOM_CFLAGS += $(RELEASEFLAGS)
+	CUSTOM_CFLAGS += $(RELEASEFLAGS) # we add our flags to raylib
 endif
 
+# This part allows us to print progress of the compilation
 ifndef ECHO
+# We ask `make` for the amount of tasks that we will do
 T := $(shell $(MAKE) $(MAKECMDGOALS) --no-print-directory \
       -nrRf $(firstword $(MAKEFILE_LIST)) \
       ECHO="COUNTTHIS" | grep -c "COUNTTHIS")
-
+# N will containt x n times, with n being the number of completed jobs
 N := x
+# with each call to c, we add an x to N
 C = $(words $N)$(eval N := x $N)
-ECHO = echo -e "[$(C)/$(T)]"
+ECHO = echo -e "[$(C)/$(T)]" # -e allows us to print color
 endif
-
-VERBOSE ?= FALSE
 
 default: $(NAME)
 
@@ -55,6 +58,7 @@ LIBRAYLIB = $(BUILD_DIR)/libraylib.a
 export CUSTOM_CFLAGS
 export RAYLIB_RELEASE_PATH
 
+# Here we get all the source files and define our objects and makefiles associated
 SOURCES = $(notdir $(wildcard ./src/*.cpp ./src/track_graph/*.cpp ./src/graphics/*.cpp))
 OBJECTS = $(addprefix $(BUILD_DIR)/, $(SOURCES:%.cpp=%.o))
 MAKEFILES = $(OBJECTS:%.o=%.d)
