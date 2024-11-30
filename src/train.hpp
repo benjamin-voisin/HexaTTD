@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "rail.hpp"
+#include "wagon.hpp"
 #include "track_graph/track_graph.hpp"
 
 class Train {
@@ -18,6 +19,8 @@ class Train {
 		int _direction;
 
 		virtual void next_rail(Graph graph, std::vector<Rail> rails);
+
+		std::vector<std::unique_ptr<Wagon>> _wagons;
 
 	public:
 		void draw(Layout layout, std::vector<Rail>);

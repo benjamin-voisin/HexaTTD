@@ -3,9 +3,6 @@
 #include <assert.h>
 #include <stdio.h>
 
-#include "raylib.h"
-#include "graphics/display_train.hpp"
-
 Train::Train(int track_id) {
 	_rail_id = track_id;
 	_orientation = 0;
@@ -13,16 +10,14 @@ Train::Train(int track_id) {
 	_max_speed = 100;
 	_progression = 0.f;
 	_direction = 1;
+	_wagons.push_back(std::make_unique<Locomotive>(Locomotive()));
 }
 
 Train::~Train() { }
 
 void Train::draw(Layout layout, std::vector<Rail> rails) {
-	// First put the train in the center of the tile
-	if (rails[_rail_id].get_hex().is_visible(layout)) {
-		auto position = rails[_rail_id].get_position(layout, _progression);
-		DrawTrain train = DrawTrain(position.position, Vector(30, 70) * layout.size.x / 100, position.direction);
-		train.draw();
+	for (size_t i = 0; i < _wagons.size(); i++) {
+		_wagons[i]->draw(layout, rails, _rail_id, _progression);
 	}
 }
 
