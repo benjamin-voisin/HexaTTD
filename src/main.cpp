@@ -151,7 +151,6 @@ int main() {
 		EndDrawing();
 		last_cursor = under_cursor;
 	}
-	CloseWindow();
 	grid.graph.to_dot(dotfile);
 	free(texte);
 	return 0;
