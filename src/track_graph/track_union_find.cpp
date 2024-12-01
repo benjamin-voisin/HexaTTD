@@ -4,14 +4,12 @@
 #include <stdio.h>
 
 TrackUF::TrackUF() {
-	n_current_classes = 0;
-	n_classes = 0;
-	version = 0;
+    n_current_classes = 0;
+    n_classes = 0;
+    version = 0;
 };
 
-int TrackUF::track_number() {
-    return parent.size();
-}
+int TrackUF::track_number() { return parent.size(); }
 
 int TrackUF::add() {
     int id = parent.size();
@@ -23,9 +21,7 @@ int TrackUF::add() {
     return id;
 }
 
-int TrackUF::n_classe() {
-    return n_classes;
-}
+int TrackUF::n_classe() { return n_classes; }
 
 int TrackUF::classe(int a) {
     int id = find(a);
@@ -39,7 +35,7 @@ int TrackUF::classe(int a) {
 std::vector<int> TrackUF::get_class(int a) {
     int classe_a = find(a);
     std::vector<int> member_classe_a = {};
-    for (long unsigned i=0; i<parent.size(); ++i)
+    for (long unsigned i = 0; i < parent.size(); ++i)
         if ((parent[i] != -1) && (find(i) == classe_a))
             member_classe_a.push_back(i);
     return member_classe_a;
@@ -48,7 +44,7 @@ std::vector<int> TrackUF::get_class(int a) {
 std::vector<int> TrackUF::del(int a) {
     int classe_a = find(a);
     std::vector<int> member_classe_a = get_class(classe_a);
-    for (long unsigned i=0; i<member_classe_a.size(); ++i) {
+    for (long unsigned i = 0; i < member_classe_a.size(); ++i) {
         ++n_classes;
         parent[member_classe_a[i]] = member_classe_a[i];
     }
@@ -59,7 +55,7 @@ std::vector<int> TrackUF::del(int a) {
 
 int TrackUF::find(int node) {
     assert(node != -1);
-    assert((long unsigned) node < parent.size());
+    assert((long unsigned)node < parent.size());
     if (node == parent[node])
         return node;
     int value = find(parent[node]);

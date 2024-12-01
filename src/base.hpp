@@ -3,12 +3,11 @@
 #include "vector.hpp"
 
 class Base {
-	private:
-		float alpha;
+  private:
+    float alpha;
 
-    public:
-        Base(float alpha);
+  public:
+    Base(float alpha);
 
-        Vector projection(Vector v);
+    Vector projection(Vector v);
 };
-
