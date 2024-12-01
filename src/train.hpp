@@ -14,7 +14,13 @@ class Train {
 		float _current_speed;
 		float _max_speed;
 
+
 		int _rail_id;
+		int *_prev_rails;
+		size_t _prev_rails_index;
+		size_t _prev_rails_size;
+		void add_prev_rail(int rail_id, int direction);
+		int get_prev_rail(int n);
 		float _progression; // Progression of the train through the rail.
 		int _direction;
 

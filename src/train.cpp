@@ -6,22 +6,75 @@
 Train::Train(int track_id) {
 	_rail_id = track_id;
 	_orientation = 0;
+	_prev_rails = (int*) calloc(3, sizeof(int));
+	_prev_rails_index = 0;
+	_prev_rails_size = 3;
 	_current_speed = 0;
 	_max_speed = 100;
 	_progression = 0.f;
 	_direction = 1;
 	_wagons.push_back(std::make_unique<Locomotive>(Locomotive()));
+	_wagons.push_back(std::make_unique<Wagon>(Wagon("test", 0.f)));
+	_wagons.push_back(std::make_unique<Wagon>(Wagon("test", 0.f)));
+	_wagons.push_back(std::make_unique<Wagon>(Wagon("test", 0.f)));
 }
 
-Train::~Train() { }
+Train::~Train() {
+	free(_prev_rails);
+}
 
 void Train::draw(Layout layout, std::vector<Rail> rails) {
-	for (size_t i = 0; i < _wagons.size(); i++) {
-		_wagons[i]->draw(layout, rails, _rail_id, _progression);
+	auto p = _progression;
+	auto rail = _rail_id;
+	int prev_rail = 0;
+	auto direction = _direction;
+	for (size_t i = 0; i < _wagons.size() - 1; i++) {
+		_wagons[i]->draw(layout, rails, rail, p);
+		if ((direction == 1 && p >= 0.5f) || (direction == -1 && p <= 0.5f)) {
+			p -= direction * 0.5;
+		} else {
+			rail = get_prev_rail(prev_rail++);
+			int new_dir;
+			if (rail < 0) {
+				rail = -rail;
+				new_dir = -1;
+			} else {
+				new_dir = 1;
+			}
+			if (direction > 0) {
+				if (direction == new_dir) {
+					p = 0.5 + (p * direction);
+				} else {
+					p = 0.5 - p;
+				}
+			} else {
+				if (direction == new_dir) {
+					p = p - 0.5;
+				} else {
+					p = 1.5 - p;
+				}
+			}
+			direction = new_dir;
+		}
+	}
+	_wagons[_wagons.size() - 1]->draw(layout, rails, rail, p);
+}
+
+void Train::add_prev_rail(int rail_id, int direction) {
+	_prev_rails_index = (_prev_rails_index + 1) % _prev_rails_size;
+	_prev_rails[_prev_rails_index] = rail_id * direction;
+}
+
+int Train::get_prev_rail(int n) {
+	if ((size_t) n > _prev_rails_index) {
+		return _prev_rails[_prev_rails_index + _prev_rails_size - n];
+	} else {
+		return _prev_rails[_prev_rails_index - n];
 	}
 }
 
 void Train::next_rail(Graph graph, std::vector<Rail> rails) {
+	add_prev_rail(_rail_id, _direction);
 	std::set<int> neighbor;
 	int new_src_dir;
 	if (_direction == 1) {
