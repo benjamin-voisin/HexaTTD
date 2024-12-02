@@ -18,5 +18,3 @@ class Test {
 		void add_test(std::shared_ptr<TestInstance>);
 		void run_tests();
 };
-
-static Test test = Test();

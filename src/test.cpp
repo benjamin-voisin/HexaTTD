@@ -24,6 +24,7 @@ TestInstance::TestInstance(std::string name) : name{name} { }
 
 #ifdef TEST
 int main() {
+	Test test;
 	test.add_test(std::make_shared<HexTest>(HexTest()));
 	test.run_tests();
 }
