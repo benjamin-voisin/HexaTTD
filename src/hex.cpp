@@ -148,7 +148,9 @@ void Hex::draw(Layout layout, Color color) {
 
 #include <iostream>
 
-HexTest::HexTest() { }
+HexTest::HexTest() {
+	name = "Hex.cpp";
+}
 
 HexTest::~HexTest() { }
 
