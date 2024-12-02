@@ -143,3 +143,18 @@ void Hex::draw(Layout layout, Color color) {
         DrawLineStrip(&corners_list[0], 7, color);
     }
 }
+
+/* #ifdef TEST */
+
+#include <iostream>
+
+HexTest::HexTest() { }
+
+HexTest::~HexTest() { }
+
+void HexTest::run_test() {
+	std::cout << "HEXAGONES " << "\n";
+}
+
+
+/* #endif // TEST */

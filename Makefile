@@ -61,6 +61,7 @@ export CUSTOM_CFLAGS
 export RAYLIB_RELEASE_PATH
 
 # Here we get all the source files and define our objects and makefiles associated
+TEST_FILE = test.cpp
 SOURCES = $(notdir $(wildcard ./src/*.cpp ./src/track_graph/*.cpp ./src/graphics/*.cpp))
 OBJECTS = $(addprefix $(BUILD_DIR)/, $(SOURCES:%.cpp=%.o))
 MAKEFILES = $(OBJECTS:%.o=%.d)
@@ -73,6 +74,8 @@ ifeq ($(VERBOSE),FALSE)
 $(NAME): $(OBJECTS) $(LIBRAYLIB)
 	@$(ECHO) "\033[32mBuilding executable $@ in $(MODE) mode\033[0m"
 	@$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
+	@$(RM) $(BUILD_DIR)/test.o
+	@$(RM) $(BUILD_DIR)/main.o
 
 $(BUILD_DIR)/%.o: %.cpp
 	@mkdir -p $(BUILD_DIR)
@@ -82,6 +85,8 @@ else
 $(NAME): $(OBJECTS) $(LIBRAYLIB)
 	@$(ECHO) "\033[32m$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^\033[0m"
 	@$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
+	@$(RM) $(BUILD_DIR)/test.o
+	@$(RM) $(BUILD_DIR)/main.o
 
 $(BUILD_DIR)/%.o: %.cpp
 	@mkdir -p $(BUILD_DIR)
@@ -94,6 +99,31 @@ $(LIBRAYLIB):
 	@$(ECHO) "\033[32mBuilding raylib static lib in $(MODE) mode, this job is longer than others...\033[0m"
 	@$(MAKE) -C $(RAYLIB_DIR)
 
+
+
+test: $(BUILD_DIR)/test
+	@./$^
+	@$(RM) $(BUILD_DIR)/test.o
+	@$(RM) $(BUILD_DIR)/main.o
+
+ifeq ($(MAKECMDGOALS),test)
+$(BUILD_DIR)/test.o: test.cpp
+	@mkdir -p $(BUILD_DIR)
+	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -DTEST -c -o $@ $<
+	@$(ECHO) "\033[32mBuilding CXX object $@ in $(MODE) mode\033[0m"
+endif
+
+$(BUILD_DIR)/test: $(BUILD_DIR)/test.o $(filter-out $(BUILD_DIR)/main.o,$(OBJECTS)) $(LIBRAYLIB)
+	@$(ECHO) "\033[32mBuilding unit test executable\033[0m"
+	@$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
+
+
+clean_main:
+	$(RM) $(BUILD_DIR)/main.o
+
+clean_test:
+	$(RM) $(BUILD_DIR)/test.o
+
 clean: clean_hex
 
 cleanall : clean clean_raylib
@@ -103,9 +133,12 @@ clean_hex:
 	$(RM) $(OBJECTS)
 	$(RM) $(MAKEFILES)
 	$(RM) $(LIBRAYLIB)
+	$(RM) $(BUILD_DIR)/test
+	$(RM) $(BUILD_DIR)/test.o
+	$(RM) $(BUILD_DIR)/test.d
 	$(RM) --dir $(BUILD_DIR)
 
 clean_raylib:
 	$(MAKE) clean -C $(RAYLIB_DIR)
 
-.PHONY: clean cleanall clean_hex clean_raylib
+.PHONY: clean cleanall clean_hex clean_raylib test clean_main clean_test
