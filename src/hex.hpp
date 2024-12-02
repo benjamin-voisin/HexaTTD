@@ -54,12 +54,9 @@ class Hex {
 
 Hex hex_direction(int direction);
 
-/* #ifdef TEST */
 #include "test.hpp"
 class HexTest : public TestInstance {
 	public:
 		void run_test() override;
 		HexTest();
 };
-
-/* #endif // TEST */
