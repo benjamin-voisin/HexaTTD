@@ -8,8 +8,7 @@ class TestInstance {
 	public:
 		std::string name;
 		virtual void run_test();
-		TestInstance();
-		virtual ~TestInstance();
+		TestInstance(std::string name);
 };
 
 class Test {

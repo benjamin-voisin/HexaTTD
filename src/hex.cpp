@@ -148,11 +148,7 @@ void Hex::draw(Layout layout, Color color) {
 
 #include <iostream>
 
-HexTest::HexTest() {
-	name = "Hex.cpp";
-}
-
-HexTest::~HexTest() { }
+HexTest::HexTest() : TestInstance("hex.cpp") { }
 
 void HexTest::run_test() {
 	std::cout << "HEXAGONES " << "\n";

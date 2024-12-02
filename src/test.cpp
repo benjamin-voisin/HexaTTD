@@ -18,9 +18,7 @@ void TestInstance::run_test() {
 	std::cout << "feur" << "\n";
 }
 
-TestInstance::TestInstance() { }
-
-TestInstance::~TestInstance() { }
+TestInstance::TestInstance(std::string name) : name{name} { }
 
 #include "hex.hpp"
 

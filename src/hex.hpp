@@ -60,7 +60,6 @@ class HexTest : public TestInstance {
 	public:
 		void run_test() override;
 		HexTest();
-		virtual ~HexTest();
 };
 
 /* #endif // TEST */
