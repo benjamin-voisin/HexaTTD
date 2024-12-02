@@ -99,6 +99,7 @@ test: $(BUILD_DIR)/test
 	@./$^
 
 $(BUILD_DIR)/test: $(filter-out $(BUILD_DIR)/main.o,$(OBJECTS)) $(LIBRAYLIB)
+	@$(ECHO) "\033[32mBuilding CXX object $(BUILD_DIR)/test.o in $(MODE) mode\033[0m"
 	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -DTEST -c -o $(BUILD_DIR)/test.o src/$(TEST_FILE)
 	@$(ECHO) "\033[32mBuilding unit test executable\033[0m"
 	@$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
