@@ -74,8 +74,6 @@ ifeq ($(VERBOSE),FALSE)
 $(NAME): $(OBJECTS) $(LIBRAYLIB)
 	@$(ECHO) "\033[32mBuilding executable $@ in $(MODE) mode\033[0m"
 	@$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
-	@$(RM) $(BUILD_DIR)/test.o
-	@$(RM) $(BUILD_DIR)/main.o
 
 $(BUILD_DIR)/%.o: %.cpp
 	@mkdir -p $(BUILD_DIR)
@@ -85,8 +83,6 @@ else
 $(NAME): $(OBJECTS) $(LIBRAYLIB)
 	@$(ECHO) "\033[32m$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^\033[0m"
 	@$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
-	@$(RM) $(BUILD_DIR)/test.o
-	@$(RM) $(BUILD_DIR)/main.o
 
 $(BUILD_DIR)/%.o: %.cpp
 	@mkdir -p $(BUILD_DIR)
@@ -99,30 +95,14 @@ $(LIBRAYLIB):
 	@$(ECHO) "\033[32mBuilding raylib static lib in $(MODE) mode, this job is longer than others...\033[0m"
 	@$(MAKE) -C $(RAYLIB_DIR)
 
-
-
 test: $(BUILD_DIR)/test
 	@./$^
-	@$(RM) $(BUILD_DIR)/test.o
-	@$(RM) $(BUILD_DIR)/main.o
 
-ifeq ($(MAKECMDGOALS),test)
-$(BUILD_DIR)/test.o: test.cpp
-	@mkdir -p $(BUILD_DIR)
-	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -DTEST -c -o $@ $<
-	@$(ECHO) "\033[32mBuilding CXX object $@ in $(MODE) mode\033[0m"
-endif
-
-$(BUILD_DIR)/test: $(BUILD_DIR)/test.o $(filter-out $(BUILD_DIR)/main.o,$(OBJECTS)) $(LIBRAYLIB)
+$(BUILD_DIR)/test: $(filter-out $(BUILD_DIR)/main.o,$(OBJECTS)) $(LIBRAYLIB)
+	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -DTEST -c -o $(BUILD_DIR)/test.o src/$(TEST_FILE)
 	@$(ECHO) "\033[32mBuilding unit test executable\033[0m"
 	@$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
-
-
-clean_main:
-	$(RM) $(BUILD_DIR)/main.o
-
-clean_test:
-	$(RM) $(BUILD_DIR)/test.o
+	@$(RM) $(BUILD_DIR)/test.o
 
 clean: clean_hex
 
@@ -141,4 +121,4 @@ clean_hex:
 clean_raylib:
 	$(MAKE) clean -C $(RAYLIB_DIR)
 
-.PHONY: clean cleanall clean_hex clean_raylib test clean_main clean_test
+.PHONY: clean cleanall clean_hex clean_raylib test
