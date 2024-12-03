@@ -6,15 +6,15 @@ BUILD_DIR ?= ./build# Default build directory ./build, but modifiable
 # Don't forget to add a directory here when making one for sources
 VPATH = ./src:./src/track_graph:./src/graphics/:$(BUILD_DIR)
 
-RAYLIB_DIR ?= ./raylib/src/#Path to raylib source code
-RAYGUI_DIR ?= ./raygui/src/#Path to raygui source code
+RAYLIB_SRC_PATH ?= ./raylib/src/#Path to raylib source code
+RAYGUI_SRC_PATH ?= ./raygui/src/#Path to raygui source code
 
 
 # This allows the preprocessor to also generate the dependencies in the *.d files
 CPPFLAGS += -MP -MD
 
 # Our compile flags, with etra warning
-CXXFLAGS = -Wall -Wextra -I$(RAYLIB_DIR) -I$(RAYGUI_DIR)
+CXXFLAGS = -Wall -Wextra -I$(RAYLIB_SRC_PATH) -I$(RAYGUI_SRC_PATH)
 DEBUGFLAGS = -g3 -fsanitize=address
 RELEASEFLAGS = -flto -O3 -DNDEBUG
 
@@ -92,7 +92,7 @@ endif
 $(LIBRAYLIB):
 	@mkdir -p $(BUILD_DIR)
 	@$(ECHO) "\033[32mBuilding raylib static lib in $(MODE) mode, this job is longer than others...\033[0m"
-	@$(MAKE) -C $(RAYLIB_DIR)
+	@$(MAKE) -C $(RAYLIB_SRC_PATH)
 
 clean: clean_hex
 
@@ -106,6 +106,6 @@ clean_hex:
 	$(RM) --dir $(BUILD_DIR)
 
 clean_raylib:
-	$(MAKE) clean -C $(RAYLIB_DIR)
+	$(MAKE) clean -C $(RAYLIB_SRC_PATH)
 
 .PHONY: clean cleanall clean_hex clean_raylib
