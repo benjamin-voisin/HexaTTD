@@ -5,3 +5,4 @@ hexattd
 *.d
 compile_commands.json
 .cache/
+build/
