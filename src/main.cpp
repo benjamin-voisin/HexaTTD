@@ -7,15 +7,7 @@
 #include "raylib.h"
 #include "train.hpp"
 #include "vector.hpp"
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-#pragma GCC diagnostic ignored "-Wunused-result"
-#pragma GCC diagnostic ignored "-Wenum-compare"
-#define RAYGUI_IMPLEMENTATION
-#include "raygui.h"
-#pragma GCC diagnostic pop
+#include "gui/toggle.hpp"
 
 const char dotfile[20] = "graph.dot";
 
@@ -30,13 +22,6 @@ void pp_int_vector(FILE *f, std::vector<int> v) {
 }
 
 int main() {
-    // A variable with the current active mode.
-    // 0 is "normal"
-    // 1 is "debug", with debug information
-    int active_mode = 0;
-#ifndef NDEBUG
-    active_mode = 1;
-#endif
     char *texte = (char *)malloc(1000 * sizeof(char));
     InitWindow(1000, 1000, "HexaTTD");
 
@@ -52,6 +37,8 @@ int main() {
     grid.add_train(new Train(0));
 
     grid.add_station(0, "Test");
+
+	auto debug_toggle = GuiToggleElement(grid.layout.screen_width - 200, 10, 80, 20, "debug");
 
     Hex last_cursor = grid.xy_to_hex(GetMouseX(), GetMouseY());
     Hex last_cursor_pers = grid.xy_to_hex(GetMouseX(), GetMouseY());
@@ -106,10 +93,9 @@ int main() {
         Vector pos = {(float)GetMouseX(), (float)GetMouseY()};
 
 #ifndef NDEBUG
-        GuiToggleGroup({(float)grid.layout.screen_width - 200, 10, 80, 20},
-                       "normal;debug", &active_mode);
+		debug_toggle.draw();
 #endif
-        if (active_mode == 1) {
+        if (debug_toggle.is_pressed()) {
             // Hightlight
             grid.hightlight(last_cursor_pers, BLUE);
             grid.hightlight(start_construct, BLACK);
@@ -137,7 +123,7 @@ int main() {
                         r.draw(grid.layout, ORANGE, 1);
                 }
             }
-            if (active_mode == 1) {
+            if (debug_toggle.is_pressed()) {
                 // Print selected rails on debug mode
                 FILE *f = fmemopen(texte, 1000, "w");
                 fprintf(f, "selected_rails= ");

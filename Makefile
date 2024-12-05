@@ -4,7 +4,7 @@ CXX = g++ --std=c++20
 BUILD_DIR ?= ./build# Default build directory ./build, but modifiable
 
 # Don't forget to add a directory here when making one for sources
-VPATH = ./src:./src/track_graph:./src/graphics/:$(BUILD_DIR)
+VPATH = ./src:./src/track_graph:./src/graphics/:./src/gui/:$(BUILD_DIR)
 
 RAYLIB_SRC_PATH ?= ./raylib/src/#Path to raylib source code
 RAYGUI_SRC_PATH ?= ./raygui/src/#Path to raygui source code
@@ -61,7 +61,7 @@ export CUSTOM_CFLAGS
 export RAYLIB_RELEASE_PATH
 
 # Here we get all the source files and define our objects and makefiles associated
-SOURCES = $(notdir $(wildcard ./src/*.cpp ./src/track_graph/*.cpp ./src/graphics/*.cpp))
+SOURCES = $(notdir $(wildcard ./src/*.cpp ./src/track_graph/*.cpp ./src/graphics/*.cpp ./src/gui/*.cpp))
 OBJECTS = $(addprefix $(BUILD_DIR)/, $(SOURCES:%.cpp=%.o))
 MAKEFILES = $(OBJECTS:%.o=%.d)
 
