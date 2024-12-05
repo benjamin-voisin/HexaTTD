@@ -80,11 +80,8 @@ $(LIBRAYLIB):
 	@$(ECHO) "\033[32mBuilding raylib static lib in $(MODE) mode, this job is longer than others...\033[0m"
 	@$(MAKE) -C $(RAYLIB_SRC_PATH)
 
-clean: clean_hex
 
-cleanall : clean clean_raylib
-
-clean_hex:
+clean:
 	$(RM) $(NAME)
 	$(RM) $(OBJECTS)
 	$(RM) $(MAKEFILES)
@@ -94,4 +91,6 @@ clean_hex:
 clean_raylib:
 	$(MAKE) clean -C $(RAYLIB_SRC_PATH)
 
-.PHONY: clean cleanall clean_hex clean_raylib
+cleanall : clean clean_raylib
+
+.PHONY: clean cleanall clean_raylib
