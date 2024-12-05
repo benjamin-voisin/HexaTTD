@@ -1,13 +1,6 @@
-#include "gui.hpp"
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-#pragma GCC diagnostic ignored "-Wunused-result"
-#pragma GCC diagnostic ignored "-Wenum-compare"
+// This file will contain the implementation of Raygui, and only this file
 #define RAYGUI_IMPLEMENTATION
-#include "raygui.h"
-#pragma GCC diagnostic pop
+#include "gui.hpp"
 
 GuiToggleC::GuiToggleC(float x, float y, float width, float heigt, std::string text) :
 	_x{x}, _y{y}, _width{width}, _height{heigt}, _text{text} {
