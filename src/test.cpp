@@ -20,9 +20,10 @@ void TestInstance::run_test() {
 
 TestInstance::TestInstance(std::string name) : name{name} { }
 
+#ifdef TEST
+
 #include "hex.hpp"
 
-#ifdef TEST
 int main() {
 	Test test;
 	test.add_test(std::make_shared<HexTest>(HexTest()));

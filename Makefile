@@ -14,7 +14,7 @@ CPPFLAGS += -MP -MD
 
 # Our compile flags, with etra warning
 CXXFLAGS = -Wall -Wextra -I$(RAYLIB_SRC_PATH) -I$(RAYGUI_SRC_PATH)
-DEBUGFLAGS = -g3 -fsanitize=address
+DEBUGFLAGS = -g3 -fsanitize=address -DDEBUG
 RELEASEFLAGS = -flto -O3 -DNDEBUG
 
 MODE ?= RELEASE# Default is Release
@@ -88,7 +88,7 @@ $(BUILD_DIR)/test: $(filter-out $(BUILD_DIR)/./src/main.o,$(OBJECTS)) $(LIBRAYLI
 	@$(ECHO) "\033[32mBuilding CXX object $(BUILD_DIR)/test.o in $(MODE) mode\033[0m"
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -DTEST -c -o $(BUILD_DIR)/src/test.o $(TEST_FILE)
 	@$(ECHO) "\033[32mBuilding unit test executable\033[0m"
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^ || echo -e "\n\033[31mFor testing, you should build this project in DEBUG mode.\033[0m\n"
 	@$(RM) $(BUILD_DIR)/src/test.o
 
 clean:

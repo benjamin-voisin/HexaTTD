@@ -144,6 +144,7 @@ void Hex::draw(Layout layout, Color color) {
     }
 }
 
+#ifdef DEBUG
 #include <iostream>
 
 HexTest::HexTest() : TestInstance("hex.cpp") { }
@@ -151,3 +152,4 @@ HexTest::HexTest() : TestInstance("hex.cpp") { }
 void HexTest::run_test() {
 	std::cout << "HEXAGONES " << "\n";
 }
+#endif
