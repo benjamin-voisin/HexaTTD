@@ -38,7 +38,7 @@ int main() {
 
     grid.add_station(0, "Test");
 
-	auto debug_toggle = GuiToggleC(grid.layout.screen_width - 200, 10, 80, 20, "debug");
+	auto debug_toggle = GuiToggleElement(grid.layout.screen_width - 200, 10, 80, 20, "debug");
 
     Hex last_cursor = grid.xy_to_hex(GetMouseX(), GetMouseY());
     Hex last_cursor_pers = grid.xy_to_hex(GetMouseX(), GetMouseY());
