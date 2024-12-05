@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 // We ignore a bunch of warning when including raygui...
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
@@ -11,17 +9,14 @@
 #include "raygui.h"
 #pragma GCC diagnostic pop
 
-class GuiToggleC {
-	private:
+
+class GuiElement {
+	protected:
 		float _x;
 		float _y;
 		float _width;
 		float _height;
-		std::string _text;
-		bool _pressed;
-
 	public:
-		void draw();
-		bool is_pressed();
-		GuiToggleC(float x, float y, float width, float height, std::string text);
+		GuiElement(float x, float y, float width, float height);
+		virtual void draw();
 };

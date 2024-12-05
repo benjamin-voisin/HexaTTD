@@ -7,7 +7,7 @@
 #include "raylib.h"
 #include "train.hpp"
 #include "vector.hpp"
-#include "gui/gui.hpp"
+#include "gui/toggle.hpp"
 
 const char dotfile[20] = "graph.dot";
 
