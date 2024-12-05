@@ -6,6 +6,10 @@
 #include "track_graph/track_graph.hpp"
 #include "wagon.hpp"
 
+struct prev_rail {
+	int rail_id;
+	int direction;
+};
 class Train {
   protected:
     std::shared_ptr<Texture2D> _sprite;
@@ -15,11 +19,11 @@ class Train {
     float _max_speed;
 
     int _rail_id;
-    int *_prev_rails;
+    struct prev_rail *_prev_rails;
     size_t _prev_rails_index;
     size_t _prev_rails_size;
     void add_prev_rail(int rail_id, int direction);
-    int get_prev_rail(int n);
+    struct prev_rail get_prev_rail(int n);
     float _progression; // Progression of the train through the rail.
     int _direction;
 

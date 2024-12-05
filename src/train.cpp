@@ -6,7 +6,7 @@
 Train::Train(int track_id) {
     _rail_id = track_id;
     _orientation = 0;
-    _prev_rails = (int *)calloc(3, sizeof(int));
+    _prev_rails = (struct prev_rail *)calloc(3, sizeof(struct prev_rail));
     _prev_rails_index = 0;
     _prev_rails_size = 3;
     _current_speed = 0;
@@ -31,14 +31,10 @@ void Train::draw(Layout layout, std::vector<Rail> rails) {
         if ((direction == 1 && p >= 0.5f) || (direction == -1 && p <= 0.5f)) {
             p -= direction * 0.5;
         } else {
-            rail = get_prev_rail(prev_rail++);
-            int new_dir;
-            if (rail < 0) {
-                rail = -rail;
-                new_dir = -1;
-            } else {
-                new_dir = 1;
-            }
+            /* rail = get_prev_rail(prev_rail++); */
+			auto prev = get_prev_rail(prev_rail++);
+            int new_dir = prev.direction;
+			rail = prev.rail_id;
             if (direction > 0) {
                 if (direction == new_dir) {
                     p = 0.5 + (p * direction);
@@ -60,10 +56,11 @@ void Train::draw(Layout layout, std::vector<Rail> rails) {
 
 void Train::add_prev_rail(int rail_id, int direction) {
     _prev_rails_index = (_prev_rails_index + 1) % _prev_rails_size;
-    _prev_rails[_prev_rails_index] = rail_id * direction;
+    _prev_rails[_prev_rails_index].rail_id = rail_id;
+    _prev_rails[_prev_rails_index].direction = direction;
 }
 
-int Train::get_prev_rail(int n) {
+prev_rail Train::get_prev_rail(int n) {
     if ((size_t)n > _prev_rails_index) {
         return _prev_rails[_prev_rails_index + _prev_rails_size - n];
     } else {
