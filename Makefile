@@ -59,6 +59,7 @@ export RAYLIB_RELEASE_PATH
 
 # Here we get all the source files and define our objects and makefiles associated
 SOURCES = $(shell find . -name '*.cpp')
+TEST_FILE = ./src/test.cpp
 OBJECTS = $(addprefix $(BUILD_DIR)/, $(SOURCES:%.cpp=%.o))
 MAKEFILES = $(OBJECTS:%.o=%.d)
 
@@ -80,12 +81,25 @@ $(LIBRAYLIB):
 	@$(ECHO) "\033[32mBuilding raylib static lib in $(MODE) mode, this job is longer than others...\033[0m"
 	@$(MAKE) -C $(RAYLIB_SRC_PATH)
 
+test: $(BUILD_DIR)/test
+	@./$^
+
+$(BUILD_DIR)/test: $(filter-out $(BUILD_DIR)/./src/main.o,$(OBJECTS)) $(LIBRAYLIB)
+	@$(ECHO) "\033[32mBuilding CXX object $(BUILD_DIR)/test.o in $(MODE) mode\033[0m"
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -DTEST -c -o $(BUILD_DIR)/src/test.o $(TEST_FILE)
+	@$(ECHO) "\033[32mBuilding unit test executable\033[0m"
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
+	@$(RM) $(BUILD_DIR)/src/test.o
 
 clean:
 	$(RM) $(NAME)
 	$(RM) $(OBJECTS)
 	$(RM) $(MAKEFILES)
 	$(RM) $(LIBRAYLIB)
+	$(RM) $(BUILD_DIR)/test
+	$(RM) $(BUILD_DIR)/src/test.o
+	$(RM) $(BUILD_DIR)/src/test.d
+	$(RM) $(BUILD_DIR)/test.d
 	$(RM) --dir $(shell find $(BUILD_DIR) -type d | sort --reverse)
 
 clean_raylib:
@@ -93,4 +107,4 @@ clean_raylib:
 
 cleanall : clean clean_raylib
 
-.PHONY: clean cleanall clean_raylib
+.PHONY: clean cleanall clean_raylib test
