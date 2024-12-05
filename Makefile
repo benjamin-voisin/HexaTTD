@@ -3,8 +3,7 @@ CXX = g++ --std=c++20
 
 BUILD_DIR ?= ./build# Default build directory ./build, but modifiable
 
-# Don't forget to add a directory here when making one for sources
-VPATH = ./src:./src/track_graph:./src/graphics/:./src/gui/:$(BUILD_DIR)
+VPATH += $(BUILD_DIR)
 
 RAYLIB_SRC_PATH ?= ./raylib/src/#Path to raylib source code
 RAYGUI_SRC_PATH ?= ./raygui/src/#Path to raygui source code
@@ -50,8 +49,6 @@ C = $(words $N)$(eval N := x $N)
 ECHO = echo -e "[$(C)/$(T)]" # -e allows us to print color
 endif
 
-VERBOSE ?= FALSE
-
 default: $(NAME)
 
 # for raylib
@@ -61,7 +58,7 @@ export CUSTOM_CFLAGS
 export RAYLIB_RELEASE_PATH
 
 # Here we get all the source files and define our objects and makefiles associated
-SOURCES = $(notdir $(wildcard ./src/*.cpp ./src/track_graph/*.cpp ./src/graphics/*.cpp ./src/gui/*.cpp))
+SOURCES = $(shell find . -name '*.cpp')
 OBJECTS = $(addprefix $(BUILD_DIR)/, $(SOURCES:%.cpp=%.o))
 MAKEFILES = $(OBJECTS:%.o=%.d)
 
@@ -69,25 +66,16 @@ MAKEFILES = $(OBJECTS:%.o=%.d)
 -include $(MAKEFILES)
 
 # The main rules to build our projects, either verbosly or not
-ifeq ($(VERBOSE),FALSE)
+# @$(ECHO) "\033[32m$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^\033[0m"
 $(NAME): $(OBJECTS) $(LIBRAYLIB)
 	@$(ECHO) "\033[32mBuilding executable $@ in $(MODE) mode\033[0m"
 	@$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
 
+# @$(ECHO) "\033[32m$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<\033[0m"
 $(BUILD_DIR)/%.o: %.cpp
-	@mkdir -p $(BUILD_DIR)
+	@mkdir -p $(BUILD_DIR)/$(dir $<)
 	@$(ECHO) "\033[32mBuilding CXX object $@ in $(MODE) mode\033[0m"
 	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<
-else
-$(NAME): $(OBJECTS) $(LIBRAYLIB)
-	@$(ECHO) "\033[32m$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^\033[0m"
-	@$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
-
-$(BUILD_DIR)/%.o: %.cpp
-	@mkdir -p $(BUILD_DIR)
-	@$(ECHO) "\033[32m$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<\033[0m"
-	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<
-endif
 
 $(LIBRAYLIB):
 	@mkdir -p $(BUILD_DIR)
@@ -103,7 +91,7 @@ clean_hex:
 	$(RM) $(OBJECTS)
 	$(RM) $(MAKEFILES)
 	$(RM) $(LIBRAYLIB)
-	$(RM) --dir $(BUILD_DIR)
+	$(RM) --dir $(shell find $(BUILD_DIR) -type d | sort --reverse)
 
 clean_raylib:
 	$(MAKE) clean -C $(RAYLIB_SRC_PATH)
