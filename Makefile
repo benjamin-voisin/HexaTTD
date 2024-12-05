@@ -66,16 +66,14 @@ MAKEFILES = $(OBJECTS:%.o=%.d)
 -include $(MAKEFILES)
 
 # The main rules to build our projects, either verbosly or not
-# @$(ECHO) "\033[32m$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^\033[0m"
 $(NAME): $(OBJECTS) $(LIBRAYLIB)
 	@$(ECHO) "\033[32mBuilding executable $@ in $(MODE) mode\033[0m"
-	@$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
 
-# @$(ECHO) "\033[32m$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<\033[0m"
 $(BUILD_DIR)/%.o: %.cpp
 	@mkdir -p $(BUILD_DIR)/$(dir $<)
 	@$(ECHO) "\033[32mBuilding CXX object $@ in $(MODE) mode\033[0m"
-	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<
 
 $(LIBRAYLIB):
 	@mkdir -p $(BUILD_DIR)
