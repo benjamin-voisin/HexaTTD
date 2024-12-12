@@ -5,7 +5,6 @@
 
 void Test::run_tests() {
 	for (size_t i = 0; i < _tests.size(); i++) {
-		std::cout << "Testing " << _tests[i]->name << "\n";
 		_tests[i]->run_test();
 	}
 }
@@ -15,10 +14,23 @@ void Test::add_test(std::shared_ptr<TestInstance> test) {
 }
 
 void TestInstance::run_test() {
-	std::cout << "feur" << "\n";
+	std::cout << "Testing " << _name << "\n";
 }
 
-TestInstance::TestInstance(std::string name) : name{name} { }
+TestInstance::TestInstance(std::string name) : _name{name} {
+	_total_tests = 0;
+	_passed_tests = 0;
+}
+
+void TestInstance::test(bool condition, std::string name) {
+	_total_tests++;
+	if (condition) {
+		_passed_tests++;
+		std::cout << name << Test::green << " \tPASSED\n" << Test::def;
+	} else {
+		std::cout << name << Test::red << " \tFAILED\n" << Test::def;
+	}
+}
 
 #ifdef TEST
 
