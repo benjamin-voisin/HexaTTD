@@ -9,6 +9,8 @@
 #include "track_graph/track_graph.hpp"
 #include "train.hpp"
 
+#define WHEEL_FACTOR 5
+
 class Grid {
   private:
     int q_min;
@@ -20,7 +22,8 @@ class Grid {
     std::vector<Train *> trains;
     std::vector<Station> stations;
 
-    void update_zoom(int wheel_factor, bool center_on_mouse);
+
+	bool _running;
 
   public:
     Graph graph;
@@ -43,6 +46,10 @@ class Grid {
     bool on_grid(Hex hex);
 
     void update();
+    void update_zoom(int wheel_factor, bool center_on_mouse);
+
+	bool is_running();
+	void stop();
 
     ~Grid();
 };

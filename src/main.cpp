@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <cstdio>
 #include <set>
+#include <thread>
 
 #include "grid.hpp"
 #include "rail.hpp"
@@ -21,7 +22,51 @@ void pp_int_vector(FILE *f, std::vector<int> v) {
     fprintf(f, "]\n");
 }
 
+
+void update(Grid *grid) {
+    Hex last_cursor = grid->xy_to_hex(GetMouseX(), GetMouseY());
+    Hex last_cursor_pers = grid->xy_to_hex(GetMouseX(), GetMouseY());
+
+    Hex start_construct = grid->xy_to_hex(GetMouseX(), GetMouseY());
+
+	while (grid->is_running()) {
+		grid->update();
+		Hex under_cursor = grid->xy_to_hex(GetMouseX(), GetMouseY());
+
+		if (under_cursor != last_cursor)
+			last_cursor_pers = last_cursor;
+		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+			start_construct = under_cursor;
+		}
+
+		// Build rails
+		if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+			if (last_cursor_pers.is_neighbor(start_construct) &&
+					last_cursor_pers.is_neighbor(under_cursor)) {
+				if ((start_construct != last_cursor_pers) &&
+						(start_construct != under_cursor)) {
+					Hex diff_src = start_construct - last_cursor_pers;
+					Hex diff_dst = under_cursor - last_cursor_pers;
+					if ((diff_src.direction() != diff_dst.direction()) &&
+							!(start_construct.is_neighbor(under_cursor))) {
+						grid->add_rail(last_cursor_pers, diff_src.direction(),
+								diff_dst.direction(), 4);
+						start_construct = last_cursor_pers;
+					}
+				}
+			}
+		}
+
+        last_cursor = under_cursor;
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(16));
+	}
+}
+
+
+
 int main() {
+
     char *texte = (char *)malloc(1000 * sizeof(char));
     InitWindow(1000, 1000, "HexaTTD");
 
@@ -40,67 +85,30 @@ int main() {
 
 	auto debug_toggle = GuiToggleElement(grid.layout.screen_width - 200, 10, 80, 20, "debug");
 
-    Hex last_cursor = grid.xy_to_hex(GetMouseX(), GetMouseY());
-    Hex last_cursor_pers = grid.xy_to_hex(GetMouseX(), GetMouseY());
-
-    Hex start_construct = grid.xy_to_hex(GetMouseX(), GetMouseY());
-
     SetTargetFPS(60);
 
+	std::thread update_thread(update, &grid);
+
     while (!WindowShouldClose()) {
-        grid.update();
-        Hex under_cursor = grid.xy_to_hex(GetMouseX(), GetMouseY());
-
-        if (under_cursor != last_cursor)
-            last_cursor_pers = last_cursor;
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-            start_construct = under_cursor;
-        }
-
-        // Build rails
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-            if (last_cursor_pers.is_neighbor(start_construct) &&
-                last_cursor_pers.is_neighbor(under_cursor)) {
-                if ((start_construct != last_cursor_pers) &&
-                    (start_construct != under_cursor)) {
-                    Hex diff_src = start_construct - last_cursor_pers;
-                    Hex diff_dst = under_cursor - last_cursor_pers;
-                    if ((diff_src.direction() != diff_dst.direction()) &&
-                        !(start_construct.is_neighbor(under_cursor))) {
-                        grid.add_rail(last_cursor_pers, diff_src.direction(),
-                                      diff_dst.direction(), 4);
-                        start_construct = last_cursor_pers;
-                    }
-                }
-            }
-        }
-
+                BeginDrawing();
+        ClearBackground(DARKGREEN);
         // Move the map
         if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
             Vector2 delta = GetMouseDelta();
             grid.layout.origin.x += delta.x;
             grid.layout.origin.y += delta.y;
         }
+		// Update the zoom level
+		grid.update_zoom(WHEEL_FACTOR, true);
 
-        BeginDrawing();
-        ClearBackground(DARKGREEN);
+		// Draw the main thing
         grid.draw();
 
-        DrawFPS(10, 10);
+		// Draw hightlighted hex
+		Hex under_cursor = grid.xy_to_hex(GetMouseX(), GetMouseY());
 
-        grid.hightlight(under_cursor, GREEN);
-
+		// Draw hightlighted rails
         Vector pos = {(float)GetMouseX(), (float)GetMouseY()};
-
-#ifndef NDEBUG
-		debug_toggle.draw();
-#endif
-        if (debug_toggle.is_pressed()) {
-            // Hightlight
-            grid.hightlight(last_cursor_pers, BLUE);
-            grid.hightlight(start_construct, BLACK);
-        }
-
         if (grid.on_grid(under_cursor)) {
             Tile *t = grid.tile_from_hex(under_cursor);
             std::set<int> on_tile_tracks = t->get_rails_on_tile();
@@ -134,9 +142,24 @@ int main() {
                 DrawText(texte, 10, 40, 30, BLACK);
             }
         }
+
+        grid.hightlight(under_cursor, GREEN);
+
+        DrawFPS(10, 10);
+
+#ifndef NDEBUG
+		debug_toggle.draw();
+#endif
+		/* if (debug_toggle.is_pressed()) { */
+            /* // Hightlight */
+            /* grid.hightlight(last_cursor_pers, BLUE); */
+            /* grid.hightlight(start_construct, BLACK); */
+        /* } */
+
         EndDrawing();
-        last_cursor = under_cursor;
     }
+	grid.stop();
+	update_thread.join();
     grid.graph.to_dot(dotfile);
     free(texte);
     return 0;

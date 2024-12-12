@@ -5,12 +5,10 @@
 #include <assert.h>
 #include <math.h>
 
-#define WHEEL_FACTOR 5
-
 Grid::Grid(Orientation orientation, Vector2 size, Vector2 origin, int q_min,
            int q_max, int r_min, int r_max)
     : q_min{q_min}, q_max{q_max}, r_min{r_min}, r_max{r_max},
-      tiles((r_max - r_min) * (q_max - q_min)),
+      tiles((r_max - r_min) * (q_max - q_min)), _running{true},
       layout{orientation, size, origin, GetScreenWidth(), GetScreenHeight()} {}
 
 Grid::~Grid() {
@@ -176,8 +174,15 @@ void Grid::update_zoom(int wheel_factor, bool center_on_mouse) {
 void Grid::update() {
     layout.screen_width = GetScreenWidth();
     layout.screen_height = GetScreenHeight();
-    update_zoom(WHEEL_FACTOR, true);
-    for (long unsigned i = 0; i < trains.size(); i++) {
-        trains[i]->update(graph, rails);
-    }
+    /* update_zoom(WHEEL_FACTOR, true); */
+	for (auto train: trains) {
+		train->update(graph, rails);
+	}
+    /* for (long unsigned i = 0; i < trains.size(); i++) { */
+    /*     trains[i]->update(graph, rails); */
+    /* } */
 }
+
+bool Grid::is_running() { return _running; }
+
+void Grid::stop() { _running = false; }
