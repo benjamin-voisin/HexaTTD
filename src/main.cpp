@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <chrono>
 #include <cstdio>
 #include <set>
 #include <thread>
@@ -29,6 +30,9 @@ void update(Grid *grid) {
 
     Hex start_construct = grid->xy_to_hex(GetMouseX(), GetMouseY());
 
+	auto target = std::chrono::milliseconds(16);
+	auto target_fast = std::chrono::milliseconds(1);
+
 	while (grid->is_running()) {
 		grid->update();
 		Hex under_cursor = grid->xy_to_hex(GetMouseX(), GetMouseY());
@@ -56,10 +60,14 @@ void update(Grid *grid) {
 				}
 			}
 		}
+		if (IsKeyDown(KEY_TAB)) {
+			std::this_thread::sleep_for(target_fast);
+		} else {
+			std::this_thread::sleep_for(target);
+		}
 
         last_cursor = under_cursor;
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(16));
 	}
 }
 
