@@ -152,9 +152,7 @@ int main() {
 
         DrawFPS(10, 10);
 
-#ifndef NDEBUG
         debug_toggle.draw();
-#endif
         /* if (debug_toggle.is_pressed()) { */
         /* // Hightlight */
         /* grid.hightlight(last_cursor_pers, BLUE); */
