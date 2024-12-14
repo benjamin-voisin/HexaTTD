@@ -11,6 +11,7 @@ class Cyclic_buffer {
     protected:
         std::size_t _size;
         std::size_t _index;
+        int _incr;
         prev_rail* _buffer;
 
     public:
@@ -19,4 +20,6 @@ class Cyclic_buffer {
 
         void add_prev_rail(int rail_id, int direction);
         struct prev_rail get_prev_rail(int n);
+
+        void reverse();
 };
