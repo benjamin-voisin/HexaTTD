@@ -20,6 +20,7 @@ class Train {
     float _max_speed;
 
     int _rail_id;
+    std::size_t _size;
     
     float _progression; // Progression of the train through the rail.
     int _direction;

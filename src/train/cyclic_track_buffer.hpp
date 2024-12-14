@@ -22,6 +22,8 @@ class Cyclic_buffer {
         Cyclic_buffer(std::size_t size);
         ~Cyclic_buffer();
 
+        std::size_t get_size();
+
         void add_prev_rail(int rail_id, int direction);
         prev_rail_s del_last_prev_rail();
         prev_rail_s get_prev_rail(int n);

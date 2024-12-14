@@ -19,13 +19,17 @@ Cyclic_buffer::~Cyclic_buffer() {
     free(_buffer);
 }
 
+std::size_t Cyclic_buffer::get_size() {
+    return _size;
+}
+
 std::size_t Cyclic_buffer::index_min() {
     return _index - ((_size-1)*_incr);
 }
 
 void Cyclic_buffer::add_prev_rail(int rail_id, int direction) {
     assert(_size < _sizemax);
-    _index = (_index + _incr) % _size;
+    _index = mod(_index + _incr, _sizemax);
     _buffer[_index].rail_id = rail_id;
     _buffer[_index].direction = direction;
     _size++;
@@ -40,7 +44,7 @@ prev_rail_s Cyclic_buffer::del_last_prev_rail() {
 
 prev_rail_s Cyclic_buffer::get_prev_rail(int n) {
     assert((0 <= n) && ((long unsigned) n < _size));
-    return _buffer[mod(_index-(n*_incr), _size)];
+    return _buffer[mod(_index-(n*_incr), _sizemax)];
 }
 
 void Cyclic_buffer::reverse() {

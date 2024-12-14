@@ -9,7 +9,8 @@
 Train::Train(int track_id, std::size_t size) 
     : _previous_rail {Cyclic_buffer(size)} {
     _rail_id = track_id;
-    
+    _size = size;
+
     _orientation = 0;
     _current_speed = 0;
     _max_speed = 100;
@@ -39,29 +40,33 @@ void Train::draw(Layout layout, std::vector<Rail> rails) {
             p -= direction * 0.5;
         } else {
             /* rail = get_prev_rail(prev_rail++); */
-			auto prev = _previous_rail.get_prev_rail(prev_rail++);
-            int new_dir = prev.direction;
-			rail = prev.rail_id;
-            if (direction > 0) {
-                if (direction == new_dir) {
-                    p = 0.5 + (p * direction);
+            if ((std::size_t) prev_rail < _previous_rail.get_size()) {
+                auto prev = _previous_rail.get_prev_rail(prev_rail++);
+                int new_dir = prev.direction;
+                rail = prev.rail_id;
+                if (direction > 0) {
+                    if (direction == new_dir) {
+                        p = 0.5 + (p * direction);
+                    } else {
+                        p = 0.5 - p;
+                    }
                 } else {
-                    p = 0.5 - p;
+                    if (direction == new_dir) {
+                        p = p - 0.5;
+                    } else {
+                        p = 1.5 - p;
+                    }
                 }
-            } else {
-                if (direction == new_dir) {
-                    p = p - 0.5;
-                } else {
-                    p = 1.5 - p;
-                }
+                direction = new_dir;
             }
-            direction = new_dir;
         }
     }
     _wagons[_wagons.size() - 1]->draw(layout, rails, rail, p);
 }
 
 void Train::next_rail(Grid* grid) {
+    if (_previous_rail.get_size() >= _size)
+        _previous_rail.del_last_prev_rail();
     _previous_rail.add_prev_rail(_rail_id, _direction);
     std::set<int> neighbor;
     int new_src_dir;
