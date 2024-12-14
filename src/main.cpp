@@ -13,16 +13,15 @@
 
 const char dotfile[20] = "graph.dot";
 
-void pp_int_vector(FILE *f, std::vector<int> v) {
+void pp_int_rail_vector(Grid* g, FILE *f, std::vector<int> v) {
     fprintf(f, "[");
     for (long unsigned i = 0; i < v.size(); ++i) {
         if (i > 0)
             fprintf(f, ", ");
-        fprintf(f, "%d", v[i]);
+        g->get_rail(v[i]).pp(f);
     }
     fprintf(f, "]\n");
-}
-
+};
 void update(Grid *grid) {
     Hex last_cursor = grid->xy_to_hex(GetMouseX(), GetMouseY());
     Hex last_cursor_pers = grid->xy_to_hex(GetMouseX(), GetMouseY());
@@ -140,7 +139,7 @@ int main() {
                 // Print selected rails on debug mode
                 FILE *f = fmemopen(texte, 1000, "w");
                 fprintf(f, "selected_rails= ");
-                pp_int_vector(f, selected_rails);
+                pp_int_rail_vector(&grid, f, selected_rails);
                 fprintf(f, "layout.x=%.2f\n", grid.layout.size.x);
                 t->pp(f);
                 fclose(f);
