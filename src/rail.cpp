@@ -48,7 +48,7 @@ std::set<int> Rail::get_on_track_train() {
     return this->_on_track_train;
 }
     
-void Rail::get_on_track_train(int train) {
+void Rail::add_on_track_train(int train) {
     this->_on_track_train.insert(train);
 }
 

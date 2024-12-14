@@ -28,7 +28,7 @@ class Rail {
     int get_src_neighbor();
     int get_dst_neighbor();
     std::set<int> get_on_track_train();
-    void get_on_track_train(int train);
+    void add_on_track_train(int train);
     void del_on_track_train(int train);
 
 

@@ -20,6 +20,7 @@ class Train {
     float _max_speed;
 
     int _rail_id;
+    int _id;
     std::size_t _size;
     
     float _progression; // Progression of the train through the rail.
@@ -32,7 +33,7 @@ class Train {
   public:
     void draw(Layout layout, std::vector<Rail>);
     void reverse();
-    Train(int track_id, std::size_t size);
+    Train(int id, int track_id, std::size_t size);
     virtual void update(Grid* grid);
     virtual ~Train();
 };
@@ -44,6 +45,6 @@ class ItineraryTrain : public Train {
     void next_rail(Grid* grid) override;
 
   public:
-    ItineraryTrain(std::vector<int> path, std::size_t size);
+    ItineraryTrain(int id, std::vector<int> path, std::size_t size);
     virtual ~ItineraryTrain();
 };

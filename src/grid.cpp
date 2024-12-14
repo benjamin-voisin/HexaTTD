@@ -139,7 +139,7 @@ void Grid::add_rail(Hex hex, int src_side, int dst_side, int width) {
 
 void Grid::add_train(Train *train) { trains.push_back(train); }
 
-Rail Grid::get_rail(int track_id) { return rails[track_id]; }
+Rail* Grid::get_rail(int track_id) { return &rails[track_id]; }
 
 void Grid::add_station(int rail_id, std::string name) {
     stations.push_back(Station(rail_id, name));

@@ -6,8 +6,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-Train::Train(int track_id, std::size_t size) 
+Train::Train(int id, int track_id, std::size_t size) 
     : _previous_rail {Cyclic_buffer(size)} {
+    _id = id;
     _rail_id = track_id;
     _size = size;
 
@@ -65,9 +66,13 @@ void Train::draw(Layout layout, std::vector<Rail> rails) {
 }
 
 void Train::next_rail(Grid* grid) {
-    if (_previous_rail.get_size() >= _size)
-        _previous_rail.del_last_prev_rail();
+    if (_previous_rail.get_size() >= _size) {
+        prev_rail_s prev_rail_data = _previous_rail.del_last_prev_rail();
+        Rail* prev_rail = grid->get_rail(prev_rail_data.rail_id);
+        prev_rail->del_on_track_train(_id);
+    }
     _previous_rail.add_prev_rail(_rail_id, _direction);
+    grid->get_rail(_rail_id)->add_on_track_train(_id);
     std::set<int> neighbor;
     int new_src_dir;
     if (_direction == 1) {
@@ -75,25 +80,25 @@ void Train::next_rail(Grid* grid) {
         // la destination
         neighbor = grid->graph.get_dst_neighbor(_rail_id);
         new_src_dir =
-            Hex::opposite_direction(grid->get_rail(_rail_id).get_dst_neighbor());
+            Hex::opposite_direction(grid->get_rail(_rail_id)->get_dst_neighbor());
     } else {
         assert(_direction == -1);
         //  Dans ce cas, le train à traversé le dernier rail de la destination
         // vers la source
         neighbor = grid->graph.get_src_neighbor(_rail_id);
         new_src_dir =
-            Hex::opposite_direction(grid->get_rail(_rail_id).get_src_neighbor());
+            Hex::opposite_direction(grid->get_rail(_rail_id)->get_src_neighbor());
     }
 
     if (neighbor.size() > 0) {
         _rail_id = *(std::next(neighbor.begin(), rand() % neighbor.size()));
-        if (new_src_dir == grid->get_rail(_rail_id).get_src_neighbor()) {
+        if (new_src_dir == grid->get_rail(_rail_id)->get_src_neighbor()) {
             // Dans ce cas, on vas maintenant aller de la source à la
             // destination
             _progression = 0.f;
             _direction = 1;
         } else {
-            assert(new_src_dir == grid->get_rail(_rail_id).get_dst_neighbor());
+            assert(new_src_dir == grid->get_rail(_rail_id)->get_dst_neighbor());
             // Dans ce cas, on vas alors aller de la destination vers la source
             _progression = 1.f;
             _direction = -1;
@@ -110,8 +115,8 @@ void Train::update(Grid* grid) {
     }
 }
 
-ItineraryTrain::ItineraryTrain(std::vector<int> path, std::size_t size)
-    : Train(path[0], size), _path{path}, _position{0} {
+ItineraryTrain::ItineraryTrain(int id, std::vector<int> path, std::size_t size)
+    : Train(id, path[0], size), _path{path}, _position{0} {
     assert(path.size() > 0);
 }
 
@@ -124,22 +129,22 @@ void ItineraryTrain::next_rail(Grid* grid) {
             //  Dans ce cas,  le tain à traversé le dernier rail de la source
             // vers la destination
             new_src_dir = Hex::opposite_direction(
-                grid->get_rail(_path[_position]).get_dst_neighbor());
+                grid->get_rail(_path[_position])->get_dst_neighbor());
         } else {
             assert(_direction == -1);
             //  Dans ce cas, le train à traversé le dernier rail de la
             // destination vers la source
             new_src_dir = Hex::opposite_direction(
-                grid->get_rail(_path[_position]).get_src_neighbor());
+                grid->get_rail(_path[_position])->get_src_neighbor());
         }
-        if (new_src_dir == grid->get_rail(_path[_position + 1]).get_src_neighbor()) {
+        if (new_src_dir == grid->get_rail(_path[_position + 1])->get_src_neighbor()) {
             // Dans ce cas, on vas maintenant aller de la source à la
             // destination
             _progression = 0.f;
             _direction = 1;
         } else {
             assert(new_src_dir ==
-                   grid->get_rail(_path[_position + 1]).get_dst_neighbor());
+                   grid->get_rail(_path[_position + 1])->get_dst_neighbor());
             // Dans ce cas, on vas alors aller de la destination vers la source
             _progression = 1.f;
             _direction = -1;
