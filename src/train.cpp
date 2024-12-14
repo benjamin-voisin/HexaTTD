@@ -1,4 +1,6 @@
 #include "train.hpp"
+#include "grid.hpp"
+
 #include <algorithm>
 #include <assert.h>
 #include <stdio.h>
@@ -20,6 +22,11 @@ Train::Train(int track_id, std::size_t size)
 }
 
 Train::~Train() {}
+
+void Train::reverse() {
+    _direction *= -1;
+    this->_previous_rail.reverse();
+}
 
 void Train::draw(Layout layout, std::vector<Rail> rails) {
     auto p = _progression;
@@ -54,47 +61,47 @@ void Train::draw(Layout layout, std::vector<Rail> rails) {
     _wagons[_wagons.size() - 1]->draw(layout, rails, rail, p);
 }
 
-void Train::next_rail(Graph graph, std::vector<Rail> rails) {
+void Train::next_rail(Grid* grid) {
     _previous_rail.add_prev_rail(_rail_id, _direction);
     std::set<int> neighbor;
     int new_src_dir;
     if (_direction == 1) {
         //  Dans ce cas,  le tain à traversé le dernier rail de la source vers
         // la destination
-        neighbor = graph.get_dst_neighbor(_rail_id);
+        neighbor = grid->graph.get_dst_neighbor(_rail_id);
         new_src_dir =
-            Hex::opposite_direction(rails[_rail_id].get_dst_neighbor());
+            Hex::opposite_direction(grid->get_rail(_rail_id).get_dst_neighbor());
     } else {
         assert(_direction == -1);
         //  Dans ce cas, le train à traversé le dernier rail de la destination
         // vers la source
-        neighbor = graph.get_src_neighbor(_rail_id);
+        neighbor = grid->graph.get_src_neighbor(_rail_id);
         new_src_dir =
-            Hex::opposite_direction(rails[_rail_id].get_src_neighbor());
+            Hex::opposite_direction(grid->get_rail(_rail_id).get_src_neighbor());
     }
 
     if (neighbor.size() > 0) {
         _rail_id = *(std::next(neighbor.begin(), rand() % neighbor.size()));
-        if (new_src_dir == rails[_rail_id].get_src_neighbor()) {
+        if (new_src_dir == grid->get_rail(_rail_id).get_src_neighbor()) {
             // Dans ce cas, on vas maintenant aller de la source à la
             // destination
             _progression = 0.f;
             _direction = 1;
         } else {
-            assert(new_src_dir == rails[_rail_id].get_dst_neighbor());
+            assert(new_src_dir == grid->get_rail(_rail_id).get_dst_neighbor());
             // Dans ce cas, on vas alors aller de la destination vers la source
             _progression = 1.f;
             _direction = -1;
         }
     } else {
-        _direction *= -1;
+        this->reverse();
     }
 }
 
-void Train::update(Graph graph, std::vector<Rail> rails) {
+void Train::update(Grid* grid) {
     _progression += 0.01 * _direction;
     if (_progression > 1.f || _progression < 0.f) {
-        next_rail(graph, rails);
+        next_rail(grid);
     }
 }
 
@@ -105,30 +112,29 @@ ItineraryTrain::ItineraryTrain(std::vector<int> path, std::size_t size)
 
 ItineraryTrain::~ItineraryTrain() {}
 
-void ItineraryTrain::next_rail(__attribute__((unused)) Graph graph,
-                               std::vector<Rail> rails) {
+void ItineraryTrain::next_rail(Grid* grid) {
     if ((long unsigned)_position < _path.size() - 1) {
         int new_src_dir;
         if (_direction == 1) {
             //  Dans ce cas,  le tain à traversé le dernier rail de la source
             // vers la destination
             new_src_dir = Hex::opposite_direction(
-                rails[_path[_position]].get_dst_neighbor());
+                grid->get_rail(_path[_position]).get_dst_neighbor());
         } else {
             assert(_direction == -1);
             //  Dans ce cas, le train à traversé le dernier rail de la
             // destination vers la source
             new_src_dir = Hex::opposite_direction(
-                rails[_path[_position]].get_src_neighbor());
+                grid->get_rail(_path[_position]).get_src_neighbor());
         }
-        if (new_src_dir == rails[_path[_position + 1]].get_src_neighbor()) {
+        if (new_src_dir == grid->get_rail(_path[_position + 1]).get_src_neighbor()) {
             // Dans ce cas, on vas maintenant aller de la source à la
             // destination
             _progression = 0.f;
             _direction = 1;
         } else {
             assert(new_src_dir ==
-                   rails[_path[_position + 1]].get_dst_neighbor());
+                   grid->get_rail(_path[_position + 1]).get_dst_neighbor());
             // Dans ce cas, on vas alors aller de la destination vers la source
             _progression = 1.f;
             _direction = -1;

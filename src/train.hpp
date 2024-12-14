@@ -8,6 +8,7 @@
 #include "train/cyclic_track_buffer.hpp"
 #include "wagon.hpp"
 
+class Grid;
 
 class Train {
   protected:
@@ -23,14 +24,15 @@ class Train {
     float _progression; // Progression of the train through the rail.
     int _direction;
 
-    virtual void next_rail(Graph graph, std::vector<Rail> rails);
+    virtual void next_rail(Grid* grid);
 
     std::vector<std::unique_ptr<Wagon>> _wagons;
 
   public:
     void draw(Layout layout, std::vector<Rail>);
+    void reverse();
     Train(int track_id, std::size_t size);
-    virtual void update(Graph graph, std::vector<Rail> rails);
+    virtual void update(Grid* grid);
     virtual ~Train();
 };
 
@@ -38,7 +40,7 @@ class ItineraryTrain : public Train {
   private:
     std::vector<int> _path;
     int _position;
-    void next_rail(Graph graph, std::vector<Rail> rails) override;
+    void next_rail(Grid* grid) override;
 
   public:
     ItineraryTrain(std::vector<int> path, std::size_t size);
