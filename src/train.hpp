@@ -33,7 +33,7 @@ class Train {
 
   public:
     void draw(Layout layout, std::vector<Rail>);
-    Train(int track_id);
+    Train(int track_id, size_t size);
     virtual void update(Graph graph, std::vector<Rail> rails);
     virtual ~Train();
 };
@@ -45,6 +45,6 @@ class ItineraryTrain : public Train {
     void next_rail(Graph graph, std::vector<Rail> rails) override;
 
   public:
-    ItineraryTrain(std::vector<int> path);
+    ItineraryTrain(std::vector<int> path, size_t size);
     virtual ~ItineraryTrain();
 };

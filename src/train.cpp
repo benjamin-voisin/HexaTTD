@@ -3,20 +3,19 @@
 #include <assert.h>
 #include <stdio.h>
 
-Train::Train(int track_id) {
+Train::Train(int track_id, size_t size) {
     _rail_id = track_id;
     _orientation = 0;
-    _prev_rails = (struct prev_rail *)calloc(3, sizeof(struct prev_rail));
+    _prev_rails = (struct prev_rail *)calloc(size, sizeof(struct prev_rail));
     _prev_rails_index = 0;
-    _prev_rails_size = 3;
+    _prev_rails_size = size;
     _current_speed = 0;
     _max_speed = 100;
     _progression = 0.f;
     _direction = 1;
     _wagons.push_back(std::make_unique<Locomotive>(Locomotive()));
-    _wagons.push_back(std::make_unique<Wagon>(Wagon("test", 0.f)));
-    _wagons.push_back(std::make_unique<Wagon>(Wagon("test", 0.f)));
-    _wagons.push_back(std::make_unique<Wagon>(Wagon("test", 0.f)));
+    for (size_t i=0; i<size; ++i)
+        _wagons.push_back(std::make_unique<Wagon>(Wagon("test", 0.f)));
 }
 
 Train::~Train() { free(_prev_rails); }
@@ -112,8 +111,8 @@ void Train::update(Graph graph, std::vector<Rail> rails) {
     }
 }
 
-ItineraryTrain::ItineraryTrain(std::vector<int> path)
-    : Train(path[0]), _path{path}, _position{0} {
+ItineraryTrain::ItineraryTrain(std::vector<int> path, size_t size)
+    : Train(path[0], size), _path{path}, _position{0} {
     assert(path.size() > 0);
 }
 
