@@ -2,36 +2,37 @@
 #include <algorithm>
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-Train::Train(int track_id, size_t size) {
+Train::Train(int track_id, std::size_t size) 
+    : _previous_rail {Cyclic_buffer(size)} {
     _rail_id = track_id;
+    
     _orientation = 0;
-    _prev_rails = (struct prev_rail *)calloc(size, sizeof(struct prev_rail));
-    _prev_rails_index = 0;
-    _prev_rails_size = size;
     _current_speed = 0;
     _max_speed = 100;
+    
     _progression = 0.f;
     _direction = 1;
     _wagons.push_back(std::make_unique<Locomotive>(Locomotive()));
-    for (size_t i=0; i<size; ++i)
+    for (std::size_t i=0; i<size; ++i)
         _wagons.push_back(std::make_unique<Wagon>(Wagon("test", 0.f)));
 }
 
-Train::~Train() { free(_prev_rails); }
+Train::~Train() {}
 
 void Train::draw(Layout layout, std::vector<Rail> rails) {
     auto p = _progression;
     auto rail = _rail_id;
     int prev_rail = 0;
     auto direction = _direction;
-    for (size_t i = 0; i < _wagons.size() - 1; i++) {
+    for (std::size_t i = 0; i < _wagons.size() - 1; i++) {
         _wagons[i]->draw(layout, rails, rail, p);
         if ((direction == 1 && p >= 0.5f) || (direction == -1 && p <= 0.5f)) {
             p -= direction * 0.5;
         } else {
             /* rail = get_prev_rail(prev_rail++); */
-			auto prev = get_prev_rail(prev_rail++);
+			auto prev = _previous_rail.get_prev_rail(prev_rail++);
             int new_dir = prev.direction;
 			rail = prev.rail_id;
             if (direction > 0) {
@@ -53,22 +54,8 @@ void Train::draw(Layout layout, std::vector<Rail> rails) {
     _wagons[_wagons.size() - 1]->draw(layout, rails, rail, p);
 }
 
-void Train::add_prev_rail(int rail_id, int direction) {
-    _prev_rails_index = (_prev_rails_index + 1) % _prev_rails_size;
-    _prev_rails[_prev_rails_index].rail_id = rail_id;
-    _prev_rails[_prev_rails_index].direction = direction;
-}
-
-prev_rail Train::get_prev_rail(int n) {
-    if ((size_t)n > _prev_rails_index) {
-        return _prev_rails[_prev_rails_index + _prev_rails_size - n];
-    } else {
-        return _prev_rails[_prev_rails_index - n];
-    }
-}
-
 void Train::next_rail(Graph graph, std::vector<Rail> rails) {
-    add_prev_rail(_rail_id, _direction);
+    _previous_rail.add_prev_rail(_rail_id, _direction);
     std::set<int> neighbor;
     int new_src_dir;
     if (_direction == 1) {
@@ -111,7 +98,7 @@ void Train::update(Graph graph, std::vector<Rail> rails) {
     }
 }
 
-ItineraryTrain::ItineraryTrain(std::vector<int> path, size_t size)
+ItineraryTrain::ItineraryTrain(std::vector<int> path, std::size_t size)
     : Train(path[0], size), _path{path}, _position{0} {
     assert(path.size() > 0);
 }

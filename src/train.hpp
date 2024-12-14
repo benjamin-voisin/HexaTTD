@@ -1,17 +1,17 @@
 #pragma once
 
 #include <memory>
+#include <stdlib.h>
 
 #include "rail.hpp"
 #include "track_graph/track_graph.hpp"
+#include "train/cyclic_track_buffer.hpp"
 #include "wagon.hpp"
 
-struct prev_rail {
-	int rail_id;
-	int direction;
-};
+
 class Train {
   protected:
+    Cyclic_buffer _previous_rail;
     std::shared_ptr<Texture2D> _sprite;
 
     float _orientation;
@@ -19,11 +19,7 @@ class Train {
     float _max_speed;
 
     int _rail_id;
-    struct prev_rail *_prev_rails;
-    size_t _prev_rails_index;
-    size_t _prev_rails_size;
-    void add_prev_rail(int rail_id, int direction);
-    struct prev_rail get_prev_rail(int n);
+    
     float _progression; // Progression of the train through the rail.
     int _direction;
 
@@ -33,7 +29,7 @@ class Train {
 
   public:
     void draw(Layout layout, std::vector<Rail>);
-    Train(int track_id, size_t size);
+    Train(int track_id, std::size_t size);
     virtual void update(Graph graph, std::vector<Rail> rails);
     virtual ~Train();
 };
@@ -45,6 +41,6 @@ class ItineraryTrain : public Train {
     void next_rail(Graph graph, std::vector<Rail> rails) override;
 
   public:
-    ItineraryTrain(std::vector<int> path, size_t size);
+    ItineraryTrain(std::vector<int> path, std::size_t size);
     virtual ~ItineraryTrain();
 };
