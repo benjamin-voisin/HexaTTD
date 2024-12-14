@@ -39,7 +39,7 @@ prev_rail_s Cyclic_buffer::del_last_prev_rail() {
 }
 
 prev_rail_s Cyclic_buffer::get_prev_rail(int n) {
-    assert((0 <= n) && (n < _size));
+    assert((0 <= n) && ((long unsigned) n < _size));
     return _buffer[mod(_index-(n*_incr), _size)];
 }
 
