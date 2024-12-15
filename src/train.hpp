@@ -15,16 +15,10 @@ class Train {
     Cyclic_buffer _previous_rail;
     std::shared_ptr<Texture2D> _sprite;
 
-    float _orientation;
-    float _current_speed;
-    float _max_speed;
-
-    int _rail_id;
     int _id;
     std::size_t _size;
     
     float _progression; // Progression of the train through the rail.
-    int _direction;
 
     virtual void next_rail(Grid* grid);
 
@@ -33,7 +27,7 @@ class Train {
   public:
     void draw(Layout layout, std::vector<Rail>);
     void reverse();
-    Train(int id, int track_id, std::size_t size);
+    Train(Grid* grid, int id, int track_id, std::size_t size);
     virtual void update(Grid* grid);
     virtual ~Train();
 };
@@ -45,6 +39,6 @@ class ItineraryTrain : public Train {
     void next_rail(Grid* grid) override;
 
   public:
-    ItineraryTrain(int id, std::vector<int> path, std::size_t size);
+    ItineraryTrain(Grid* grid, int id, std::vector<int> path, std::size_t size);
     virtual ~ItineraryTrain();
 };

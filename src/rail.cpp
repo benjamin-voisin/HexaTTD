@@ -119,6 +119,9 @@ void Rail::draw(Layout layout, Color c, int phase) {
     // Vector center = Vector(_hex.center(layout));
     std::vector<Vector2> corners = _hex.corners(layout);
 
+    if (this->_on_track_train.size() > 0)
+        c = GREEN;
+
     // Hex tile_src = _hex.neighbor(_src_neighbor);
     // Hex tile_dst = _hex.neighbor(_dst_neighbor);
 
