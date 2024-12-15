@@ -82,7 +82,7 @@ int main() {
     grid.add_rail(Hex(1, -1), 2, 5, 5);
     grid.add_rail(Hex(1, -1) + Hex(1, -1), 2, 0, 5);
     grid.add_rail(Hex(0, 1), 1, 4, 5);
-    grid.add_train(new Train(&grid, 0, 0, 4));
+    grid.add_train(new Train(&grid, 0, 0, 5));
 
     grid.add_station(0, "Test");
 

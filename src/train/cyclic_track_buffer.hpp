@@ -26,6 +26,7 @@ class Cyclic_buffer {
         void pp(FILE* f);
 
         std::size_t get_size();
+        std::size_t get_max_size();
 
         void add_prev_rail(int rail_id, int direction);
         prev_rail_s del_last_prev_rail();

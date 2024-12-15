@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 Train::Train(Grid* grid, int id, int track_id, std::size_t size) 
-    : _previous_rail {Cyclic_buffer(size / 2 + 1)} {
+    : _previous_rail {Cyclic_buffer(size / 2 + 2)} {
     _id = id;
     
     _size = size;
@@ -18,7 +18,7 @@ Train::Train(Grid* grid, int id, int track_id, std::size_t size)
     grid->get_rail(track_id)->add_on_track_train(_id);
     
     _wagons.push_back(std::make_unique<Wagon>(Wagon("Test", 1.f)));
-    for (std::size_t i=0; i<size; ++i)
+    for (std::size_t i=0; i<size-1; ++i)
         _wagons.push_back(std::make_unique<Wagon>(Wagon("test", 0.f)));
 }
 
@@ -26,19 +26,18 @@ Train::~Train() {}
 
 void Train::reverse() {
     this->_previous_rail.reverse();
-    _progression = 0.f;
 }
 
 void Train::draw(Layout layout, std::vector<Rail> rails) {
     std::size_t c = (_progression > 0.5) ? 0 : 1;
     for (std::size_t i = 0; i < _wagons.size(); i++) {
-        auto j = (i+c) / 2;
+        auto j = (i+c+1) / 2;
         if (j < _previous_rail.get_size()) {
             auto prev = _previous_rail.get_prev_rail(j);
             auto p = _progression;
             // Gestion de l'autre demi-rail
             // décalage par rapport à la locomotive
-            if (i % 2 != 0) {
+            if (i % 2 != 1) {
                 if (c == 0)
                     p -= 0.5;
                 else 
@@ -60,6 +59,13 @@ void Train::next_rail(Grid* grid) {
     
     std::set<int> neighbor;
     int new_src_dir;
+
+    if (_previous_rail.get_size() >= _previous_rail.get_max_size()) {
+        prev_rail_s prev_rail_data = _previous_rail.del_last_prev_rail();
+        Rail* prev_rail = grid->get_rail(prev_rail_data.rail_id);
+        prev_rail->del_on_track_train(_id);
+    }
+
     if (_direction == 1) {
         //  Dans ce cas,  le tain à traversé le dernier rail de la source vers
         // la destination
@@ -76,11 +82,6 @@ void Train::next_rail(Grid* grid) {
     }
 
     if (neighbor.size() > 0) {
-        if (_previous_rail.get_size() >= _size/2+1) {
-            prev_rail_s prev_rail_data = _previous_rail.del_last_prev_rail();
-            Rail* prev_rail = grid->get_rail(prev_rail_data.rail_id);
-            prev_rail->del_on_track_train(_id);
-        }
         _rail_id = *(std::next(neighbor.begin(), rand() % neighbor.size()));
         if (new_src_dir == grid->get_rail(_rail_id)->get_src_neighbor()) {
             // Dans ce cas, on vas maintenant aller de la source à la

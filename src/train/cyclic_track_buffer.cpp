@@ -22,6 +22,11 @@ std::size_t Cyclic_buffer::get_size() {
     return _size;
 }
 
+std::size_t Cyclic_buffer::get_max_size() {
+    return _sizemax;
+}
+
+
 std::size_t Cyclic_buffer::index_min() {
     return mod(_index - ((_size-1)*_incr), _sizemax);
 }
