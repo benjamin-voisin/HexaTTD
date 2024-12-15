@@ -145,9 +145,9 @@ void Grid::add_rail(Hex hex, int src_side, int dst_side, int width) {
     _lock.unlock();
 }
 
-void Grid::add_train(Train *train) {
+void Grid::add_train(int track_id, std::size_t size) {
     _lock.lock();
-    trains.push_back(train);
+    trains.push_back(new Train(this, trains.size(), track_id, size));
     _lock.unlock();
 }
 

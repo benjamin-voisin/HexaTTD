@@ -13,7 +13,7 @@
 
 const char dotfile[20] = "graph.dot";
 
-void pp_int_rail_vector(Grid* g, FILE *f, std::vector<int> v) {
+void pp_int_rail_vector(Grid *g, FILE *f, std::vector<int> v) {
     fprintf(f, "[");
     for (long unsigned i = 0; i < v.size(); ++i) {
         if (i > 0)
@@ -82,7 +82,7 @@ int main() {
     grid.add_rail(Hex(1, -1), 2, 5, 5);
     grid.add_rail(Hex(1, -1) + Hex(1, -1), 2, 0, 5);
     grid.add_rail(Hex(0, 1), 1, 4, 5);
-    grid.add_train(new Train(&grid, 0, 0, 5));
+    grid.add_train(0, 5);
 
     grid.add_station(0, "Test");
 
@@ -119,7 +119,7 @@ int main() {
             std::vector<int> selected_rails = {};
             for (auto n = on_tile_tracks.begin(); n != on_tile_tracks.end();
                  ++n) {
-                Rail* r = grid.get_rail(*n);
+                Rail *r = grid.get_rail(*n);
                 if (r->is_on_track(grid.layout, pos)) {
                     selected_rails.push_back(*n);
                 }
@@ -130,7 +130,7 @@ int main() {
                 }
             } else {
                 for (long unsigned i = 0; i < selected_rails.size(); ++i) {
-                    Rail* r = grid.get_rail(selected_rails[i]);
+                    Rail *r = grid.get_rail(selected_rails[i]);
                     if (!r->deleted)
                         r->draw(grid.layout, ORANGE, 1);
                 }

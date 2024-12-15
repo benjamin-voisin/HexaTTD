@@ -37,7 +37,7 @@ class Grid {
 
     Tile *tile_from_hex(Hex hex);
     void add_rail(Hex tile, int src_side, int dst_side, int width);
-    void add_train(Train *train);
+    void add_train(int track_id, std::size_t size);
 
     Rail *get_rail(int track_id);
     void del_rail(int rail_id);
