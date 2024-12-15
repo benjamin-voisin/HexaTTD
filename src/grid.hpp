@@ -22,8 +22,9 @@ class Grid {
     std::vector<Train *> trains;
     std::vector<Station> stations;
 
+    std::mutex _lock;
 
-	bool _running;
+    bool _running;
 
   public:
     Graph graph;
@@ -38,7 +39,7 @@ class Grid {
     void add_rail(Hex tile, int src_side, int dst_side, int width);
     void add_train(Train *train);
 
-    Rail* get_rail(int track_id);
+    Rail *get_rail(int track_id);
     void del_rail(int rail_id);
 
     void add_station(int rail_id, std::string name);
@@ -48,8 +49,8 @@ class Grid {
     void update();
     void update_zoom(int wheel_factor, bool center_on_mouse);
 
-	bool is_running();
-	void stop();
+    bool is_running();
+    void stop();
 
     ~Grid();
 };

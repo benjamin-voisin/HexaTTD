@@ -18,6 +18,7 @@ Grid::~Grid() {
 }
 
 void Grid::draw() {
+    _lock.lock();
     for (int q = q_min; q <= q_max; q++) {
         for (int r = r_min; r <= r_max; r++) {
             Hex(q, r).draw(layout, BLACK);
@@ -42,6 +43,7 @@ void Grid::draw() {
     for (long unsigned i = 0; i < trains.size(); i++) {
         trains[i]->draw(layout, rails);
     }
+    _lock.unlock();
 }
 
 void Grid::hightlight(Hex hex, Color c) { hex.draw(layout, c); }
@@ -93,6 +95,7 @@ Tile *Grid::tile_from_hex(Hex hex) {
 }
 
 void Grid::del_rail(int track_id) {
+    _lock.lock();
     assert((0 <= track_id) && ((long unsigned)track_id < rails.size()));
     Rail r = rails[track_id];
 
@@ -110,9 +113,11 @@ void Grid::del_rail(int track_id) {
     rails[track_id].deleted = true;
 
     graph.delete_rail(track_id);
+    _lock.unlock();
 }
 
 void Grid::add_rail(Hex hex, int src_side, int dst_side, int width) {
+    _lock.lock();
     rails.push_back(Rail(hex, src_side, dst_side, width));
     Rail r = rails[rails.size() - 1];
 #ifndef NDEBUG
@@ -135,14 +140,21 @@ void Grid::add_rail(Hex hex, int src_side, int dst_side, int width) {
                            track_id);
 
     assert(rails.size() - 1 == (long unsigned)track_id);
+    _lock.unlock();
 }
 
-void Grid::add_train(Train *train) { trains.push_back(train); }
+void Grid::add_train(Train *train) {
+    _lock.lock();
+    trains.push_back(train);
+    _lock.unlock();
+}
 
-Rail* Grid::get_rail(int track_id) { return &rails[track_id]; }
+Rail *Grid::get_rail(int track_id) { return &rails[track_id]; }
 
 void Grid::add_station(int rail_id, std::string name) {
+    _lock.lock();
     stations.push_back(Station(rail_id, name));
+    _lock.unlock();
 }
 
 void Grid::update_zoom(int wheel_factor, bool center_on_mouse) {
@@ -172,15 +184,17 @@ void Grid::update_zoom(int wheel_factor, bool center_on_mouse) {
 }
 
 void Grid::update() {
+    _lock.lock();
     layout.screen_width = GetScreenWidth();
     layout.screen_height = GetScreenHeight();
     /* update_zoom(WHEEL_FACTOR, true); */
-	for (auto train: trains) {
-		train->update(this);
-	}
+    for (auto train : trains) {
+        train->update(this);
+    }
     /* for (long unsigned i = 0; i < trains.size(); i++) { */
     /*     trains[i]->update(graph, rails); */
     /* } */
+    _lock.unlock();
 }
 
 bool Grid::is_running() { return _running; }
