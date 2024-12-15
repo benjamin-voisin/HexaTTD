@@ -99,20 +99,22 @@ void Grid::del_rail(int track_id) {
     assert((0 <= track_id) && ((long unsigned)track_id < rails.size()));
     Rail r = rails[track_id];
 
-    Hex hex = r.get_hex();
-    Tile *src_neighbor = tile_from_hex(hex.neighbor(r.get_src_neighbor()));
-    Tile *tile = tile_from_hex(hex);
-    Tile *dst_neighbor = tile_from_hex(hex.neighbor(r.get_dst_neighbor()));
+    if (!r.is_train_on_track()) {
+        Hex hex = r.get_hex();
+        Tile *src_neighbor = tile_from_hex(hex.neighbor(r.get_src_neighbor()));
+        Tile *tile = tile_from_hex(hex);
+        Tile *dst_neighbor = tile_from_hex(hex.neighbor(r.get_dst_neighbor()));
 
-    tile->del_on_tile_track(track_id);
-    src_neighbor->del_rail(Hex::opposite_direction(r.get_src_neighbor()),
-                           track_id);
-    dst_neighbor->del_rail(Hex::opposite_direction(r.get_dst_neighbor()),
-                           track_id);
+        tile->del_on_tile_track(track_id);
+        src_neighbor->del_rail(Hex::opposite_direction(r.get_src_neighbor()),
+                               track_id);
+        dst_neighbor->del_rail(Hex::opposite_direction(r.get_dst_neighbor()),
+                               track_id);
 
-    rails[track_id].deleted = true;
+        rails[track_id].deleted = true;
 
-    graph.delete_rail(track_id);
+        graph.delete_rail(track_id);
+    }
     _lock.unlock();
 }
 

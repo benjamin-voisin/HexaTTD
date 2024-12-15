@@ -28,33 +28,29 @@ Rail::Rail(Hex tile, int src_side, int dst_side, int width)
 
 Hex Rail::get_hex() { return _hex; }
 
-void setpp(FILE* f, std::set<int> _on_track_train) {
+void setpp(FILE *f, std::set<int> _on_track_train) {
     fprintf(f, "[");
-    for (auto i=_on_track_train.begin(); i!=_on_track_train.end(); ++i) {
-        if (i !=  _on_track_train.begin())
+    for (auto i = _on_track_train.begin(); i != _on_track_train.end(); ++i) {
+        if (i != _on_track_train.begin())
             fprintf(f, ", ");
         fprintf(f, "%d", *i);
     }
     fprintf(f, "]");
 }
 
-void Rail::pp(FILE* f) {
+void Rail::pp(FILE *f) {
     fprintf(f, "Rail{src=%d, dst=%d, trains=", _src_neighbor, _dst_neighbor);
     setpp(f, _on_track_train);
     fprintf(f, "}");
 }
 
-std::set<int> Rail::get_on_track_train() {
-    return this->_on_track_train;
-}
-    
+std::set<int> Rail::get_on_track_train() { return this->_on_track_train; }
+
 void Rail::add_on_track_train(int train) {
     this->_on_track_train.insert(train);
 }
 
-void Rail::del_on_track_train(int train) {
-    this->_on_track_train.erase(train);
-}
+void Rail::del_on_track_train(int train) { this->_on_track_train.erase(train); }
 
 train_pos Rail::get_position(Layout layout, float progression) {
     if (_src_neighbor + 3 == _dst_neighbor) {
@@ -279,6 +275,8 @@ void Rail::draw(Layout layout, Color c) {
         }
     }
 }
+
+bool Rail::is_train_on_track() { return !_on_track_train.empty(); }
 
 int Rail::get_src_neighbor() { return _src_neighbor; }
 
