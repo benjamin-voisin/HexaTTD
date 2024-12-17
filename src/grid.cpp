@@ -18,7 +18,6 @@ Grid::~Grid() {
 }
 
 void Grid::draw() {
-    _lock.lock();
     for (int q = q_min; q <= q_max; q++) {
         for (int r = r_min; r <= r_max; r++) {
             Hex(q, r).draw(layout, BLACK);
@@ -27,6 +26,7 @@ void Grid::draw() {
     int n_classes = graph.get_max_class();
     for (int phase = 0; phase < Rail::number_phases(); phase++) {
         for (long unsigned i = 0; i < rails.size(); ++i) {
+            _lock.lock();
             if (!rails[i].deleted) {
                 int r_class = graph.get_class(i);
                 rails[i].draw(
@@ -35,15 +35,19 @@ void Grid::draw() {
                                  0.7f, 0.5f),
                     phase);
             }
+            _lock.unlock();
         }
     }
-    for (long unsigned i = 0; i < stations.size(); i++) {
-        stations[i].draw(layout, rails);
+    for (Station station : stations) {
+        _lock.lock();
+        station.draw(layout, rails);
+        _lock.unlock();
     }
-    for (long unsigned i = 0; i < trains.size(); i++) {
-        trains[i]->draw(layout, rails);
+    for (Train *train : trains) {
+        _lock.lock();
+        train->draw(layout, rails);
+        _lock.unlock();
     }
-    _lock.unlock();
 }
 
 void Grid::hightlight(Hex hex, Color c) { hex.draw(layout, c); }
@@ -186,17 +190,17 @@ void Grid::update_zoom(int wheel_factor, bool center_on_mouse) {
 }
 
 void Grid::update() {
-    _lock.lock();
     layout.screen_width = GetScreenWidth();
     layout.screen_height = GetScreenHeight();
     /* update_zoom(WHEEL_FACTOR, true); */
     for (auto train : trains) {
+        _lock.lock();
         train->update(this);
+        _lock.unlock();
     }
     /* for (long unsigned i = 0; i < trains.size(); i++) { */
     /*     trains[i]->update(graph, rails); */
     /* } */
-    _lock.unlock();
 }
 
 bool Grid::is_running() { return _running; }
