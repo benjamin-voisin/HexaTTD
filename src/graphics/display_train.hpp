@@ -1,7 +1,6 @@
 #pragma once
 
-#include "../vector.hpp"
-#include "raylib.h"
+#include "geometry/vector.hpp"
 
 class DrawTrain {
   private:

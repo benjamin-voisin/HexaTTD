@@ -2,7 +2,7 @@
 
 #include <math.h>
 
-#include "layout.hpp"
+#include "geometry/layout.hpp"
 #include "rail.hpp"
 #include "station.hpp"
 #include "tile.hpp"

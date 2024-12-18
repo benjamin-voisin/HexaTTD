@@ -1,7 +1,7 @@
 #pragma once
 
-#include "hex.hpp"
-#include "layout.hpp"
+#include "geometry/hex.hpp"
+#include "geometry/layout.hpp"
 
 #include <set>
 #include <stdio.h>

@@ -1,5 +1,5 @@
 #include "grid.hpp"
-#include "hex.hpp"
+#include "geometry/hex.hpp"
 #include "utils.hpp"
 
 #include <assert.h>

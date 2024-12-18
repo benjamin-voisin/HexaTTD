@@ -2,7 +2,7 @@
 #include <math.h>
 #include <vector>
 
-#include "../raylib/src/raylib.h"
+#include "raylib.h"
 #include "hex.hpp"
 
 Hex::Hex(int q, int r, int s) : _q{q}, _r{r}, _s{s} {

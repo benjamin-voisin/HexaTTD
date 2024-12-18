@@ -1,8 +1,6 @@
 #include "game.hpp"
 #include "raylib.h"
 
-#include <iostream>
-
 void Game::update() {
     Hex last_cursor = _grid.xy_to_hex(GetMouseX(), GetMouseY());
     Hex last_cursor_pers = _grid.xy_to_hex(GetMouseX(), GetMouseY());

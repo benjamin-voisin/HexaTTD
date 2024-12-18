@@ -1,7 +1,7 @@
 #include "rail.hpp"
+#include "geometry/vector.hpp"
 #include "graphics/display_track.hpp"
 #include "raylib.h"
-#include "vector.hpp"
 
 #include <assert.h>
 #include <stdio.h>

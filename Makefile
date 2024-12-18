@@ -13,7 +13,7 @@ RAYGUI_SRC_PATH ?= ./raygui/src/#Path to raygui source code
 CPPFLAGS += -MP -MD
 
 # Our compile flags, with etra warning
-CXXFLAGS = -Wall -Wextra -I$(RAYLIB_SRC_PATH) -I$(RAYGUI_SRC_PATH)
+CXXFLAGS = -Wall -Wextra -I$(RAYLIB_SRC_PATH) -I$(RAYGUI_SRC_PATH) -I./src/
 DEBUGFLAGS = -g3 -fsanitize=address -DDEBUG
 RELEASEFLAGS = -flto -O3 -DNDEBUG
 
