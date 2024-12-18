@@ -2,6 +2,7 @@ NAME = hexattd
 CXX = g++ --std=c++20 
 
 BUILD_DIR ?= ./build# Default build directory ./build, but modifiable
+SRC_DIR = ./src
 
 VPATH += $(BUILD_DIR)
 
@@ -13,7 +14,7 @@ RAYGUI_SRC_PATH ?= ./raygui/src/#Path to raygui source code
 CPPFLAGS += -MP -MD
 
 # Our compile flags, with etra warning
-CXXFLAGS = -Wall -Wextra -I$(RAYLIB_SRC_PATH) -I$(RAYGUI_SRC_PATH) -I./src/
+CXXFLAGS = -Wall -Wextra -I$(RAYLIB_SRC_PATH) -I$(RAYGUI_SRC_PATH) -I$(SRC_DIR)
 DEBUGFLAGS = -g3 -fsanitize=address -DDEBUG
 RELEASEFLAGS = -flto -O3 -DNDEBUG
 
@@ -58,7 +59,7 @@ export CUSTOM_CFLAGS
 export RAYLIB_RELEASE_PATH
 
 # Here we get all the source files and define our objects and makefiles associated
-SOURCES = $(shell find . -name '*.cpp')
+SOURCES = $(shell find $(SRC_DIR) -name '*.cpp')
 TEST_FILE = ./src/test.cpp
 OBJECTS = $(addprefix $(BUILD_DIR)/, $(SOURCES:%.cpp=%.o))
 MAKEFILES = $(OBJECTS:%.o=%.d)
