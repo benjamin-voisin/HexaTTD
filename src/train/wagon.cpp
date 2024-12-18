@@ -1,5 +1,5 @@
 #include "wagon.hpp"
-#include "graphics/display_train.hpp"
+#include "../graphics/display_train.hpp"
 
 void Wagon::draw(Layout layout, std::vector<Rail> rails, int rail_id,
                  float _progression) {

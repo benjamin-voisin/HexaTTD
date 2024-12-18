@@ -1,7 +1,7 @@
 #pragma once
 
-#include "layout.hpp"
-#include "rail.hpp"
+#include "../layout.hpp"
+#include "../rail.hpp"
 #include <string>
 
 class Wagon {

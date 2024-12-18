@@ -3,9 +3,8 @@
 #include <memory>
 #include <stdlib.h>
 
-#include "rail.hpp"
-#include "track_graph/track_graph.hpp"
-#include "train/cyclic_track_buffer.hpp"
+#include "../rail.hpp"
+#include "cyclic_track_buffer.hpp"
 #include "wagon.hpp"
 
 class Grid;

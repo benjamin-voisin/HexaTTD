@@ -8,7 +8,7 @@
 #include "gui/toggle.hpp"
 #include "rail.hpp"
 #include "raylib.h"
-#include "train.hpp"
+#include "train/train.hpp"
 #include "vector.hpp"
 
 const char dotfile[20] = "graph.dot";
@@ -82,7 +82,7 @@ int main() {
     grid.add_rail(Hex(1, -1), 2, 5, 5);
     grid.add_rail(Hex(1, -1) + Hex(1, -1), 2, 0, 5);
     grid.add_rail(Hex(0, 1), 1, 4, 5);
-    grid.add_train(0, 5);
+    grid.add_train(0, 6);
 
     grid.add_station(0, "Test");
 

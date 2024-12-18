@@ -1,9 +1,8 @@
 #include "train.hpp"
-#include "grid.hpp"
+#include "../grid.hpp"
 
 #include <algorithm>
 #include <assert.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 Train::Train(Grid *grid, int id, int track_id, std::size_t size)

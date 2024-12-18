@@ -7,7 +7,7 @@
 #include "station.hpp"
 #include "tile.hpp"
 #include "track_graph/track_graph.hpp"
-#include "train.hpp"
+#include "train/train.hpp"
 
 #define WHEEL_FACTOR 5
 
