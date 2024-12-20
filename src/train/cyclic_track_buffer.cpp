@@ -2,33 +2,24 @@
 
 #include <assert.h>
 
-int mod(int a, int b) {
-    return ((a % b) + b) % b;
-}
+int mod(int a, int b) { return ((a % b) + b) % b; }
 
-Cyclic_buffer::Cyclic_buffer(std::size_t sizemax) {
+Cyclic_buffer::Cyclic_buffer(size_t sizemax) {
     _sizemax = sizemax;
     _size = 0;
     _index = 0;
     _incr = 1;
-    _buffer = (prev_rail_s*) calloc(sizemax, sizeof(prev_rail_s));
+    _buffer = (prev_rail_s *)calloc(sizemax, sizeof(prev_rail_s));
 }
 
-Cyclic_buffer::~Cyclic_buffer() {
-    free(_buffer);
-}
+Cyclic_buffer::~Cyclic_buffer() { free(_buffer); }
 
-std::size_t Cyclic_buffer::get_size() {
-    return _size;
-}
+size_t Cyclic_buffer::get_size() { return _size; }
 
-std::size_t Cyclic_buffer::get_max_size() {
-    return _sizemax;
-}
+size_t Cyclic_buffer::get_max_size() { return _sizemax; }
 
-
-std::size_t Cyclic_buffer::index_min() {
-    return mod(_index - ((_size-1)*_incr), _sizemax);
+size_t Cyclic_buffer::index_min() {
+    return mod(_index - ((_size - 1) * _incr), _sizemax);
 }
 
 void Cyclic_buffer::add_prev_rail(int rail_id, int direction) {
@@ -41,14 +32,14 @@ void Cyclic_buffer::add_prev_rail(int rail_id, int direction) {
 
 prev_rail_s Cyclic_buffer::del_last_prev_rail() {
     assert(_size > 0);
-    prev_rail_s ret = get_prev_rail(_size-1);
+    prev_rail_s ret = get_prev_rail(_size - 1);
     _size--;
     return ret;
 }
 
-prev_rail_s Cyclic_buffer::get_prev_rail(std::size_t n) {
-    assert((long unsigned) n < _size);
-    prev_rail_s ret = _buffer[mod(_index-(n*_incr), _sizemax)];
+prev_rail_s Cyclic_buffer::get_prev_rail(size_t n) {
+    assert((long unsigned)n < _size);
+    prev_rail_s ret = _buffer[mod(_index - (n * _incr), _sizemax)];
     ret.direction *= _incr;
     return ret;
 }
@@ -58,9 +49,9 @@ void Cyclic_buffer::reverse() {
     _incr = _incr * -1;
 }
 
-void Cyclic_buffer::pp(FILE* f) {
+void Cyclic_buffer::pp(FILE *f) {
     fprintf(f, "[");
-    for (std::size_t i=0; i<get_size(); ++i) {
+    for (size_t i = 0; i < get_size(); ++i) {
         if (i > 0)
             fprintf(f, ", ");
         prev_rail_s s = get_prev_rail(i);
