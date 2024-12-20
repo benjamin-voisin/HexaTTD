@@ -145,6 +145,15 @@ Game::Game(int width, int height, std::string name)
     _grid.add_station(0, "Test");
 }
 
+#ifdef PLATFORM_WEB
+void Game::start() {
+    _update_thread = std::thread([this]() { update(); });
+    InitWindow(1920, 1080, this->_name.c_str());
+    SetTargetFPS(60);
+    draw();
+    _grid.stop();
+}
+#else
 void Game::start() {
     _update_thread = std::thread([this]() { update(); });
     _draw_thread = std::thread([this]() {
@@ -154,6 +163,7 @@ void Game::start() {
         this->_grid.stop();
     });
 }
+#endif
 
 void Game::wait() {
     _draw_thread.join();

@@ -1,6 +1,9 @@
 *.o
 *.a
 hexattd
+hexattd.html
+hexattd.js
+hexattd.wasm
 *.dot
 *.d
 compile_commands.json

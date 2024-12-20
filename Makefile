@@ -55,7 +55,6 @@ default: $(NAME)
 # for raylib
 RAYLIB_RELEASE_PATH = $(CURDIR)/$(BUILD_DIR)
 LIBRAYLIB = $(BUILD_DIR)/libraylib.a
-export CUSTOM_CFLAGS
 export RAYLIB_RELEASE_PATH
 
 # Here we get all the source files and define our objects and makefiles associated
@@ -77,10 +76,18 @@ $(BUILD_DIR)/%.o: %.cpp
 	@$(ECHO) "\033[32mBuilding CXX object $@ in $(MODE) mode\033[0m"
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<
 
+web: $(SOURCES)
+	@mkdir -p $(BUILD_DIR)
+	@$(ECHO) "\033[32mBuilding raylib for WASM\033[0m"
+	@$(MAKE) -C $(RAYLIB_SRC_PATH) PLATFORM=PLATFORM_WEB -B
+	@$(ECHO) "\033[32mBuilding WASM object $(NAME).wasm \033[0m"
+	em++ -o $(NAME).html $(SOURCES) -Wall -std=c++20 -D_DEFAULT_SOURCE -Wno-missing-braces -Wunused-result -O3 -s USE_GLFW=3 -s USE_PTHREADS=1 -s ASSERTIONS -s ASYNCIFY -s FORCE_FILESYSTEM=1 --shell-file $(RAYLIB_SRC_PATH)shell.html $(LIBRAYLIB) -DPLATFORM_WEB -s 'EXPORTED_FUNCTIONS=["_free","_malloc","_main"]' -s EXPORTED_RUNTIME_METHODS=ccall -I$(RAYLIB_SRC_PATH) -I$(RAYGUI_SRC_PATH) -I$(SRC_DIR)
+	@$(RM) $(LIBRAYLIB)
+
 $(LIBRAYLIB):
 	@mkdir -p $(BUILD_DIR)
 	@$(ECHO) "\033[32mBuilding raylib static lib in $(MODE) mode, this job is longer than others...\033[0m"
-	@$(MAKE) -C $(RAYLIB_SRC_PATH)
+	@$(MAKE) -C $(RAYLIB_SRC_PATH) CUSTOM_CFLAGS="$(CUSTOM_CFLAGS)"
 
 test: $(BUILD_DIR)/test
 	@./$^
