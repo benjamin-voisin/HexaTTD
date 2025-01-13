@@ -101,6 +101,9 @@ $(BUILD_DIR)/test: $(filter-out $(BUILD_DIR)/./src/main.o,$(OBJECTS)) $(LIBRAYLI
 
 clean:
 	$(RM) $(NAME)
+	$(RM) $(NAME).js
+	$(RM) $(NAME).wasm
+	$(RM) $(NAME).html
 	$(RM) $(OBJECTS)
 	$(RM) $(MAKEFILES)
 	$(RM) $(LIBRAYLIB)
