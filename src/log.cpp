@@ -39,19 +39,23 @@ Logger::Logger(loglevel level) {
 }
 
 Logger &Logger::operator<<(const char *value) {
-    std::cout << _text << value << std::endl;
-    return *this;
-}
-
-void raylib_log(int msgType, const char *text, va_list args) {
     char timeStr[64] = {0};
     time_t now = time(NULL);
     struct tm *tm_info = localtime(&now);
 
     strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", tm_info);
-    printf("[%s] ", timeStr);
 
-    vprintf(text, args);
+    std::cout << "[" << timeStr << "] " << _text << value << std::endl;
+    return *this;
+}
+
+// We need to ignore the va_list argumont in this function, as raylib require
+// it but we don’t use it
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+void raylib_log(int msgType, const char *text, va_list args) {
+#pragma GCC diagnostic pop
+
     switch (msgType) {
     case LOG_INFO:
         Log::Info << text;
