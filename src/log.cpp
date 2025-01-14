@@ -1,44 +1,75 @@
 #include "log.hpp"
-#include <mutex>
 
 #include <iostream>
 
-Log::Log() : _log_level{0} {}
+using Log::Logger;
 
-void Log::Init() { _logPtr = nullptr; }
+#ifdef DEBUG
+Log::loglevel Logger::_log_level = Log::Level_Debug;
+#else
+Log::loglevel Logger::_log_level = Log::Level_Info;
+#endif // DEBUG
+
+Logger Log::Info = Logger(Log::Level_Info);
+Logger Log::Warning = Logger(Log::Level_Warning);
+Logger Log::Fatal = Logger(Log::Level_Fatal);
+Logger Log::Debug = Logger(Log::Level_Debug);
+Logger Log::Error = Logger(Log::Level_Error);
+
+std::string level_to_string(Log::loglevel level) {
+    switch (level) {
+    case Log::Level_Debug:
+        return "[DEBUG]";
+    case Log::Level_Info:
+        return "[INFO]";
+    case Log::Level_Fatal:
+        return "[FATAL]";
+    case Log::Level_Warning:
+        return "[WARNING]";
+    case Log::Level_Error:
+        return "[ERROR]";
+    default:
+        return "[?]";
+    }
+}
+
+Logger::Logger(loglevel level) {
+    _text = level;
+    _log_level = Log::Level_Debug;
+}
+
+Logger &Logger::operator<<(const char *value) {
+    std::cout << _text << value << std::endl;
+    return *this;
+}
 
 void raylib_log(int msgType, const char *text, va_list args) {
-    /* char timeStr[64] = { 0 }; */
-    /* time_t now = time(NULL); */
-    /* struct tm *tm_info = localtime(&now); */
+    char timeStr[64] = {0};
+    time_t now = time(NULL);
+    struct tm *tm_info = localtime(&now);
 
-    /* strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", tm_info); */
-    /* printf("[%s] ", timeStr); */
+    strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", tm_info);
+    printf("[%s] ", timeStr);
 
-    /* switch (msgType) */
-    /* { */
-    /*     case LOG_INFO: printf("[INFO] : "); break; */
-    /*     case LOG_ERROR: printf("[ERROR]: "); break; */
-    /*     case LOG_WARNING: printf("[WARN] : "); break; */
-    /*     case LOG_DEBUG: printf("[DEBUG]: "); break; */
-    /*     default: break; */
-    /* } */
-
-    /* vprintf(text, args); */
-    Log::Get()->print_log_level();
-}
-
-Log *Log::Get() {
-    if (_logPtr == nullptr) {
-        _lock.lock();
-        if (_logPtr == nullptr) {
-            _logPtr = new Log;
-        }
-        _lock.unlock();
+    vprintf(text, args);
+    switch (msgType) {
+    case LOG_INFO:
+        Log::Info << text;
+        break;
+    case LOG_ERROR:
+        Log::Error << text;
+        break;
+    case LOG_WARNING:
+        Log::Warning << text;
+        break;
+    case LOG_DEBUG:
+        Log::Debug << text;
+        break;
+    default:
+        break;
     }
-    return _logPtr;
 }
 
-void Log::print_log_level() { std::cout << _log_level << std::endl; }
+void Logger::print_log_level() { std::cout << _log_level << std::endl; }
 
-void Log::set_log_level(int log_level) { _log_level = log_level; }
+void Logger::set_log_level(Log::loglevel log_level) { _log_level = log_level; }

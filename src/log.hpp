@@ -2,30 +2,36 @@
 
 #include "raylib.h"
 
-#include <mutex>
+#include <string>
 
-class Log {
-  private:
-    int _log_level;
+namespace Log {
+enum loglevel {
+    Level_Info = LOG_INFO,
+    Level_Warning = LOG_WARNING,
+    Level_Fatal = LOG_FATAL,
+    Level_Debug = LOG_DEBUG,
+    Level_Error = LOG_ERROR,
+};
 
-    static Log *_logPtr;
-    static std::mutex _lock;
-    Log();
+class Logger {
+  protected:
+    static Log::loglevel _log_level;
+    std::string _text;
 
   public:
-    Log(const Log &obj) = delete;
-
-    static Log *Get();
-    static void Init();
+    Logger(loglevel level);
 
     void print_log_level();
-    void set_log_level(int log_level);
+    void set_log_level(Log::loglevel log_level);
 
-    int Info = LOG_INFO;
-    int Warning = LOG_WARNING;
-    int Fatal = LOG_FATAL;
-    int Debug = LOG_DEBUG;
-    int Error = LOG_ERROR;
+    Logger &operator<<(const char *value);
 };
+
+extern Logger Info;
+extern Logger Warning;
+extern Logger Fatal;
+extern Logger Debug;
+extern Logger Error;
+}; // namespace Log
 
 void raylib_log(int msgType, const char *text, va_list args);
