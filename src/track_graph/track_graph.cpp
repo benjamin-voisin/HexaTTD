@@ -35,7 +35,7 @@ void Graph::_fusion(int rail_id) {
     }
 }
 
-int Graph::add(Rail r, std::vector<Rail> rails, std::set<int> neighbor_src,
+int Graph::add(Rail r, std::vector<Rail> &rails, std::set<int> neighbor_src,
                std::set<int> neighbor_dst) {
     adj_list_src.push_back(neighbor_src);
     adj_list_dst.push_back(neighbor_dst);

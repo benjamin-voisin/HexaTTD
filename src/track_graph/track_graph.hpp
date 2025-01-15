@@ -16,7 +16,7 @@ class Graph {
   public:
     Graph();
     int size();
-    int add(Rail r, std::vector<Rail> rails, std::set<int> neighbor_src,
+    int add(Rail r, std::vector<Rail> &rails, std::set<int> neighbor_src,
             std::set<int> neighbor_dst);
     int get_max_class();
     int get_class(int node);

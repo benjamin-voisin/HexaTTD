@@ -3,7 +3,7 @@
 Station::Station(int rail_id, std::string name)
     : _rail_id{rail_id}, _name{name} {}
 
-void Station::draw(Layout *layout, std::vector<Rail> rails) {
+void Station::draw(Layout *layout, std::vector<Rail> &rails) {
     if (rails[_rail_id].get_hex().is_visible(layout)) {
         auto position = rails[_rail_id].get_position(layout, 0.5f);
         auto pos = position.position +

@@ -34,7 +34,7 @@ void Train::reverse() {
         _progression -= 0.5;
 }
 
-void Train::draw(Layout *layout, std::vector<Rail> rails) {
+void Train::draw(Layout *layout, std::vector<Rail> &rails) {
     std::size_t c = (_progression > 0.5) ? 0 : 1;
     for (std::size_t i = 0; i < _wagons.size(); i++) {
         auto j = (i + c + 1) / 2;

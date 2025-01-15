@@ -10,5 +10,5 @@ class Station {
 
   public:
     Station(int rail_id, std::string name);
-    void draw(Layout *layout, std::vector<Rail> rails);
+    void draw(Layout *layout, std::vector<Rail> &rails);
 };
