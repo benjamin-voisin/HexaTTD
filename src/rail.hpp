@@ -32,9 +32,9 @@ class Rail {
     void del_on_track_train(int train);
     bool is_train_on_track();
 
-    void draw(Layout layout, Color c, int phase);
-    void draw(Layout layout, Color c);
-    train_pos get_position(Layout layout, float progression);
-    bool is_on_track(Layout layout, Vector v);
+    void draw(Layout *layout, Color c, int phase);
+    void draw(Layout *layout, Color c);
+    train_pos get_position(Layout *layout, float progression);
+    bool is_on_track(Layout *layout, Vector v);
     static int number_phases();
 };

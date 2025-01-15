@@ -20,7 +20,7 @@ Grid::~Grid() {
 void Grid::draw() {
     for (int q = q_min; q <= q_max; q++) {
         for (int r = r_min; r <= r_max; r++) {
-            Hex(q, r).draw(layout, BLACK);
+            Hex(q, r).draw(&layout, BLACK);
         }
     }
     int n_classes = graph.get_max_class();
@@ -30,7 +30,7 @@ void Grid::draw() {
             if (!rails[i].deleted) {
                 int r_class = graph.get_class(i);
                 rails[i].draw(
-                    this->layout,
+                    &this->layout,
                     ColorFromHSV(((float)r_class / (float)n_classes) * 360,
                                  0.7f, 0.5f),
                     phase);
@@ -40,17 +40,17 @@ void Grid::draw() {
     }
     for (Station station : stations) {
         _lock.lock();
-        station.draw(layout, rails);
+        station.draw(&layout, rails);
         _lock.unlock();
     }
     for (Train *train : trains) {
         _lock.lock();
-        train->draw(layout, rails);
+        train->draw(&layout, rails);
         _lock.unlock();
     }
 }
 
-void Grid::hightlight(Hex hex, Color c) { hex.draw(layout, c); }
+void Grid::hightlight(Hex hex, Color c) { hex.draw(&layout, c); }
 
 Hex round(float q, float r, float s) {
     double rx = round(q);

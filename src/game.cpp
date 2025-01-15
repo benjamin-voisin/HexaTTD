@@ -87,7 +87,7 @@ void Game::draw() {
             for (auto n = on_tile_tracks.begin(); n != on_tile_tracks.end();
                  ++n) {
                 Rail *r = _grid.get_rail(*n);
-                if (r->is_on_track(_grid.layout, pos)) {
+                if (r->is_on_track(&_grid.layout, pos)) {
                     selected_rails.push_back(*n);
                 }
             }
@@ -99,7 +99,7 @@ void Game::draw() {
                 for (long unsigned i = 0; i < selected_rails.size(); ++i) {
                     Rail *r = _grid.get_rail(selected_rails[i]);
                     if (!r->deleted)
-                        r->draw(_grid.layout, ORANGE, 1);
+                        r->draw(&_grid.layout, ORANGE, 1);
                 }
             }
             if (_debug_toggle.is_pressed()) {

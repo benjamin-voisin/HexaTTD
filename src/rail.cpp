@@ -52,7 +52,7 @@ void Rail::add_on_track_train(int train) {
 
 void Rail::del_on_track_train(int train) { this->_on_track_train.erase(train); }
 
-train_pos Rail::get_position(Layout layout, float progression) {
+train_pos Rail::get_position(Layout *layout, float progression) {
     if (_src_neighbor + 3 == _dst_neighbor) {
         // The rail is a straight line
         Vector src = _hex.center_side(layout, _src_neighbor);
@@ -69,8 +69,8 @@ train_pos Rail::get_position(Layout layout, float progression) {
                 _hex.corner_angle(layout, _src_neighbor + 4) * 180.f / M_PI;
             float angle = (progression) * (angle_max - angle_min) + angle_min;
             Vector v1 = Vector{
-                center.x + cosf(DEG2RAD * angle) * (layout.size.x * 1.5f),
-                center.y + sinf(DEG2RAD * angle) * (layout.size.x * 1.5f)};
+                center.x + cosf(DEG2RAD * angle) * (layout->size.x * 1.5f),
+                center.y + sinf(DEG2RAD * angle) * (layout->size.x * 1.5f)};
             return {v1, Vector(angle * DEG2RAD).orthogonal()};
         } else {
             Vector center = _hex.neighbor(_src_neighbor - 1).center(layout);
@@ -80,16 +80,16 @@ train_pos Rail::get_position(Layout layout, float progression) {
                 _hex.corner_angle(layout, _src_neighbor + 3) * 180.f / M_PI;
             float angle = (progression) * (angle_max - angle_min) + angle_min;
             Vector v1 = Vector{
-                center.x + cosf(DEG2RAD * angle) * (layout.size.x * 1.5f),
-                center.y + sinf(DEG2RAD * angle) * (layout.size.x * 1.5f)};
+                center.x + cosf(DEG2RAD * angle) * (layout->size.x * 1.5f),
+                center.y + sinf(DEG2RAD * angle) * (layout->size.x * 1.5f)};
             return {v1, Vector(angle * DEG2RAD).orthogonal()};
         }
     }
 }
 
-bool Rail::is_on_track(Layout layout, Vector v) {
-    auto display_gauge = GAUGE * (layout.size.x / GAUGE_FACTOR);
-    int delta = layout.size.x / 20;
+bool Rail::is_on_track(Layout *layout, Vector v) {
+    auto display_gauge = GAUGE * (layout->size.x / GAUGE_FACTOR);
+    int delta = layout->size.x / 20;
     if (_src_neighbor + 3 == _dst_neighbor) {
         // The rail is a straight line
         Vector src = _hex.center_side(layout, _src_neighbor);
@@ -106,12 +106,12 @@ bool Rail::is_on_track(Layout layout, Vector v) {
         }
         Vector dist = v - center;
         float norm = dist.norme();
-        return (norm > layout.size.x * 1.5f - display_gauge / 2 - delta) &&
-               (norm < layout.size.x * 1.5f + display_gauge / 2 + delta);
+        return (norm > layout->size.x * 1.5f - display_gauge / 2 - delta) &&
+               (norm < layout->size.x * 1.5f + display_gauge / 2 + delta);
     }
 }
 
-void Rail::draw(Layout layout, Color c, int phase) {
+void Rail::draw(Layout *layout, Color c, int phase) {
     // Vector center = Vector(_hex.center(layout));
     std::vector<Vector2> corners = _hex.corners(layout);
 
@@ -153,7 +153,7 @@ void Rail::draw(Layout layout, Color c, int phase) {
             ArcTrack track =
                 ArcTrack{c,
                          tile_curb.center(layout),
-                         layout.size.x * 1.5f,
+                         layout->size.x * 1.5f,
                          GAUGE,
                          _hex.corner_angle(layout, _dst_neighbor + 3) * 180 /
                              (float)M_PI,
@@ -165,7 +165,7 @@ void Rail::draw(Layout layout, Color c, int phase) {
             ArcTrack track =
                 ArcTrack{c,
                          tile_curb.center(layout),
-                         layout.size.x * 1.5f,
+                         layout->size.x * 1.5f,
                          GAUGE,
                          _hex.corner_angle(layout, _dst_neighbor - 2) * 180 /
                              (float)M_PI,
@@ -268,7 +268,7 @@ void Rail::draw(Layout layout, Color c, int phase) {
     } */
 }
 
-void Rail::draw(Layout layout, Color c) {
+void Rail::draw(Layout *layout, Color c) {
     if (_hex.is_visible(layout)) {
         for (int phase = 0; phase < number_phases(); phase++) {
             draw(layout, c, phase);

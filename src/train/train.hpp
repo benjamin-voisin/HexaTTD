@@ -24,7 +24,7 @@ class Train {
     std::vector<std::unique_ptr<Wagon>> _wagons;
 
   public:
-    void draw(Layout layout, std::vector<Rail>);
+    void draw(Layout *layout, std::vector<Rail>);
     void reverse();
     Train(Grid *grid, int id, int track_id, std::size_t size);
     virtual void update(Grid *grid);

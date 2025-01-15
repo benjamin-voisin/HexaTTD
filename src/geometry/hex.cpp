@@ -2,8 +2,8 @@
 #include <math.h>
 #include <vector>
 
-#include "raylib.h"
 #include "hex.hpp"
+#include "raylib.h"
 
 Hex::Hex(int q, int r, int s) : _q{q}, _r{r}, _s{s} {
     assert(q + r + s == 0);
@@ -80,34 +80,34 @@ int Hex::direction() {
     return -1;
 }
 
-Vector2 raw_center(Layout layout, Vector v) {
-    float x = (layout.orientation.f0 * v.x + layout.orientation.f1 * v.y) *
-              layout.size.x;
-    float y = (layout.orientation.f2 * v.x + layout.orientation.f3 * v.y) *
-              layout.size.y;
-    return Vector2{x + layout.origin.x, y + layout.origin.y};
+Vector2 raw_center(Layout *layout, Vector v) {
+    float x = (layout->orientation.f0 * v.x + layout->orientation.f1 * v.y) *
+              layout->size.x;
+    float y = (layout->orientation.f2 * v.x + layout->orientation.f3 * v.y) *
+              layout->size.y;
+    return Vector2{x + layout->origin.x, y + layout->origin.y};
 }
-Vector2 Hex::center_side(Layout layout, int direction) {
+Vector2 Hex::center_side(Layout *layout, int direction) {
     return raw_center(layout, to_Vector() + hex_directions[direction] / 2);
 }
-Vector2 Hex::center(Layout layout) { return raw_center(layout, to_Vector()); }
+Vector2 Hex::center(Layout *layout) { return raw_center(layout, to_Vector()); }
 
-float Hex::corner_angle(Layout layout, int corner) {
-    return 2.0 * M_PI * (layout.orientation.start_angle + corner) / 6;
+float Hex::corner_angle(Layout *layout, int corner) {
+    return 2.0 * M_PI * (layout->orientation.start_angle + corner) / 6;
 }
 
-Vector2 corner_offset(Layout layout, int corner) {
+Vector2 corner_offset(Layout *layout, int corner) {
     float angle = Hex::corner_angle(layout, corner);
-    return Vector2{layout.size.x * cos(angle), layout.size.y * sin(angle)};
+    return Vector2{layout->size.x * cos(angle), layout->size.y * sin(angle)};
 }
 
-Vector2 Hex::corner(Layout layout, int corner) {
+Vector2 Hex::corner(Layout *layout, int corner) {
     Vector2 c = center(layout);
     Vector2 offset = corner_offset(layout, (corner + 6) % 6);
     return Vector2{c.x + offset.x, c.y + offset.y};
 }
 
-std::vector<Vector2> Hex::corners(Layout layout) {
+std::vector<Vector2> Hex::corners(Layout *layout) {
     std::vector<Vector2> corners = {};
     for (int i = 0; i < 6; i++) {
         corners.push_back(corner(layout, i));
@@ -116,28 +116,28 @@ std::vector<Vector2> Hex::corners(Layout layout) {
     return corners;
 }
 
-Base Hex::base_sides(Layout layout, int k) {
+Base Hex::base_sides(Layout *layout, int k) {
     return Base{corner_angle(layout, k)};
 }
 
-bool Hex::is_visible(Layout layout) {
+bool Hex::is_visible(Layout *layout) {
     auto c = center(layout);
-    if (c.x - layout.size.x > layout.screen_width) {
+    if (c.x - layout->size.x > layout->screen_width) {
         return false;
     }
-    if (c.x + layout.size.x < 0) {
+    if (c.x + layout->size.x < 0) {
         return false;
     }
-    if (c.y - layout.size.y > layout.screen_height) {
+    if (c.y - layout->size.y > layout->screen_height) {
         return false;
     }
-    if (c.y + layout.size.y < 0) {
+    if (c.y + layout->size.y < 0) {
         return false;
     }
     return true;
 }
 
-void Hex::draw(Layout layout, Color color) {
+void Hex::draw(Layout *layout, Color color) {
     if (is_visible(layout)) {
         std::vector<Vector2> corners_list = corners(layout);
         DrawLineStrip(&corners_list[0], 7, color);
@@ -147,10 +147,10 @@ void Hex::draw(Layout layout, Color color) {
 #ifdef DEBUG
 #include <iostream>
 
-HexTest::HexTest() : TestInstance("hex.cpp") { }
+HexTest::HexTest() : TestInstance("hex.cpp") {}
 
 void HexTest::run_test() {
-	test(true, "Should pass");
-	test(false, "Should fail");
+    test(true, "Should pass");
+    test(false, "Should fail");
 }
 #endif

@@ -12,7 +12,7 @@ class Wagon {
 
   public:
     Wagon(std::string type, float capacity);
-    virtual void draw(Layout layout, std::vector<Rail> rails, int rail_id,
+    virtual void draw(Layout *layout, std::vector<Rail> rails, int rail_id,
                       float _progression);
     virtual ~Wagon();
 };
@@ -20,7 +20,7 @@ class Wagon {
 class Locomotive : public Wagon {
   public:
     Locomotive();
-    void draw(Layout layout, std::vector<Rail> rails, int rail_id,
+    void draw(Layout *layout, std::vector<Rail> rails, int rail_id,
               float _progression) override;
     ~Locomotive();
 };

@@ -20,7 +20,7 @@ class Hex {
     Hex multiply(int k);
 
   public:
-    void draw(Layout layout, Color color);
+    void draw(Layout *layout, Color color);
     Hex(int q, int r, int s);
     // As q + r + s = 0, we can build a constructor that computes s
     Hex(int q, int r);
@@ -38,18 +38,18 @@ class Hex {
 
     int length();
     int distance(Hex a);
-    Vector2 center(Layout layout);
+    Vector2 center(Layout *layout);
     Vector to_Vector();
-    Base base_sides(Layout layout, int i);
-    std::vector<Vector2> corners(Layout layout);
-    Vector2 center_side(Layout layout, int direction);
-    Vector2 corner(Layout layout, int corner);
-    static float corner_angle(Layout layout, int corner);
+    Base base_sides(Layout *layout, int i);
+    std::vector<Vector2> corners(Layout *layout);
+    Vector2 center_side(Layout *layout, int direction);
+    Vector2 corner(Layout *layout, int corner);
+    static float corner_angle(Layout *layout, int corner);
     bool is_neighbor(Hex other);
     Hex neighbor(int direction);
     static int opposite_direction(int direction);
     int direction();
-    bool is_visible(Layout layout);
+    bool is_visible(Layout *layout);
 };
 
 Hex hex_direction(int direction);
@@ -57,8 +57,8 @@ Hex hex_direction(int direction);
 #ifdef DEBUG
 #include "test.hpp"
 class HexTest : public TestInstance {
-	public:
-		void run_test() override;
-		HexTest();
+  public:
+    void run_test() override;
+    HexTest();
 };
 #endif
