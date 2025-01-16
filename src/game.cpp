@@ -2,48 +2,18 @@
 #include "raylib.h"
 
 void Game::update() {
-    Hex last_cursor = _grid.xy_to_hex(GetMouseX(), GetMouseY());
-    Hex last_cursor_pers = _grid.xy_to_hex(GetMouseX(), GetMouseY());
-
-    Hex start_construct = _grid.xy_to_hex(GetMouseX(), GetMouseY());
 
     auto target = std::chrono::milliseconds(16);
     auto target_fast = std::chrono::milliseconds(1);
 
     while (_grid.is_running()) {
         _grid.update();
-        Hex under_cursor = _grid.xy_to_hex(GetMouseX(), GetMouseY());
 
-        if (under_cursor != last_cursor)
-            last_cursor_pers = last_cursor;
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-            start_construct = under_cursor;
-        }
-
-        // Build rails
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-            if (last_cursor_pers.is_neighbor(start_construct) &&
-                last_cursor_pers.is_neighbor(under_cursor)) {
-                if ((start_construct != last_cursor_pers) &&
-                    (start_construct != under_cursor)) {
-                    Hex diff_src = start_construct - last_cursor_pers;
-                    Hex diff_dst = under_cursor - last_cursor_pers;
-                    if ((diff_src.direction() != diff_dst.direction()) &&
-                        !(start_construct.is_neighbor(under_cursor))) {
-                        _grid.add_rail(last_cursor_pers, diff_src.direction(),
-                                       diff_dst.direction(), 4);
-                        start_construct = last_cursor_pers;
-                    }
-                }
-            }
-        }
         if (IsKeyDown(KEY_TAB)) {
             std::this_thread::sleep_for(target_fast);
         } else {
             std::this_thread::sleep_for(target);
         }
-
-        last_cursor = under_cursor;
     }
 }
 
@@ -58,6 +28,11 @@ void pp_int_rail_vector(Grid *g, FILE *f, std::vector<int> v) {
 };
 
 void Game::draw() {
+
+    Hex last_cursor = _grid.xy_to_hex(GetMouseX(), GetMouseY());
+    Hex last_cursor_pers = _grid.xy_to_hex(GetMouseX(), GetMouseY());
+
+    Hex start_construct = _grid.xy_to_hex(GetMouseX(), GetMouseY());
 
     char *texte = (char *)calloc(1000, sizeof(char));
     while (!WindowShouldClose()) {
@@ -114,6 +89,30 @@ void Game::draw() {
             }
         }
 
+        if (under_cursor != last_cursor)
+            last_cursor_pers = last_cursor;
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            start_construct = under_cursor;
+        }
+
+        // Build rails
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+            if (last_cursor_pers.is_neighbor(start_construct) &&
+                last_cursor_pers.is_neighbor(under_cursor)) {
+                if ((start_construct != last_cursor_pers) &&
+                    (start_construct != under_cursor)) {
+                    Hex diff_src = start_construct - last_cursor_pers;
+                    Hex diff_dst = under_cursor - last_cursor_pers;
+                    if ((diff_src.direction() != diff_dst.direction()) &&
+                        !(start_construct.is_neighbor(under_cursor))) {
+                        _grid.add_rail(last_cursor_pers, diff_src.direction(),
+                                       diff_dst.direction(), 4);
+                        start_construct = last_cursor_pers;
+                    }
+                }
+            }
+        }
+
         _grid.hightlight(under_cursor, GREEN);
 
         DrawFPS(10, 10);
@@ -125,6 +124,7 @@ void Game::draw() {
         /* grid.hightlight(start_construct, BLACK); */
         /* } */
 
+        last_cursor = under_cursor;
         EndDrawing();
     }
     free(texte);
@@ -158,7 +158,7 @@ void Game::start() {
     _update_thread = std::thread([this]() { update(); });
     _draw_thread = std::thread([this]() {
         InitWindow(1000, 1000, this->_name.c_str());
-        SetTargetFPS(60);
+        /* SetTargetFPS(60); */
         draw();
         this->_grid.stop();
     });
