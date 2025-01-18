@@ -1,5 +1,6 @@
 #include "log.hpp"
 
+#include <cstdio>
 #include <iostream>
 
 using Log::Logger;
@@ -34,27 +35,47 @@ std::string level_to_string(Log::loglevel level) {
 }
 
 Logger::Logger(loglevel level) {
-    _text = level;
-    _log_level = Log::Level_Debug;
+    _text = level_to_string(level);
+    _level = level;
 }
 
 Logger &Logger::operator<<(const char *value) {
-    char timeStr[64] = {0};
-    time_t now = time(NULL);
-    struct tm *tm_info = localtime(&now);
-
-    strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", tm_info);
-
-    std::cout << "[" << timeStr << "] " << _text << value << std::endl;
+    log("%s", value);
     return *this;
 }
 
-// We need to ignore the va_list argumont in this function, as raylib require
-// it but we don’t use it
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
+std::string string_format(const std::string fmt, ...) {
+    int n, size = 100;
+    std::string str;
+    va_list ap;
+    while (1) {
+        str.resize(size);
+        va_start(ap, fmt);
+        n = vsnprintf((char *)str.c_str(), size, fmt.c_str(), ap);
+        va_end(ap);
+        if (n > -1 && n < size)
+            return str;
+        if (n > -1)
+            size = n * 2;
+        else
+            size = 2;
+    }
+}
+
+void Logger::log(const char *format, ...) {
+    va_list args;
+    char timeStr[64] = {0};
+    time_t now = time(NULL);
+    struct tm *tm_info = localtime(&now);
+    strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", tm_info);
+
+    std::cout << "[" << timeStr << "][" << _text << "] "
+              << string_format(format, args) << std::endl;
+}
+
 void raylib_log(int msgType, const char *text, va_list args) {
-#pragma GCC diagnostic pop
+
+    vprintf(text, args);
 
     switch (msgType) {
     case LOG_INFO:

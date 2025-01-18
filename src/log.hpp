@@ -16,6 +16,7 @@ enum loglevel {
 class Logger {
   protected:
     static Log::loglevel _log_level;
+    Log::loglevel _level;
     std::string _text;
 
   public:
@@ -24,6 +25,7 @@ class Logger {
     void print_log_level();
     void set_log_level(Log::loglevel log_level);
 
+    void log(const char *text, ...);
     Logger &operator<<(const char *value);
 };
 
