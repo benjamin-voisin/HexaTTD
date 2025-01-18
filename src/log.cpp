@@ -40,26 +40,8 @@ Logger::Logger(loglevel level) {
 }
 
 Logger &Logger::operator<<(const char *value) {
-    log("%s", value);
+    log(value);
     return *this;
-}
-
-std::string string_format(const std::string fmt, ...) {
-    int n, size = 100;
-    std::string str;
-    va_list ap;
-    while (1) {
-        str.resize(size);
-        va_start(ap, fmt);
-        n = vsnprintf((char *)str.c_str(), size, fmt.c_str(), ap);
-        va_end(ap);
-        if (n > -1 && n < size)
-            return str;
-        if (n > -1)
-            size = n * 2;
-        else
-            size = 2;
-    }
 }
 
 void Logger::log(const char *format, ...) {
@@ -69,8 +51,10 @@ void Logger::log(const char *format, ...) {
     struct tm *tm_info = localtime(&now);
     strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", tm_info);
 
-    std::cout << "[" << timeStr << "][" << _text << "] "
-              << string_format(format, args) << std::endl;
+    char text[100];
+    snprintf(text, 100, format, args);
+
+    std::cout << "[" << timeStr << "][" << _text << "] " << text << std::endl;
 }
 
 void raylib_log(int msgType, const char *text, va_list args) {
