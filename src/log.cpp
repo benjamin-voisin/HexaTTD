@@ -1,8 +1,10 @@
 #include "log.hpp"
 
 #include <assert.h>
+#include <cstdarg>
 #include <cstdio>
 #include <iostream>
+#include <stdio.h>
 
 using Log::Logger;
 
@@ -44,7 +46,7 @@ Logger::Logger(loglevel level) {
 Logger::~Logger() { free(_buffer); }
 
 Logger &Logger::operator<<(const char *value) {
-    log(value);
+    log("%s", value);
     return *this;
 }
 
@@ -55,30 +57,26 @@ void Logger::log(const char *format, ...) {
     struct tm *tm_info = localtime(&now);
     strftime(timeStr, sizeof(timeStr), "[%H:%M:%S]", tm_info);
 
-    snprintf(_buffer, BUFFER_SIZE, format, args);
+    va_start(args, format);
+    vsnprintf(_buffer, BUFFER_SIZE, format, args);
+    va_end(args);
 
     std::cout << timeStr << _text << " " << _buffer << std::endl;
 }
 
 void raylib_log(int msgType, const char *text, va_list args) {
 
-    /* vprintf(text, args); */
-
     switch (msgType) {
     case LOG_INFO:
-        /* Log::Info << text; */
         Log::Info.log(text, args);
         break;
     case LOG_ERROR:
-        /* Log::Error << text; */
         Log::Error.log(text, args);
         break;
     case LOG_WARNING:
-        /* Log::Warning << text; */
         Log::Warning.log(text, args);
         break;
     case LOG_DEBUG:
-        /* Log::Debug << text; */
         Log::Debug.log(text, args);
         break;
     default:
