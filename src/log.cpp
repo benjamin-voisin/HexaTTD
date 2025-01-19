@@ -51,17 +51,19 @@ Logger &Logger::operator<<(const char *value) {
 }
 
 void Logger::log(const char *format, ...) {
-    va_list args;
-    char timeStr[11] = {0};
-    time_t now = time(NULL);
-    struct tm *tm_info = localtime(&now);
-    strftime(timeStr, sizeof(timeStr), "[%H:%M:%S]", tm_info);
+    if (_level >= _log_level) {
+        va_list args;
+        char timeStr[11] = {0};
+        time_t now = time(NULL);
+        struct tm *tm_info = localtime(&now);
+        strftime(timeStr, sizeof(timeStr), "[%H:%M:%S]", tm_info);
 
-    va_start(args, format);
-    vsnprintf(_buffer, BUFFER_SIZE, format, args);
-    va_end(args);
+        va_start(args, format);
+        vsnprintf(_buffer, BUFFER_SIZE, format, args);
+        va_end(args);
 
-    std::cout << timeStr << _text << " " << _buffer << std::endl;
+        std::cout << timeStr << _text << " " << _buffer << std::endl;
+    }
 }
 
 void raylib_log(int msgType, const char *text, va_list args) {
