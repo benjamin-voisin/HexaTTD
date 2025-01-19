@@ -1,5 +1,6 @@
 #include "grid.hpp"
 #include "geometry/hex.hpp"
+#include "log.hpp"
 #include "utils.hpp"
 
 #include <assert.h>
@@ -127,8 +128,8 @@ void Grid::add_rail(Hex hex, int src_side, int dst_side, int width) {
     rails.push_back(Rail(hex, src_side, dst_side, width));
     Rail r = rails[rails.size() - 1];
 #ifndef NDEBUG
-    printf("New rail %ld: src=%d dst=%d\n", rails.size() - 1,
-           r.get_src_neighbor(), r.get_dst_neighbor());
+    Log::Info.log("New rail %ld: src=%d dst=%d", rails.size() - 1,
+                  r.get_src_neighbor(), r.get_dst_neighbor());
 #endif // !NDEBUG
     Tile *src_neighbor = tile_from_hex(hex.neighbor(r.get_src_neighbor()));
     Tile *tile = tile_from_hex(hex);
