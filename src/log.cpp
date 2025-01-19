@@ -38,7 +38,10 @@ std::string level_to_string(Log::loglevel level) {
 Logger::Logger(loglevel level) {
     _text = level_to_string(level);
     _level = level;
+    _buffer = (char *)malloc(BUFFER_SIZE * sizeof(char));
 }
+
+Logger::~Logger() { free(_buffer); }
 
 Logger &Logger::operator<<(const char *value) {
     log(value);
@@ -52,10 +55,9 @@ void Logger::log(const char *format, ...) {
     struct tm *tm_info = localtime(&now);
     strftime(timeStr, sizeof(timeStr), "[%H:%M:%S]", tm_info);
 
-    char text[100];
-    snprintf(text, 100, format, args);
+    snprintf(_buffer, BUFFER_SIZE, format, args);
 
-    std::cout << timeStr << _text << " " << text << std::endl;
+    std::cout << timeStr << _text << " " << _buffer << std::endl;
 }
 
 void raylib_log(int msgType, const char *text, va_list args) {
