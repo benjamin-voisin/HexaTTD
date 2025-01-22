@@ -9,6 +9,6 @@ class Station {
     std::string _name;
 
   public:
-    Station(int rail_id, std::string name);
+    Station(int rail_id, const std::string &name);
     void draw(Layout *layout, std::vector<Rail> &rails);
 };

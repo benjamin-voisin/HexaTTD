@@ -1,6 +1,6 @@
 #include "station.hpp"
 
-Station::Station(int rail_id, std::string name)
+Station::Station(int rail_id, const std::string &name)
     : _rail_id{rail_id}, _name{name} {}
 
 void Station::draw(Layout *layout, std::vector<Rail> &rails) {

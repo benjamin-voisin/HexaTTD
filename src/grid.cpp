@@ -154,7 +154,7 @@ void Grid::add_train(int track_id, std::size_t size) {
 
 Rail *Grid::get_rail(int track_id) { return &rails[track_id]; }
 
-void Grid::add_station(int rail_id, std::string name) {
+void Grid::add_station(int rail_id, const std::string &name) {
     _lock.lock();
     stations.push_back(Station(rail_id, name));
     _lock.unlock();
