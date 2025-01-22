@@ -11,6 +11,8 @@
 
 #define WHEEL_FACTOR 5
 
+using std::shared_ptr;
+
 class Grid {
   private:
     int q_min;
@@ -19,7 +21,7 @@ class Grid {
     int r_max;
     std::vector<Tile> tiles;
     std::vector<Rail> rails;
-    std::vector<Train *> trains;
+    std::vector<shared_ptr<Train>> trains;
     std::vector<Station> stations;
 
     std::mutex _lock;

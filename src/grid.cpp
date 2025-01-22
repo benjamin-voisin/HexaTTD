@@ -11,11 +11,7 @@ Grid::Grid(Orientation orientation, Vector2 size, Vector2 origin, int q_min,
       tiles((r_max - r_min) * (q_max - q_min)), _running{true},
       layout{orientation, size, origin, GetScreenWidth(), GetScreenHeight()} {}
 
-Grid::~Grid() {
-    for (unsigned long i = 0; i < trains.size(); i++) {
-        delete trains[i];
-    }
-}
+Grid::~Grid() {}
 
 void Grid::draw() {
     for (int q = q_min; q <= q_max; q++) {
@@ -43,7 +39,7 @@ void Grid::draw() {
         station.draw(&layout, rails);
         _lock.unlock();
     }
-    for (Train *train : trains) {
+    for (shared_ptr<Train> train : trains) {
         _lock.lock();
         train->draw(&layout, rails);
         _lock.unlock();
@@ -151,7 +147,8 @@ void Grid::add_rail(Hex hex, int src_side, int dst_side, int width) {
 
 void Grid::add_train(int track_id, std::size_t size) {
     _lock.lock();
-    trains.push_back(new Train(this, trains.size(), track_id, size));
+    auto train = std::make_shared<Train>(this, trains.size(), track_id, size);
+    trains.push_back(train);
     _lock.unlock();
 }
 
