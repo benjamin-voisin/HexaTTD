@@ -158,7 +158,7 @@ void Game::start() {
     _update_thread = std::thread([this]() { update(); });
     _draw_thread = std::thread([this]() {
         InitWindow(1000, 1000, this->_name.c_str());
-        /* SetTargetFPS(60); */
+        SetTargetFPS(60);
         draw();
         this->_grid.stop();
     });
