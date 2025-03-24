@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 #include "cyclic_track_buffer.hpp"
+#include "log.hpp"
 #include "rail.hpp"
 #include "wagon.hpp"
 
@@ -29,6 +30,7 @@ class Train {
     Train(Grid *grid, int id, int track_id, std::size_t size);
     virtual void update(Grid *grid);
     virtual ~Train();
+    Train &operator>>(Log::Logger *log);
 };
 
 class ItineraryTrain : public Train {
