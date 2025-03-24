@@ -1,4 +1,5 @@
 #include "track_graph.hpp"
+#include "../log.hpp"
 
 #include <assert.h>
 #include <stdio.h>
@@ -47,8 +48,9 @@ int Graph::add(Rail r, std::vector<Rail> &rails, std::set<int> neighbor_src,
             adj_list_src[*n].insert(id);
         } else {
 #ifndef NDEBUG
-            printf("rsrc=%d, nsrc=%d ndst=%d\n", r.get_src_neighbor(),
-                   rails[*n].get_src_neighbor(), rails[*n].get_dst_neighbor());
+            Log::Info.log("rsrc=%d, nsrc=%d ndst=%d", r.get_src_neighbor(),
+                          rails[*n].get_src_neighbor(),
+                          rails[*n].get_dst_neighbor());
 #endif // !NDEBUG
             assert(Hex::opposite_direction(r.get_src_neighbor()) ==
                    rails[*n].get_dst_neighbor());

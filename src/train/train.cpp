@@ -158,3 +158,8 @@ void ItineraryTrain::next_rail(Grid *grid) {
     }
     //_rail_id = _path[_position];
 }
+
+Train &Train::operator>>(Log::Logger *log) {
+    log->log("{id: %d, size: %ld}", _id, _size);
+    return *this;
+}
