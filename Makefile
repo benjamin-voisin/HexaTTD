@@ -6,7 +6,8 @@ SRC_DIR = ./src
 
 VPATH += $(BUILD_DIR)
 
-RAYLIB_SRC_PATH ?= ./raylib/src/#Path to raylib source code
+RAYLIB_PATH ?= ./raylib/#path to raylib source code
+RAYLIB_SRC_PATH = $(RAYLIB_PATH)/src
 
 # This allows the preprocessor to also generate the dependencies in the *.d files
 CPPFLAGS += -MP -MD
@@ -101,7 +102,7 @@ $(RAYLIB_SRC_PATH)/raylib.h:
 	curl -L https://github.com/raysan5/raylib/archive/refs/tags/5.5.tar.gz -o ./raylib.tar.gz
 	tar xf raylib.tar.gz
 	rm raylib.tar.gz
-	mv ./raylib-5.5 ./raylib
+	mv ./raylib-5.5 $(RAYLIB_PATH)
 
 src/gui/clay.h:
 	curl -L https://github.com/nicbarker/clay/releases/download/v0.13/clay.h -o ./src/gui/clay.h
