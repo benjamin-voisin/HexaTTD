@@ -9,3 +9,5 @@ hexattd.wasm
 compile_commands.json
 .cache/
 build/
+raylib
+src/gui/clay.h
