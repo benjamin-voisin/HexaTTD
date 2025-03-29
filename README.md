@@ -6,18 +6,9 @@ Work in progress.
 
 ## Build
 
-This project uses [raylib](raylib.com), included in the git as a submodule. If
-you don’t already have raylib, use 
-```
-git clone --recursive https://codeberg.org/BenjaminV/HexaTTD.git
-```
-to clone the project.
+This project uses [raylib](raylib.com) and [clay](https://www.nicbarker.com/clay). If you already have raylib on your system, you can change the variable RAYLIB_PATH, else it will be downloaded automatically.
 
-If you already have the source code somewhere, you just have to change the
-variable `RAYLIB_DIR` and `RAYLIB_RELEASE_PATH` in the Makefile.
-
-Then, juste
+To buil the project, it is as simple as
 ```
-make
+make depends && make
 ```
-will build the project.
