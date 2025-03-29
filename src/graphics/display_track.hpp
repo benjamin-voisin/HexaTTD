@@ -3,8 +3,8 @@
 #define GAUGE_FACTOR 100
 #define N_TRAVERSES 20
 
-#include "geometry/layout.hpp"
-#include "geometry/vector.hpp"
+#include "../geometry/layout.hpp"
+#include "../geometry/vector.hpp"
 class DSPTrack {
   protected:
     Color color;

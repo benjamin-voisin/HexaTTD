@@ -4,8 +4,8 @@
 #include <stdlib.h>
 
 #include "cyclic_track_buffer.hpp"
-#include "log.hpp"
-#include "rail.hpp"
+#include "../log.hpp"
+#include "../rail.hpp"
 #include "wagon.hpp"
 
 class Grid;
