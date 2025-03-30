@@ -1,12 +1,24 @@
 #pragma once
 
-// We ignore a bunch of warning when including raygui...
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-#pragma GCC diagnostic ignored "-Wunused-result"
-#pragma GCC diagnostic ignored "-Wenum-compare"
-#pragma GCC diagnostic pop
+#include "clay.h"
+#include "raylib.h"
+
+class Gui {
+  private:
+    Font *_font;
+    char *_temp_render_buffer = nullptr;
+    int _temp_render_buffer_len;
+
+    void render(Clay_RenderCommandArray);
+    static Clay_Dimensions measure_text(Clay_StringSlice text,
+                                        Clay_TextElementConfig *config,
+                                        void *userData);
+
+  public:
+    Gui(float width, float heigth);
+    ~Gui();
+    void draw();
+};
 
 class GuiElement {
   protected:

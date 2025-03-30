@@ -49,6 +49,7 @@ void Game::draw() {
 
         // Draw the main thing
         _grid.draw();
+        _gui.draw();
 
         // Draw hightlighted hex
         Hex under_cursor = _grid.xy_to_hex(GetMouseX(), GetMouseY());
@@ -115,8 +116,6 @@ void Game::draw() {
 
         _grid.hightlight(under_cursor, GREEN);
 
-        DrawFPS(10, 10);
-
         _debug_toggle.draw();
         /* if (debug_toggle.is_pressed()) { */
         /* // Hightlight */
@@ -135,7 +134,8 @@ Game::Game(int width, int height, std::string name)
                  Vector2{(float)width / 2, (float)height / 2}, -10, 10, -10,
                  10)},
       _name{name},
-      _debug_toggle{GuiToggleElement(width - 200, 10, 80, 20, "debug", false)} {
+      _debug_toggle{GuiToggleElement(width - 200, 10, 80, 20, "debug", false)},
+      _gui{Gui((float)width, (float)height)} {
     _grid.add_rail(Hex(0, 0), 1, 5, 5);
     _grid.add_rail(Hex(1, -1), 2, 5, 5);
     _grid.add_rail(Hex(1, -1) + Hex(1, -1), 2, 0, 5);
