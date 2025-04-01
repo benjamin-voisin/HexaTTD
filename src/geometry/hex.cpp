@@ -150,7 +150,9 @@ void Hex::draw(Layout *layout, Color color) {
 HexTest::HexTest() : TestInstance("hex.cpp") {}
 
 void HexTest::run_test() {
+    TestInstance::run_test();
     test(true, "Should pass");
     test(false, "Should fail");
+    TestInstance::print_result();
 }
 #endif

@@ -15,6 +15,11 @@ void Test::add_test(std::shared_ptr<TestInstance> test) {
 
 void TestInstance::run_test() { std::cout << "Testing " << _name << "\n"; }
 
+void TestInstance::print_result() {
+    std::cout << _passed_tests << " out of " << _total_tests << " test passed"
+              << "\n";
+}
+
 TestInstance::TestInstance(std::string name) : _name{name} {
     _total_tests = 0;
     _passed_tests = 0;
