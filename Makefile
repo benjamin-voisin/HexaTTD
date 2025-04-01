@@ -14,8 +14,16 @@ RAYGUI_SRC_PATH ?= ./raygui/src/#Path to raygui source code
 CPPFLAGS += -MP -MD
 
 # Our compile flags, with etra warning
+<<<<<<< Updated upstream
 CXXFLAGS = -Wall -Wextra -I$(RAYLIB_SRC_PATH) -I$(RAYGUI_SRC_PATH) -I$(SRC_DIR)
 DEBUGFLAGS = -g3 -fsanitize=address -DDEBUG
+||||||| Stash base
+CXXFLAGS = -Wall -Wextra -I$(RAYLIB_SRC_PATH) -I$(SRC_DIR)
+DEBUGFLAGS = -g3 -fsanitize=address -DDEBUG
+=======
+CXXFLAGS = -Wall -Wextra -I$(RAYLIB_SRC_PATH) -I$(SRC_DIR)
+DEBUGFLAGS = -g3 -fsanitize=address -DDEBUG -O0
+>>>>>>> Stashed changes
 RELEASEFLAGS = -flto -O3 -DNDEBUG
 
 MODE ?= RELEASE# Default is Release
