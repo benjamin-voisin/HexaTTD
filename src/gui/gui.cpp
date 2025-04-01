@@ -62,7 +62,9 @@ void Gui::draw() {
     // width main content Parent element with 8px of padding
     CLAY({.layout = {.padding = CLAY_PADDING_ALL(8)}}) {
         // Child element 1
-        CLAY_TEXT(text, CLAY_TEXT_CONFIG({.textColor = color, .fontSize = 24}));
+        CLAY_TEXT(text, CLAY_TEXT_CONFIG({.textColor = color,
+                                          .fontSize = 24,
+                                          .letterSpacing = 3}));
     }
     render(Clay_EndLayout());
 }
