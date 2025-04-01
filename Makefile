@@ -70,12 +70,12 @@ $(NAME): $(OBJECTS) $(LIBRAYLIB)
 	@$(ECHO) "\033[32mBuilding executable $@ in $(MODE) mode\033[0m"
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
 
-$(BUILD_DIR)/%.o: %.cpp
+$(BUILD_DIR)/%.o: %.cpp depends
 	@mkdir -p $(BUILD_DIR)/$(dir $<)
 	@$(ECHO) "\033[32mBuilding CXX object $@ in $(MODE) mode\033[0m"
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<
 
-web: $(SOURCES)
+web: $(SOURCES) depends
 	@mkdir -p $(BUILD_DIR)
 	@$(ECHO) "\033[32mBuilding raylib for WASM\033[0m"
 	@$(MAKE) -C $(RAYLIB_SRC_PATH) PLATFORM=PLATFORM_WEB -B
