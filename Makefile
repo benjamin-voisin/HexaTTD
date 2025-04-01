@@ -14,16 +14,8 @@ RAYGUI_SRC_PATH ?= ./raygui/src/#Path to raygui source code
 CPPFLAGS += -MP -MD
 
 # Our compile flags, with etra warning
-<<<<<<< Updated upstream
-CXXFLAGS = -Wall -Wextra -I$(RAYLIB_SRC_PATH) -I$(RAYGUI_SRC_PATH) -I$(SRC_DIR)
-DEBUGFLAGS = -g3 -fsanitize=address -DDEBUG
-||||||| Stash base
-CXXFLAGS = -Wall -Wextra -I$(RAYLIB_SRC_PATH) -I$(SRC_DIR)
-DEBUGFLAGS = -g3 -fsanitize=address -DDEBUG
-=======
 CXXFLAGS = -Wall -Wextra -I$(RAYLIB_SRC_PATH) -I$(SRC_DIR)
 DEBUGFLAGS = -g3 -fsanitize=address -DDEBUG -O0
->>>>>>> Stashed changes
 RELEASEFLAGS = -flto -O3 -DNDEBUG
 
 MODE ?= RELEASE# Default is Release
@@ -79,12 +71,12 @@ $(NAME): $(OBJECTS) $(LIBRAYLIB)
 	@$(ECHO) "\033[32mBuilding executable $@ in $(MODE) mode\033[0m"
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
 
-$(BUILD_DIR)/%.o: %.cpp
+$(BUILD_DIR)/%.o: %.cpp $(RAYLIB_SRC_PATH)/raylib.h src/gui/clay.h
 	@mkdir -p $(BUILD_DIR)/$(dir $<)
 	@$(ECHO) "\033[32mBuilding CXX object $@ in $(MODE) mode\033[0m"
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<
 
-web: $(SOURCES)
+web: $(SOURCES) $(RAYLIB_SRC_PATH)/raylib.h src/gui/clay.h
 	@mkdir -p $(BUILD_DIR)
 	@$(ECHO) "\033[32mBuilding raylib for WASM\033[0m"
 	@$(MAKE) -C $(RAYLIB_SRC_PATH) PLATFORM=PLATFORM_WEB -B
@@ -92,7 +84,7 @@ web: $(SOURCES)
 	em++ -o $(NAME).html $(SOURCES) -Wall -std=c++20 -D_DEFAULT_SOURCE -Wno-missing-braces -Wunused-result -O3 -s USE_GLFW=3 -s USE_PTHREADS=1 -s ASSERTIONS -s ASYNCIFY -s FORCE_FILESYSTEM=1 --shell-file $(RAYLIB_SRC_PATH)shell.html $(LIBRAYLIB) -DPLATFORM_WEB -s 'EXPORTED_FUNCTIONS=["_free","_malloc","_main"]' -s EXPORTED_RUNTIME_METHODS=ccall -I$(RAYLIB_SRC_PATH) -I$(RAYGUI_SRC_PATH) -I$(SRC_DIR)
 	@$(RM) $(LIBRAYLIB)
 
-$(LIBRAYLIB):
+$(LIBRAYLIB): $(RAYLIB_SRC_PATH)/raylib.h
 	@mkdir -p $(BUILD_DIR)
 	@$(ECHO) "\033[32mBuilding raylib static lib in $(MODE) mode, this job is longer than others...\033[0m"
 	@$(MAKE) -C $(RAYLIB_SRC_PATH) CUSTOM_CFLAGS="$(CUSTOM_CFLAGS)"
