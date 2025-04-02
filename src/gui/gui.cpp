@@ -63,14 +63,21 @@ void Gui::draw() {
         color = COLOR_RED; // Low FPS
     Clay_BeginLayout();
 
-    // An example of laying out a UI with a fixed width sidebar and flexible
-    // width main content Parent element with 8px of padding
-    CLAY({.layout = {.padding = CLAY_PADDING_ALL(8)}}) {
+    // Remove warning visible in clay things
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+    CLAY({.layout = {.sizing = {CLAY_SIZING_FIT(0), CLAY_SIZING_FIT(0)},
+                     .padding = CLAY_PADDING_ALL(8)},
+          .backgroundColor = COLOR_ORANGE,
+          .cornerRadius = {12, 12, 12, 12}}) {
         // Child element 1
-        CLAY_TEXT(text, CLAY_TEXT_CONFIG({.textColor = color,
-                                          .fontSize = 24,
-                                          .letterSpacing = 3}));
+        CLAY({.layout = {.padding = CLAY_PADDING_ALL(0)}}) {
+            CLAY_TEXT(text, CLAY_TEXT_CONFIG({.textColor = color,
+                                              .fontSize = 25,
+                                              .letterSpacing = 3}));
+        }
     }
+#pragma GCC diagnostic pop
     render(Clay_EndLayout());
 }
 
