@@ -18,7 +18,7 @@ void HandleClayErrors(Clay_ErrorData errorData) {
     // See the Clay_ErrorData struct for more information
     Log::Error << errorData.errorText.chars;
 }
-Gui::Gui(float width, float height) {
+Gui::Gui(float width, float height) : _is_debug{false} {
     uint64_t clayRequiredMemory = Clay_MinMemorySize();
     Clay_Arena clayMemory = Clay_CreateArenaWithCapacityAndMemory(
         clayRequiredMemory, malloc(clayRequiredMemory));
@@ -33,6 +33,11 @@ Gui::Gui(float width, float height) {
     /* SetTextureFilter(fonts[FONT_ID_BODY_16].texture,
      * TEXTURE_FILTER_BILINEAR); */
     Clay_SetMeasureTextFunction(measure_text, _font);
+}
+
+void Gui::togle_debug() {
+    _is_debug = !_is_debug;
+    Clay_SetDebugModeEnabled(_is_debug);
 }
 
 Gui::~Gui() { free(_temp_render_buffer); }

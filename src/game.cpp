@@ -44,7 +44,14 @@ void Game::draw() {
             _grid.layout.origin.x += delta.x;
             _grid.layout.origin.y += delta.y;
         }
-        // Update the zoom level
+
+        auto char_pressed = GetCharPressed();
+#ifdef DEBUG
+        if (char_pressed == 'd') {
+            _gui.togle_debug();
+        }
+#endif // DEBUG
+       // Update the zoom level
         _grid.update_zoom(WHEEL_FACTOR, true);
 
         // Draw the main thing
