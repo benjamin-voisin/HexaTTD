@@ -26,6 +26,7 @@ Clay_Dimensions Gui::measure_text(Clay_StringSlice text,
     auto textSize = Clay_Dimensions();
 
     float maxTextWidth = 0.0f;
+    size_t number_of_letters = 0;
     float lineTextWidth = 0;
 
     float textHeight = config->fontSize;
@@ -39,11 +40,17 @@ Clay_Dimensions Gui::measure_text(Clay_StringSlice text,
     /* } */
 
     float scaleFactor = config->fontSize / (float)fontToUse.baseSize;
+    if (config->fontId == 0) {
+        config->letterSpacing = 1;
+    }
 
     for (int i = 0; i < text.length; ++i) {
         if (text.chars[i] == '\n') {
-            maxTextWidth = MAX(maxTextWidth, lineTextWidth);
+            maxTextWidth =
+                MAX(maxTextWidth, lineTextWidth + (config->letterSpacing *
+                                                   (number_of_letters - 1)));
             lineTextWidth = 0;
+            number_of_letters = 0;
             continue;
         }
         int index = text.chars[i] - 32;
@@ -52,9 +59,11 @@ Clay_Dimensions Gui::measure_text(Clay_StringSlice text,
         else
             lineTextWidth +=
                 (fontToUse.recs[index].width + fontToUse.glyphs[index].offsetX);
+        number_of_letters++;
     }
 
-    maxTextWidth = MAX(maxTextWidth, lineTextWidth);
+    maxTextWidth = MAX(maxTextWidth, lineTextWidth + (config->letterSpacing *
+                                                      (number_of_letters - 1)));
 
     textSize.width = maxTextWidth * scaleFactor;
     textSize.height = textHeight;
@@ -74,6 +83,10 @@ void Gui::render(Clay_RenderCommandArray renderCommands) {
             Font fontToUse = GetFontDefault();
 
             int strlen = textData->stringContents.length + 1;
+            // Set the letterspacing for debug mode
+            if (textData->fontId == 0) {
+                textData->letterSpacing = 1;
+            }
 
             if (strlen > _temp_render_buffer_len) {
                 // Grow the temp buffer if we need a larger string
