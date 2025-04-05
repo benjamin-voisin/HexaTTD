@@ -85,16 +85,6 @@ void Game::draw() {
                         r->draw(&_grid.layout, ORANGE, 1);
                 }
             }
-            if (_debug_toggle.is_pressed()) {
-                // Print selected rails on debug mode
-                FILE *f = fmemopen(texte, 1000, "w");
-                fprintf(f, "selected_rails= ");
-                pp_int_rail_vector(&_grid, f, selected_rails);
-                fprintf(f, "layout.x=%.2f\n", _grid.layout.size.x);
-                t->pp(f);
-                fclose(f);
-                DrawText(texte, 10, 40, 30, BLACK);
-            }
         }
 
         if (under_cursor != last_cursor)
@@ -123,13 +113,6 @@ void Game::draw() {
 
         _grid.hightlight(under_cursor, GREEN);
 
-        _debug_toggle.draw();
-        /* if (debug_toggle.is_pressed()) { */
-        /* // Hightlight */
-        /* grid.hightlight(last_cursor_pers, BLUE); */
-        /* grid.hightlight(start_construct, BLACK); */
-        /* } */
-
         last_cursor = under_cursor;
         EndDrawing();
     }
@@ -140,9 +123,7 @@ Game::Game(int width, int height, std::string name)
     : _grid{Grid(layout_flat, Vector2{100, 100},
                  Vector2{(float)width / 2, (float)height / 2}, -10, 10, -10,
                  10)},
-      _name{name},
-      _debug_toggle{GuiToggleElement(width - 200, 10, 80, 20, "debug", false)},
-      _gui{Gui((float)width, (float)height)} {
+      _name{name}, _gui{Gui((float)width, (float)height)} {
     _grid.add_rail(Hex(0, 0), 1, 5, 5);
     _grid.add_rail(Hex(1, -1), 2, 5, 5);
     _grid.add_rail(Hex(1, -1) + Hex(1, -1), 2, 0, 5);

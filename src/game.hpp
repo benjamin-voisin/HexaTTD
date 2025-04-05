@@ -2,7 +2,6 @@
 
 #include "grid.hpp"
 #include "gui/gui.hpp"
-#include "gui/toggle.hpp"
 
 #include <thread>
 
@@ -13,7 +12,6 @@ struct Game {
     std::thread _draw_thread;
     bool _running;
     std::string _name;
-    GuiToggleElement _debug_toggle;
     Gui _gui;
 
   public:
