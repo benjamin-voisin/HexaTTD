@@ -13,7 +13,7 @@ RAYLIB_SRC_PATH = $(RAYLIB_PATH)/src
 CPPFLAGS += -MP -MD
 
 # Our compile flags, with etra warning
-CXXFLAGS = -Wall -Wextra -I$(RAYLIB_SRC_PATH) -I$(SRC_DIR)
+CXXFLAGS = -Wall -Wextra -Werror -I$(RAYLIB_SRC_PATH) -I$(SRC_DIR)
 DEBUGFLAGS = -g3 -fsanitize=address -DDEBUG -O0
 RELEASEFLAGS = -flto -O3 -DNDEBUG
 
