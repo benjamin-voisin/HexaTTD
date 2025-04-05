@@ -45,8 +45,8 @@ void Game::draw() {
             _grid.layout.origin.y += delta.y;
         }
 
-        auto char_pressed = GetCharPressed();
 #ifdef DEBUG
+        auto char_pressed = GetCharPressed();
         if (char_pressed == 'd') {
             _gui.togle_debug();
         }
