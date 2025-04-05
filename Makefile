@@ -104,8 +104,9 @@ $(RAYLIB_SRC_PATH)/raylib.h:
 	rm raylib.tar.gz
 	mv ./raylib-5.5 $(RAYLIB_PATH)
 
+CLAY_SOURCE = "https://raw.githubusercontent.com/nicbarker/clay/a9e94e3be0b146bdb4a1d6cd4ad746912d1de771/clay.h"
 src/gui/clay.h:
-	curl -L https://github.com/nicbarker/clay/releases/download/v0.13/clay.h -o ./src/gui/clay.h
+	curl -L $(CLAY_SOURCE) -o src/gui/clay.h
 
 
 depends: $(RAYLIB_SRC_PATH)/raylib.h src/gui/clay.h
