@@ -22,6 +22,8 @@
 Clay_Dimensions Gui::measure_text(Clay_StringSlice text,
                                   Clay_TextElementConfig *config,
                                   void *userData) {
+    // ignore userData not used yet
+    (void)userData;
     // Measure string size for Font
     auto textSize = Clay_Dimensions();
 

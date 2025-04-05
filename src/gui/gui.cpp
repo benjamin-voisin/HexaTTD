@@ -54,7 +54,9 @@ void Gui::draw() {
         true, (Clay_Vector2){scrollDelta.x, scrollDelta.y}, GetFrameTime());
 
     int fps = GetFPS();
-    auto text = (Clay_String){.length = 6, .chars = TextFormat("%2i FPS", fps)};
+    auto text = (Clay_String){.isStaticallyAllocated = false,
+                              .length = 6,
+                              .chars = TextFormat("%2i FPS", fps)};
     Clay_Color color = COLOR_LIGHT;
 
     if ((fps < 30) && (fps >= 15))
