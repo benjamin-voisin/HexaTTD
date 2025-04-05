@@ -6,8 +6,11 @@ SRC_DIR = ./src
 
 VPATH += $(BUILD_DIR)
 
-RAYLIB_PATH ?= ./raylib/#path to raylib source code
+RAYLIB_PATH ?= ./raylib#path to raylib source code
 RAYLIB_SRC_PATH = $(RAYLIB_PATH)/src
+RAYLIB_SOURCE = "https://github.com/raysan5/raylib/archive/refs/tags/5.5.tar.gz"
+CLAY_SOURCE = "https://raw.githubusercontent.com/nicbarker/clay/a9e94e3be0b146bdb4a1d6cd4ad746912d1de771/clay.h"
+CLAY_PATH = $(SRC_DIR)/gui/clay.h
 
 # This allows the preprocessor to also generate the dependencies in the *.d files
 CPPFLAGS += -MP -MD
@@ -70,12 +73,12 @@ $(NAME): $(OBJECTS) $(LIBRAYLIB)
 	@$(ECHO) "\033[32mBuilding executable $@ in $(MODE) mode\033[0m"
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
 
-$(BUILD_DIR)/%.o: %.cpp $(RAYLIB_SRC_PATH)/raylib.h src/gui/clay.h
+$(BUILD_DIR)/%.o: %.cpp $(RAYLIB_SRC_PATH)/raylib.h $(CLAY_PATH)
 	@mkdir -p $(BUILD_DIR)/$(dir $<)
 	@$(ECHO) "\033[32mBuilding CXX object $@ in $(MODE) mode\033[0m"
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<
 
-web: $(SOURCES) $(RAYLIB_SRC_PATH)/raylib.h src/gui/clay.h
+web: $(SOURCES) $(RAYLIB_SRC_PATH)/raylib.h $(CLAY_PATH)
 	@mkdir -p $(BUILD_DIR)
 	@$(ECHO) "\033[32mBuilding raylib for WASM\033[0m"
 	@$(MAKE) -C $(RAYLIB_SRC_PATH) PLATFORM=PLATFORM_WEB -B
@@ -99,17 +102,20 @@ $(BUILD_DIR)/test: $(filter-out $(BUILD_DIR)/./src/main.o,$(OBJECTS)) $(LIBRAYLI
 	@$(RM) $(BUILD_DIR)/src/test.o
 
 $(RAYLIB_SRC_PATH)/raylib.h:
-	curl -L https://github.com/raysan5/raylib/archive/refs/tags/5.5.tar.gz -o ./raylib.tar.gz
+	curl -L $(RAYLIB_SOURCE) -o ./raylib.tar.gz
 	tar xf raylib.tar.gz
-	rm raylib.tar.gz
+	$(RM) raylib.tar.gz
+	$(RM) -r ./raylib
 	mv ./raylib-5.5 $(RAYLIB_PATH)
 
-CLAY_SOURCE = "https://raw.githubusercontent.com/nicbarker/clay/a9e94e3be0b146bdb4a1d6cd4ad746912d1de771/clay.h"
-src/gui/clay.h:
+
+$(CLAY_PATH):
 	curl -L $(CLAY_SOURCE) -o src/gui/clay.h
 
 
-depends: $(RAYLIB_SRC_PATH)/raylib.h src/gui/clay.h
+depends: $(RAYLIB_SRC_PATH)/raylib.h $(CLAY_PATH)
+	$(MAKE) -B $< -C $(PWD)
+	$(MAKE) -B $(CLAY_PATH) -C $(PWD)
 
 
 clean:
