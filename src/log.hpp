@@ -10,8 +10,6 @@
 #define PRINTF_FORMAT(fmt, args)
 #endif
 
-#define BUFFER_SIZE 500
-
 using std::string;
 
 namespace Log {
@@ -38,6 +36,7 @@ class Logger {
     Log::loglevel _level;
     string _text;
     char *_buffer;
+    size_t _buffer_size;
 
   public:
     Logger(loglevel level);

@@ -3,6 +3,8 @@
 #include <assert.h>
 #include <cstdarg>
 #include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <iostream>
 #include <stdio.h>
 
@@ -40,7 +42,10 @@ std::string level_to_string(Log::loglevel level) {
 Logger::Logger(loglevel level) {
     _text = level_to_string(level);
     _level = level;
-    _buffer = (char *)malloc(BUFFER_SIZE * sizeof(char));
+    size_t buffer_size = 100; // buffer start value, it will be resized if
+                              // needed
+    _buffer = (char *)malloc(buffer_size * sizeof(char));
+    _buffer_size = buffer_size;
 }
 
 Logger::~Logger() { free(_buffer); }
@@ -57,10 +62,23 @@ void Logger::log(const char *format, ...) {
         time_t now = time(NULL);
         struct tm *tm_info = localtime(&now);
         strftime(timeStr, sizeof(timeStr), "[%H:%M:%S]", tm_info);
-
+        memset(_buffer, 0, _buffer_size);
         va_start(args, format);
-        vsnprintf(_buffer, BUFFER_SIZE, format, args);
+        auto written = vsnprintf(_buffer, _buffer_size, format, args);
         va_end(args);
+
+        // If the buffer was not big enough, we expand it
+        if ((size_t)written > _buffer_size) {
+            // We realloc the buffer
+            _buffer_size = written;
+            _buffer = (char *)reallocarray(_buffer, _buffer_size, sizeof(char));
+
+            // And we re-do the vsnprintf
+            memset(_buffer, 0, _buffer_size);
+            va_start(args, format);
+            vsnprintf(_buffer, _buffer_size, format, args);
+            va_end(args);
+        }
 
         std::cout << timeStr << _text << " " << _buffer << std::endl;
     }
