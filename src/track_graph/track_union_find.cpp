@@ -55,7 +55,7 @@ std::vector<int> TrackUF::del(int a) {
 
 int TrackUF::find(int node) {
     assert(node != -1);
-    assert((long unsigned)node < parent.size());
+    assert(static_cast<long unsigned>(node) < parent.size());
     if (node == parent[node])
         return node;
     int value = find(parent[node]);

@@ -44,7 +44,7 @@ Logger::Logger(loglevel level) {
     _level = level;
     size_t buffer_size = 100; // buffer start value, it will be resized if
                               // needed
-    _buffer = (char *)malloc(buffer_size * sizeof(char));
+    _buffer = static_cast<char *>(malloc(buffer_size * sizeof(char)));
     _buffer_size = buffer_size;
 }
 
@@ -68,7 +68,7 @@ void Logger::log(const char *format, ...) {
         va_end(args);
 
         // If the buffer was not big enough, we expand it
-        if ((size_t)written > _buffer_size) {
+        if (written > static_cast<int>(_buffer_size)) {
             // We realloc the buffer
             _buffer_size = written;
             _buffer = (char *)reallocarray(_buffer, _buffer_size, sizeof(char));

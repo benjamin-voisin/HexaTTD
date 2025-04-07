@@ -7,8 +7,6 @@
 
 #include "../utils.hpp"
 
-#include <stdio.h>
-
 DSPTrack::DSPTrack(Color color, float gauge) : color{color}, gauge{gauge} {};
 
 float DSPTrack::get_display_gauge(Layout *layout) {
@@ -151,7 +149,7 @@ void StraighTrack::draw_traverse(Layout *layout) {
 void StraighTrack::draw_rails(Layout *layout) {
     float display_gauge = get_display_gauge(layout);
     int delta = get_delta(layout);
-    float rail_delta = MAX((float)delta / 2.5f, 1.f);
+    float rail_delta = MAX(static_cast<float>(delta) / 2.5f, 1.f);
     Vector ortho = (dst - src).orthogonal().normalise();
 
     Vector debut1 = src + (ortho * (display_gauge / 2 + rail_delta / 2.f));

@@ -12,9 +12,9 @@
 #include "log.hpp"
 #include "raylib.h"
 
-const Clay_Color COLOR_LIGHT = (Clay_Color){224, 215, 210, 255};
-const Clay_Color COLOR_RED = (Clay_Color){168, 66, 28, 255};
-const Clay_Color COLOR_ORANGE = (Clay_Color){225, 138, 50, 255};
+const Clay_Color COLOR_LIGHT = {224, 215, 210, 255};
+const Clay_Color COLOR_RED = {168, 66, 28, 255};
+const Clay_Color COLOR_ORANGE = {225, 138, 50, 255};
 
 void HandleClayErrors(Clay_ErrorData errorData) {
     // See the Clay_ErrorData struct for more information
@@ -25,10 +25,9 @@ Gui::Gui(float width, float height) : _is_debug{false} {
     Clay_Arena clayMemory = Clay_CreateArenaWithCapacityAndMemory(
         clayRequiredMemory, malloc(clayRequiredMemory));
     Clay_Initialize(
-        clayMemory, (Clay_Dimensions){.width = width, .height = height},
-        (Clay_ErrorHandler){HandleClayErrors,
-                            nullptr}); // This final argument is new since the
-                                       // video was published
+        clayMemory, {.width = width, .height = height},
+        {HandleClayErrors, nullptr}); // This final argument is new since the
+                                      // video was published
     /* Font fonts[1]; */
     /* fonts[FONT_ID_BODY_16] = LoadFontEx("resources/Roboto-Regular.ttf", 48,
      * 0, 400); */
@@ -45,15 +44,15 @@ void Gui::togle_debug() {
 Gui::~Gui() { free(_temp_render_buffer); }
 
 void Gui::draw() {
-    Clay_SetLayoutDimensions((Clay_Dimensions){
-        .width = (float)GetScreenWidth(), .height = (float)GetScreenHeight()});
+    Clay_SetLayoutDimensions({.width = static_cast<float>(GetScreenWidth()),
+                              .height = static_cast<float>(GetScreenHeight())});
 
     Vector2 mousePosition = GetMousePosition();
     Vector2 scrollDelta = GetMouseWheelMoveV();
-    Clay_SetPointerState((Clay_Vector2){mousePosition.x, mousePosition.y},
+    Clay_SetPointerState({mousePosition.x, mousePosition.y},
                          IsMouseButtonDown(0));
-    Clay_UpdateScrollContainers(
-        true, (Clay_Vector2){scrollDelta.x, scrollDelta.y}, GetFrameTime());
+    Clay_UpdateScrollContainers(true, {scrollDelta.x, scrollDelta.y},
+                                GetFrameTime());
 
     int fps = GetFPS();
     auto text_field = TextFormat("%i FPS", fps);

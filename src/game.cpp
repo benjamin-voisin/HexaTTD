@@ -34,7 +34,7 @@ void Game::draw() {
 
     Hex start_construct = _grid.xy_to_hex(GetMouseX(), GetMouseY());
 
-    char *texte = (char *)calloc(1000, sizeof(char));
+    char *texte = static_cast<char *>(calloc(1000, sizeof(char)));
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(DARKGREEN);
@@ -121,9 +121,11 @@ void Game::draw() {
 
 Game::Game(int width, int height, std::string name)
     : _grid{Grid(layout_flat, Vector2{100, 100},
-                 Vector2{(float)width / 2, (float)height / 2}, -10, 10, -10,
-                 10)},
-      _name{name}, _gui{Gui((float)width, (float)height)} {
+                 Vector2{static_cast<float>(width) / 2,
+                         static_cast<float>(height) / 2},
+                 -10, 10, -10, 10)},
+      _name{name},
+      _gui{Gui(static_cast<float>(width), static_cast<float>(height))} {
     _grid.add_rail(Hex(0, 0), 1, 5, 5);
     _grid.add_rail(Hex(1, -1), 2, 5, 5);
     _grid.add_rail(Hex(1, -1) + Hex(1, -1), 2, 0, 5);
@@ -146,7 +148,7 @@ void Game::start() {
     _update_thread = std::thread([this]() { update(); });
     _draw_thread = std::thread([this]() {
         InitWindow(1000, 1000, this->_name.c_str());
-        SetTargetFPS(60);
+        SetTargetFPS(144);
         draw();
         this->_grid.stop();
     });

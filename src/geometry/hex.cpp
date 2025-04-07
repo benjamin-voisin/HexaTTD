@@ -145,7 +145,6 @@ void Hex::draw(Layout *layout, Color color) {
 }
 
 #ifdef DEBUG
-#include <iostream>
 
 HexTest::HexTest() : TestInstance("hex.cpp") {}
 

@@ -156,9 +156,9 @@ void Rail::draw(Layout *layout, Color c, int phase) {
                          layout->size.x * 1.5f,
                          GAUGE,
                          _hex.corner_angle(layout, _dst_neighbor + 3) * 180 /
-                             (float)M_PI,
+                             static_cast<float>(M_PI),
                          _hex.corner_angle(layout, _src_neighbor + 4) * 180 /
-                             (float)M_PI};
+                             static_cast<float>(M_PI)};
             track.draw(layout, phase);
         } else {
             Hex tile_curb = _hex.neighbor(_src_neighbor - 1);
@@ -168,9 +168,9 @@ void Rail::draw(Layout *layout, Color c, int phase) {
                          layout->size.x * 1.5f,
                          GAUGE,
                          _hex.corner_angle(layout, _dst_neighbor - 2) * 180 /
-                             (float)M_PI,
+                             static_cast<float>(M_PI),
                          _hex.corner_angle(layout, _src_neighbor + 3) * 180 /
-                             (float)M_PI};
+                             static_cast<float>(M_PI)};
             track.draw(layout, phase);
         }
     }

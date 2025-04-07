@@ -26,11 +26,12 @@ void Grid::draw() {
             _lock.lock();
             if (!rails[i].deleted) {
                 int r_class = graph.get_class(i);
-                rails[i].draw(
-                    &this->layout,
-                    ColorFromHSV(((float)r_class / (float)n_classes) * 360,
-                                 0.7f, 0.5f),
-                    phase);
+                rails[i].draw(&this->layout,
+                              ColorFromHSV((static_cast<float>(r_class) /
+                                            static_cast<float>(n_classes)) *
+                                               360,
+                                           0.7f, 0.5f),
+                              phase);
             }
             _lock.unlock();
         }
@@ -97,7 +98,8 @@ Tile *Grid::tile_from_hex(Hex hex) {
 
 void Grid::del_rail(int track_id) {
     _lock.lock();
-    assert((0 <= track_id) && ((long unsigned)track_id < rails.size()));
+    assert((0 <= track_id) &&
+           (static_cast<long unsigned>(track_id) < rails.size()));
     Rail r = rails[track_id];
 
     if (!r.is_train_on_track()) {

@@ -9,7 +9,7 @@ Cyclic_buffer::Cyclic_buffer(size_t sizemax) {
     _size = 0;
     _index = 0;
     _incr = 1;
-    _buffer = (prev_rail_s *)calloc(sizemax, sizeof(prev_rail_s));
+    _buffer = static_cast<prev_rail_s *>(calloc(sizemax, sizeof(prev_rail_s)));
 }
 
 Cyclic_buffer::~Cyclic_buffer() { free(_buffer); }
@@ -38,7 +38,7 @@ prev_rail_s Cyclic_buffer::del_last_prev_rail() {
 }
 
 prev_rail_s Cyclic_buffer::get_prev_rail(size_t n) {
-    assert((long unsigned)n < _size);
+    assert(static_cast<long unsigned>(n) < _size);
     prev_rail_s ret = _buffer[mod(_index - (n * _incr), _sizemax)];
     ret.direction *= _incr;
     return ret;

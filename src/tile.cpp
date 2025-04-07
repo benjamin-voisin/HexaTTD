@@ -1,6 +1,5 @@
 #include "tile.hpp"
 
-#include <algorithm>
 #include <assert.h>
 
 Tile::Tile() {};

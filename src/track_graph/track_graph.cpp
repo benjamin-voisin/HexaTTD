@@ -9,29 +9,30 @@ Graph::Graph() {};
 int Graph::size() { return this->adj_list_src.size(); }
 
 std::set<int> Graph::get_src_neighbor(int id_rail) {
-    assert((long unsigned)id_rail < adj_list_src.size());
+    assert(static_cast<long unsigned>(id_rail) < adj_list_src.size());
     assert(0 <= id_rail);
     return adj_list_src[id_rail];
 }
 
 std::set<int> Graph::get_dst_neighbor(int id_rail) {
-    assert((long unsigned)id_rail < adj_list_dst.size());
+    assert(static_cast<long unsigned>(id_rail) < adj_list_dst.size());
     assert(0 <= id_rail);
     return adj_list_dst[id_rail];
 }
 
 void Graph::_fusion(int rail_id) {
-    assert((0 <= rail_id) && (long unsigned)rail_id < adj_list_src.size());
+    assert((0 <= rail_id) &&
+           static_cast<long unsigned>(rail_id) < adj_list_src.size());
 
     std::set<int> neighbor_src = adj_list_src[rail_id];
     std::set<int> neighbor_dst = adj_list_dst[rail_id];
 
     for (auto n = neighbor_src.begin(); n != neighbor_src.end(); ++n) {
-        assert((long unsigned)*n < adj_list_src.size());
+        assert(static_cast<long unsigned>(*n) < adj_list_src.size());
         uf.ens_union(*n, rail_id);
     }
     for (auto n = neighbor_dst.begin(); n != neighbor_dst.end(); ++n) {
-        assert((long unsigned)*n < adj_list_dst.size());
+        assert(static_cast<long unsigned>(*n) < adj_list_dst.size());
         uf.ens_union(*n, rail_id);
     }
 }
@@ -42,7 +43,7 @@ int Graph::add(Rail r, std::vector<Rail> &rails, std::set<int> neighbor_src,
     adj_list_dst.push_back(neighbor_dst);
     int id = uf.add();
     for (auto n = neighbor_src.begin(); n != neighbor_src.end(); ++n) {
-        assert((long unsigned)*n < adj_list_src.size());
+        assert(static_cast<long unsigned>(*n) < adj_list_src.size());
         if (Hex::opposite_direction(r.get_src_neighbor()) ==
             rails[*n].get_src_neighbor()) {
             adj_list_src[*n].insert(id);
@@ -73,7 +74,8 @@ int Graph::add(Rail r, std::vector<Rail> &rails, std::set<int> neighbor_src,
 }
 
 void Graph::delete_rail(int rail_id) {
-    assert((0 <= rail_id) && (long unsigned)rail_id < adj_list_src.size());
+    assert((0 <= rail_id) &&
+           static_cast<long unsigned>(rail_id) < adj_list_src.size());
 
     std::set<int> neighbor_src = adj_list_src[rail_id];
     for (auto n = neighbor_src.begin(); n != neighbor_src.end(); ++n) {
