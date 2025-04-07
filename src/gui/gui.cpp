@@ -6,6 +6,8 @@
 #undef CLAY_IMPLEMENTATION
 #pragma GCC diagnostic pop
 
+#include <cstring>
+
 #include "gui.hpp"
 #include "log.hpp"
 #include "raylib.h"
@@ -54,9 +56,12 @@ void Gui::draw() {
         true, (Clay_Vector2){scrollDelta.x, scrollDelta.y}, GetFrameTime());
 
     int fps = GetFPS();
-    auto text = (Clay_String){.isStaticallyAllocated = false,
-                              .length = 6,
-                              .chars = TextFormat("%2i FPS", fps)};
+    auto text_field = TextFormat("%i FPS", fps);
+
+    auto text =
+        (Clay_String){.isStaticallyAllocated = false,
+                      .length = static_cast<int32_t>(strlen(text_field)),
+                      .chars = text_field};
     Clay_Color color = COLOR_LIGHT;
 
     if ((fps < 30) && (fps >= 15))
