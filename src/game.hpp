@@ -3,6 +3,7 @@
 #include "grid.hpp"
 #include "gui/gui.hpp"
 
+#include <semaphore>
 #include <thread>
 
 struct Game {
@@ -13,6 +14,7 @@ struct Game {
     bool _running;
     std::string _name;
     Gui _gui;
+    std::binary_semaphore _start_sema;
 
   public:
     void update();

@@ -125,7 +125,8 @@ Game::Game(int width, int height, std::string name)
                          static_cast<float>(height) / 2},
                  -10, 10, -10, 10)},
       _name{name},
-      _gui{Gui(static_cast<float>(width), static_cast<float>(height))} {
+      _gui{Gui(static_cast<float>(width), static_cast<float>(height))},
+      _start_sema{0} {
     _grid.add_rail(Hex(0, 0), 1, 5, 5);
     _grid.add_rail(Hex(1, -1), 2, 5, 5);
     _grid.add_rail(Hex(1, -1) + Hex(1, -1), 2, 0, 5);
@@ -145,10 +146,14 @@ void Game::start() {
 }
 #else
 void Game::start() {
-    _update_thread = std::thread([this]() { update(); });
+    _update_thread = std::thread([this]() {
+        this->_start_sema.acquire();
+        update();
+    });
     _draw_thread = std::thread([this]() {
         InitWindow(1000, 1000, this->_name.c_str());
         SetTargetFPS(144);
+        _start_sema.release();
         draw();
         this->_grid.stop();
     });
