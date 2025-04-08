@@ -15,6 +15,7 @@ struct Game {
     std::string _name;
     Gui _gui;
     std::binary_semaphore _start_sema;
+    bool _is_fast;
 
   public:
     void update();

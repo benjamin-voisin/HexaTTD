@@ -9,7 +9,7 @@ void Game::update() {
     while (_grid.is_running()) {
         _grid.update();
 
-        if (IsKeyDown(KEY_TAB)) {
+        if (_is_fast) {
             std::this_thread::sleep_for(target_fast);
         } else {
             std::this_thread::sleep_for(target);
@@ -43,6 +43,13 @@ void Game::draw() {
             Vector2 delta = GetMouseDelta();
             _grid.layout.origin.x += delta.x;
             _grid.layout.origin.y += delta.y;
+        }
+
+        // Change speed of the game
+        if (IsKeyDown(KEY_TAB)) {
+            _is_fast = true;
+        } else {
+            _is_fast = false;
         }
 
 #ifdef DEBUG
@@ -127,6 +134,7 @@ Game::Game(int width, int height, std::string name)
       _name{name},
       _gui{Gui(static_cast<float>(width), static_cast<float>(height))},
       _start_sema{0} {
+    _is_fast = false;
     _grid.add_rail(Hex(0, 0), 1, 5, 5);
     _grid.add_rail(Hex(1, -1), 2, 5, 5);
     _grid.add_rail(Hex(1, -1) + Hex(1, -1), 2, 0, 5);
