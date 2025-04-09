@@ -71,7 +71,7 @@ void Logger::log(const char *format, ...) {
         if (written > static_cast<int>(_buffer_size)) {
             // We realloc the buffer
             _buffer_size = written;
-            _buffer = (char *)reallocarray(_buffer, _buffer_size, sizeof(char));
+            _buffer = (char *)realloc(_buffer, _buffer_size * sizeof(char));
 
             // And we re-do the vsnprintf
             memset(_buffer, 0, _buffer_size);
