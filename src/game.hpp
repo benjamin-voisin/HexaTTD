@@ -16,6 +16,7 @@ struct Game {
     Gui _gui;
     std::binary_semaphore _start_sema;
     bool _is_fast;
+    void set_fullscreen();
 
   public:
     void update();

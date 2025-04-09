@@ -27,6 +27,14 @@ void pp_int_rail_vector(Grid *g, FILE *f, std::vector<int> v) {
     fprintf(f, "]\n");
 };
 
+void Game::set_fullscreen() {
+    auto display = GetCurrentMonitor();
+    if (!IsWindowFullscreen()) {
+        SetWindowSize(GetMonitorWidth(display), GetMonitorHeight(display));
+        ToggleFullscreen();
+    }
+}
+
 void Game::draw() {
 
     Hex last_cursor = _grid.xy_to_hex(GetMouseX(), GetMouseY());
@@ -161,6 +169,7 @@ void Game::start() {
     _draw_thread = std::thread([this]() {
         InitWindow(1000, 1000, this->_name.c_str());
         SetTargetFPS(144);
+        set_fullscreen();
         _start_sema.release();
         draw();
         this->_grid.stop();
