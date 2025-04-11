@@ -35,6 +35,7 @@ void Train::reverse() {
 }
 
 void Train::draw(Layout *layout, std::vector<Rail> &rails) {
+    _lock.lock();
     std::size_t c = (_progression > 0.5) ? 0 : 1;
     for (std::size_t i = 0; i < _wagons.size(); i++) {
         auto j = (i + c + 1) / 2;
@@ -56,6 +57,7 @@ void Train::draw(Layout *layout, std::vector<Rail> &rails) {
             _wagons[i]->draw(layout, rails, prev.rail_id, p);
         }
     }
+    _lock.unlock();
 }
 
 void Train::next_rail(Grid *grid) {
@@ -108,9 +110,12 @@ void Train::next_rail(Grid *grid) {
 
 void Train::update(Grid *grid) {
 
+    _lock.lock();
     _progression += 0.01;
-    if (_progression > 1.f)
+    if (_progression > 1.f) {
         next_rail(grid);
+    }
+    _lock.unlock();
 }
 
 ItineraryTrain::ItineraryTrain(Grid *grid, int id, std::vector<int> path,

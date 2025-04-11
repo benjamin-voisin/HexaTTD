@@ -42,7 +42,6 @@ void Grid::draw() {
         _lock.unlock();
     }
     for (shared_ptr<Train> train : trains) {
-        _lock.lock();
         train->draw(&layout, rails);
         _lock.unlock();
     }
@@ -192,15 +191,9 @@ void Grid::update_zoom(int wheel_factor, bool center_on_mouse) {
 void Grid::update() {
     layout.screen_width = GetScreenWidth();
     layout.screen_height = GetScreenHeight();
-    /* update_zoom(WHEEL_FACTOR, true); */
     for (auto train : trains) {
-        _lock.lock();
         train->update(this);
-        _lock.unlock();
     }
-    /* for (long unsigned i = 0; i < trains.size(); i++) { */
-    /*     trains[i]->update(graph, rails); */
-    /* } */
 }
 
 bool Grid::is_running() { return _running; }

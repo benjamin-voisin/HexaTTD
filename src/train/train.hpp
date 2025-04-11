@@ -1,17 +1,19 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 #include <stdlib.h>
 
-#include "cyclic_track_buffer.hpp"
 #include "../log.hpp"
 #include "../rail.hpp"
+#include "cyclic_track_buffer.hpp"
 #include "wagon.hpp"
 
 class Grid;
 
 class Train {
   protected:
+    std::mutex _lock;
     Cyclic_buffer _previous_rail;
     std::shared_ptr<Texture2D> _sprite;
 
