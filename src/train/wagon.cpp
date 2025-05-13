@@ -13,7 +13,9 @@ void Wagon::draw(Layout *layout, std::vector<Rail> &rails, int rail_id,
 }
 
 Wagon::Wagon(std::string type, float capacity)
-    : _capacity{capacity}, _type{type} {}
+    : _capacity{capacity}, _type{type} {
+    _filling = 0;
+}
 
 Locomotive::Locomotive() : Wagon("locomotive", 0.0) {}
 
