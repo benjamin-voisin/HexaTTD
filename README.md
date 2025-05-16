@@ -1,4 +1,4 @@
-# HexaTTD
+#HexaTTD
 
 Some experiments on implementing an openttd like game with hexagonal grid.
 
@@ -10,5 +10,5 @@ This project uses [raylib](raylib.com) and [clay](https://www.nicbarker.com/clay
 
 To buil the project, it is as simple as
 ```
-make depends && make
+make
 ```
