@@ -55,17 +55,14 @@ Logger &Logger::operator<<(const char *value) {
     return *this;
 }
 
-void Logger::log(const char *format, ...) {
+void Logger::vlog(const char *format, va_list args) {
     if (_level >= _log_level) {
-        va_list args;
         char timeStr[11] = {0};
         time_t now = time(NULL);
         struct tm *tm_info = localtime(&now);
         strftime(timeStr, sizeof(timeStr), "[%H:%M:%S]", tm_info);
         memset(_buffer, 0, _buffer_size);
-        va_start(args, format);
         auto written = vsnprintf(_buffer, _buffer_size, format, args);
-        va_end(args);
 
         // If the buffer was not big enough, we expand it
         if (written > static_cast<int>(_buffer_size)) {
@@ -75,29 +72,34 @@ void Logger::log(const char *format, ...) {
 
             // And we re-do the vsnprintf
             memset(_buffer, 0, _buffer_size);
-            va_start(args, format);
             vsnprintf(_buffer, _buffer_size, format, args);
-            va_end(args);
         }
 
         std::cout << timeStr << _text << " " << _buffer << std::endl;
     }
 }
 
+void Logger::log(const char *format, ...) {
+    va_list args;
+    va_start(args, format);
+    vlog(format, args);
+    va_end(args);
+}
+
 void raylib_log(int msgType, const char *text, va_list args) {
 
     switch (msgType) {
     case LOG_INFO:
-        Log::Info.log(text, args);
+        Log::Info.vlog(text, args);
         break;
     case LOG_ERROR:
-        Log::Error.log(text, args);
+        Log::Error.vlog(text, args);
         break;
     case LOG_WARNING:
-        Log::Warning.log(text, args);
+        Log::Warning.vlog(text, args);
         break;
     case LOG_DEBUG:
-        Log::Debug.log(text, args);
+        Log::Debug.vlog(text, args);
         break;
     default:
         assert(false);

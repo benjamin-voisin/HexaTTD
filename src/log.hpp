@@ -46,6 +46,7 @@ class Logger {
     void set_log_level(Log::loglevel log_level);
 
     PRINTF_FORMAT(2, 3) void log(const char *text, ...);
+    void vlog(const char *text, va_list args);
     Logger &operator<<(const char *value);
 };
 
