@@ -2,13 +2,15 @@
 
 #include "clay.h"
 #include "raylib.h"
+#include "settings.hpp"
 
 class Gui {
   private:
     Font *_font;
     char *_temp_render_buffer = nullptr;
     int _temp_render_buffer_len;
-    bool _is_debug;
+
+    Settings *_settings;
 
     void render(Clay_RenderCommandArray);
     static Clay_Dimensions measure_text(Clay_StringSlice text,
@@ -16,10 +18,9 @@ class Gui {
                                         void *userData);
 
   public:
-    Gui(float width, float heigth);
+    Gui(float width, float heigth, Settings *settings);
     ~Gui();
     void draw();
-    void togle_debug();
 };
 
 class GuiElement {

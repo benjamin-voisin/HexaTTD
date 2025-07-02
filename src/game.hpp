@@ -2,12 +2,14 @@
 
 #include "grid.hpp"
 #include "gui/gui.hpp"
+#include "settings.hpp"
 
 #include <semaphore>
 #include <thread>
 
 struct Game {
   private:
+    Settings _settings;
     Grid _grid;
     std::thread _update_thread;
     std::thread _draw_thread;

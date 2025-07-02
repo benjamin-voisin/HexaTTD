@@ -20,7 +20,7 @@ void HandleClayErrors(Clay_ErrorData errorData) {
     // See the Clay_ErrorData struct for more information
     Log::Error << errorData.errorText.chars;
 }
-Gui::Gui(float width, float height) : _is_debug{false} {
+Gui::Gui(float width, float height, Settings *settings) : _settings{settings} {
     uint64_t clayRequiredMemory = Clay_MinMemorySize();
     Clay_Arena clayMemory = Clay_CreateArenaWithCapacityAndMemory(
         clayRequiredMemory, malloc(clayRequiredMemory));
@@ -36,9 +36,14 @@ Gui::Gui(float width, float height) : _is_debug{false} {
     Clay_SetMeasureTextFunction(measure_text, _font);
 }
 
-void Gui::togle_debug() {
-    _is_debug = !_is_debug;
-    Clay_SetDebugModeEnabled(_is_debug);
+void HandleButtonInteraction(Clay_ElementId elementId,
+                             Clay_PointerData pointerInfo, intptr_t userData) {
+    if (pointerInfo.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
+        if (elementId.id == CLAY_ID("DEBUG_BUTTON").id) {
+            Settings *settings = reinterpret_cast<Settings *>(userData);
+            settings->toggle_debug();
+        }
+    }
 }
 
 Gui::~Gui() { free(_temp_render_buffer); }
@@ -81,6 +86,15 @@ void Gui::draw() {
             CLAY_TEXT(text, CLAY_TEXT_CONFIG({.textColor = color,
                                               .fontSize = 25,
                                               .letterSpacing = 3}));
+        }
+        // An orange button that turns blue when hovered
+        CLAY({.id = CLAY_ID("DEBUG_BUTTON")}) {
+            Clay_OnHover(HandleButtonInteraction,
+                         reinterpret_cast<intptr_t>(_settings));
+            CLAY_TEXT(CLAY_STRING("Debug"),
+                      CLAY_TEXT_CONFIG({.textColor = COLOR_LIGHT,
+                                        .fontSize = 25,
+                                        .letterSpacing = 3}));
         }
     }
 #pragma GCC diagnostic pop

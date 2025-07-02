@@ -63,7 +63,7 @@ void Game::draw() {
 #ifdef DEBUG
         auto char_pressed = GetCharPressed();
         if (char_pressed == 'd') {
-            _gui.togle_debug();
+            _settings.toggle_debug();
         }
 #endif // DEBUG
        // Update the zoom level
@@ -135,14 +135,15 @@ void Game::draw() {
 }
 
 Game::Game(int width, int height, std::string name)
-    : _grid{Grid(layout_flat, Vector2{100, 100},
-                 Vector2{static_cast<float>(width) / 2,
-                         static_cast<float>(height) / 2},
-                 -10, 10, -10, 10)},
-      _name{name},
-      _gui{Gui(static_cast<float>(width), static_cast<float>(height))},
+    : _settings{Settings()}, _grid{Grid(layout_flat, Vector2{100, 100},
+                                        Vector2{static_cast<float>(width) / 2,
+                                                static_cast<float>(height) / 2},
+                                        -10, 10, -10, 10)},
+      _name{name}, _gui{Gui(static_cast<float>(width),
+                            static_cast<float>(height), &_settings)},
       _start_sema{0} {
     _is_fast = false;
+    // _gui = Gui(static_cast<float>(width), static_cast<float>(height));
     _grid.add_rail(Hex(0, 0), 1, 5, 5);
     _grid.add_rail(Hex(1, -1), 2, 5, 5);
     _grid.add_rail(Hex(1, -1) + Hex(1, -1), 2, 0, 5);
@@ -169,7 +170,7 @@ void Game::start() {
     _draw_thread = std::thread([this]() {
         InitWindow(1000, 1000, this->_name.c_str());
         SetTargetFPS(144);
-        set_fullscreen();
+        // set_fullscreen();
         _start_sema.release();
         draw();
         this->_grid.stop();
