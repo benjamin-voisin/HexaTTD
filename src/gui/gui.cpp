@@ -91,10 +91,13 @@ void Gui::draw() {
         CLAY({.id = CLAY_ID("DEBUG_BUTTON")}) {
             Clay_OnHover(HandleButtonInteraction,
                          reinterpret_cast<intptr_t>(_settings));
-            CLAY_TEXT(CLAY_STRING("Debug"),
-                      CLAY_TEXT_CONFIG({.textColor = COLOR_LIGHT,
-                                        .fontSize = 25,
-                                        .letterSpacing = 3}));
+            CLAY_TEXT(
+                _settings->is_debug() ? CLAY_STRING("Debug")
+                                      : CLAY_STRING("No debug"),
+                CLAY_TEXT_CONFIG(
+                    {.textColor = Clay_Hovered() ? COLOR_RED : COLOR_LIGHT,
+                     .fontSize = 25,
+                     .letterSpacing = 3}));
         }
     }
 #pragma GCC diagnostic pop

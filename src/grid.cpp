@@ -7,9 +7,10 @@
 #include <math.h>
 
 Grid::Grid(Orientation orientation, Vector2 size, Vector2 origin, int q_min,
-           int q_max, int r_min, int r_max)
+           int q_max, int r_min, int r_max, Settings *settings)
     : q_min{q_min}, q_max{q_max}, r_min{r_min}, r_max{r_max},
-      tiles((r_max - r_min) * (q_max - q_min)), _running{true},
+      tiles((r_max - r_min) * (q_max - q_min)), _settings{settings},
+      _running{true},
       layout{orientation, size, origin, GetScreenWidth(), GetScreenHeight()} {}
 
 Grid::~Grid() {}
@@ -124,10 +125,10 @@ void Grid::add_rail(Hex hex, int src_side, int dst_side, int width) {
     _lock.lock();
     rails.push_back(Rail(hex, src_side, dst_side, width));
     Rail r = rails[rails.size() - 1];
-#ifndef NDEBUG
-    Log::Info.log("New rail %ld: src=%d dst=%d", rails.size() - 1,
-                  r.get_src_neighbor(), r.get_dst_neighbor());
-#endif // !NDEBUG
+    if (_settings->is_debug()) {
+        Log::Info.log("New rail %ld: src=%d dst=%d", rails.size() - 1,
+                      r.get_src_neighbor(), r.get_dst_neighbor());
+    }
     Tile *src_neighbor = tile_from_hex(hex.neighbor(r.get_src_neighbor()));
     Tile *tile = tile_from_hex(hex);
     Tile *dst_neighbor = tile_from_hex(hex.neighbor(r.get_dst_neighbor()));

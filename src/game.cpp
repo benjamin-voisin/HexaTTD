@@ -138,7 +138,7 @@ Game::Game(int width, int height, std::string name)
     : _settings{Settings()}, _grid{Grid(layout_flat, Vector2{100, 100},
                                         Vector2{static_cast<float>(width) / 2,
                                                 static_cast<float>(height) / 2},
-                                        -10, 10, -10, 10)},
+                                        -10, 10, -10, 10, &_settings)},
       _name{name}, _gui{Gui(static_cast<float>(width),
                             static_cast<float>(height), &_settings)},
       _start_sema{0} {
