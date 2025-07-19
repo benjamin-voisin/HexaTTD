@@ -50,14 +50,15 @@ void Game::draw() {
         BeginDrawing();
         ClearBackground(DARKGREEN);
         // Move the map
-        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
+        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) &&
+            _settings.state == State::Game) {
             Vector2 delta = GetMouseDelta();
             _grid.layout.origin.x += delta.x;
             _grid.layout.origin.y += delta.y;
         }
 
         // Change speed of the game
-        if (IsKeyDown(KEY_TAB)) {
+        if (IsKeyDown(KEY_TAB) && _settings.state == State::Game) {
             _is_fast = true;
         } else {
             _is_fast = false;
@@ -70,7 +71,9 @@ void Game::draw() {
         }
 #endif // DEBUG
        // Update the zoom level
-        _grid.update_zoom(WHEEL_FACTOR, true);
+        if (_settings.state == State::Game) {
+            _grid.update_zoom(WHEEL_FACTOR, true);
+        }
 
         // Draw the main thing
         _grid.draw();
@@ -81,7 +84,7 @@ void Game::draw() {
 
         // Draw hightlighted rails
         Vector pos = {(float)GetMouseX(), (float)GetMouseY()};
-        if (_grid.on_grid(under_cursor)) {
+        if (_grid.on_grid(under_cursor) && _settings.state == State::Game) {
             Tile *t = _grid.tile_from_hex(under_cursor);
             std::set<int> on_tile_tracks = t->get_rails_on_tile();
             std::vector<int> selected_rails = {};
@@ -112,7 +115,8 @@ void Game::draw() {
         }
 
         // Build rails
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) &&
+            _settings.state == State::Game) {
             if (last_cursor_pers.is_neighbor(start_construct) &&
                 last_cursor_pers.is_neighbor(under_cursor)) {
                 if ((start_construct != last_cursor_pers) &&
@@ -129,7 +133,9 @@ void Game::draw() {
             }
         }
 
-        _grid.hightlight(under_cursor, GREEN);
+        if (_settings.state == State::Game) {
+            _grid.hightlight(under_cursor, GREEN);
+        }
 
         last_cursor = under_cursor;
         EndDrawing();
