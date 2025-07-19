@@ -48,17 +48,7 @@ void HandleButtonInteraction(Clay_ElementId elementId,
 
 Gui::~Gui() { free(_temp_render_buffer); }
 
-void Gui::draw() {
-    Clay_SetLayoutDimensions({.width = static_cast<float>(GetScreenWidth()),
-                              .height = static_cast<float>(GetScreenHeight())});
-
-    Vector2 mousePosition = GetMousePosition();
-    Vector2 scrollDelta = GetMouseWheelMoveV();
-    Clay_SetPointerState({mousePosition.x, mousePosition.y},
-                         IsMouseButtonDown(0));
-    Clay_UpdateScrollContainers(true, {scrollDelta.x, scrollDelta.y},
-                                GetFrameTime());
-
+void Gui::draw_game() {
     int fps = GetFPS();
     auto text_field = TextFormat("%i FPS", fps);
 
@@ -102,6 +92,62 @@ void Gui::draw() {
     }
 #pragma GCC diagnostic pop
     render(Clay_EndLayout());
+}
+
+void Gui::draw_menu() {
+    Clay_BeginLayout();
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+    CLAY({.id = CLAY_ID("OuterContainer"),
+          .layout = {.sizing = {CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0)},
+                     .padding = CLAY_PADDING_ALL(16),
+                     .childGap = 16,
+                     .childAlignment = {.x = CLAY_ALIGN_X_CENTER,
+                                        .y = CLAY_ALIGN_Y_CENTER}},
+          .backgroundColor = {250, 250, 255, 255}}) {
+        CLAY({.layout =
+                  {
+                      .sizing = {CLAY_SIZING_FIT(0), CLAY_SIZING_FIT(0)},
+                      .padding = CLAY_PADDING_ALL(1),
+                      .layoutDirection = CLAY_TOP_TO_BOTTOM,
+                  },
+              .backgroundColor = COLOR_LIGHT}) {
+            CLAY_TEXT(
+                CLAY_STRING("Bouton 1"),
+                CLAY_TEXT_CONFIG({.textColor = COLOR_RED, .fontSize = 40}));
+            CLAY_TEXT(
+                CLAY_STRING("Bouton 2"),
+                CLAY_TEXT_CONFIG({.textColor = COLOR_ORANGE, .fontSize = 40}));
+            CLAY_TEXT(
+                CLAY_STRING("Bouton 3"),
+                CLAY_TEXT_CONFIG({.textColor = COLOR_ORANGE, .fontSize = 40}));
+        }
+    }
+#pragma GCC diagnostic pop
+    render(Clay_EndLayout());
+}
+
+void Gui::draw() {
+    Clay_SetLayoutDimensions({.width = static_cast<float>(GetScreenWidth()),
+                              .height = static_cast<float>(GetScreenHeight())});
+
+    Vector2 mousePosition = GetMousePosition();
+    Vector2 scrollDelta = GetMouseWheelMoveV();
+    Clay_SetPointerState({mousePosition.x, mousePosition.y},
+                         IsMouseButtonDown(0));
+    Clay_UpdateScrollContainers(true, {scrollDelta.x, scrollDelta.y},
+                                GetFrameTime());
+
+    switch (_settings->state) {
+    case State::Menu:
+        draw_menu();
+        break;
+    case State::Game:
+        draw_game();
+        break;
+    default:
+        break;
+    }
 }
 
 GuiElement::GuiElement(float x, float y, float width, float heigt)

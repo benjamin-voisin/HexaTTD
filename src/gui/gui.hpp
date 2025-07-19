@@ -16,6 +16,8 @@ class Gui {
     static Clay_Dimensions measure_text(Clay_StringSlice text,
                                         Clay_TextElementConfig *config,
                                         void *userData);
+    void draw_game();
+    void draw_menu();
 
   public:
     Gui(float width, float heigth, Settings *settings);
