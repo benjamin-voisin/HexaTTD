@@ -4,6 +4,7 @@ enum class State {
     Menu,
     Settings,
     Game,
+    Quit,
 };
 
 class Settings {

@@ -14,6 +14,9 @@ void Game::update() {
         } else {
             std::this_thread::sleep_for(target);
         }
+        if (_settings.state == State::Quit) {
+            _grid.stop();
+        }
     }
 }
 
@@ -43,7 +46,7 @@ void Game::draw() {
     Hex start_construct = _grid.xy_to_hex(GetMouseX(), GetMouseY());
 
     char *texte = static_cast<char *>(calloc(1000, sizeof(char)));
-    while (!WindowShouldClose()) {
+    while (!WindowShouldClose() && _grid.is_running()) {
         BeginDrawing();
         ClearBackground(DARKGREEN);
         // Move the map

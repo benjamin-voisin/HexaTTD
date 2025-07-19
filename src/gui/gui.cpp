@@ -46,6 +46,10 @@ void HandleButtonInteraction(Clay_ElementId elementId,
             Settings *settings = reinterpret_cast<Settings *>(userData);
             settings->toggle_debug();
         }
+        if (elementId.id == CLAY_ID("EXIT GAME BUTTON").id) {
+            Settings *settings = reinterpret_cast<Settings *>(userData);
+            settings->state = State::Quit;
+        }
     }
 }
 
@@ -136,12 +140,14 @@ void Gui::draw_menu() {
                         {.textColor = Clay_Hovered() ? COLOR_RED : COLOR_BLACK,
                          .fontSize = 50}));
             }
-            CLAY({.id = CLAY_ID("Bouton 3"),
+            CLAY({.id = CLAY_ID("EXIT GAME BUTTON"),
                   .layout = {.padding = CLAY_PADDING_ALL(15)},
                   .backgroundColor = {200, 200, 200, 255},
                   .cornerRadius = {12, 12, 12, 12}}) {
+                Clay_OnHover(HandleButtonInteraction,
+                             reinterpret_cast<intptr_t>(_settings));
                 CLAY_TEXT(
-                    CLAY_STRING("Bouton avec un text long"),
+                    CLAY_STRING("Exit"),
                     CLAY_TEXT_CONFIG(
                         {.textColor = Clay_Hovered() ? COLOR_RED : COLOR_BLACK,
                          .fontSize = 50}));
