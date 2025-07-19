@@ -1,6 +1,7 @@
 #include "settings.hpp"
 
 Settings::Settings() {
+    state = State::Menu;
 #ifdef NDEBUG
     _is_debug = false;
 #else
