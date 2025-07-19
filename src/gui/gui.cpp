@@ -14,7 +14,10 @@
 
 const Clay_Color COLOR_LIGHT = {224, 215, 210, 255};
 const Clay_Color COLOR_RED = {168, 66, 28, 255};
+const Clay_Color COLOR_BLUE = {28, 66, 168, 255};
+const Clay_Color COLOR_GREEN = {66, 168, 28, 255};
 const Clay_Color COLOR_ORANGE = {225, 138, 50, 255};
+const Clay_Color COLOR_BLACK = {0, 0, 0, 255};
 
 void HandleClayErrors(Clay_ErrorData errorData) {
     // See the Clay_ErrorData struct for more information
@@ -100,27 +103,49 @@ void Gui::draw_menu() {
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
     CLAY({.id = CLAY_ID("OuterContainer"),
           .layout = {.sizing = {CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0)},
-                     .padding = CLAY_PADDING_ALL(16),
-                     .childGap = 16,
                      .childAlignment = {.x = CLAY_ALIGN_X_CENTER,
                                         .y = CLAY_ALIGN_Y_CENTER}},
-          .backgroundColor = {250, 250, 255, 255}}) {
-        CLAY({.layout =
-                  {
-                      .sizing = {CLAY_SIZING_FIT(0), CLAY_SIZING_FIT(0)},
-                      .padding = CLAY_PADDING_ALL(1),
-                      .layoutDirection = CLAY_TOP_TO_BOTTOM,
-                  },
-              .backgroundColor = COLOR_LIGHT}) {
-            CLAY_TEXT(
-                CLAY_STRING("Bouton 1"),
-                CLAY_TEXT_CONFIG({.textColor = COLOR_RED, .fontSize = 40}));
-            CLAY_TEXT(
-                CLAY_STRING("Bouton 2"),
-                CLAY_TEXT_CONFIG({.textColor = COLOR_ORANGE, .fontSize = 40}));
-            CLAY_TEXT(
-                CLAY_STRING("Bouton 3"),
-                CLAY_TEXT_CONFIG({.textColor = COLOR_ORANGE, .fontSize = 40}));
+          .backgroundColor = {100, 100, 100, 150}}) {
+        CLAY({
+            .layout =
+                {
+                    .sizing = {CLAY_SIZING_FIT(0), CLAY_SIZING_FIT(0)},
+                    .padding = CLAY_PADDING_ALL(1),
+                    .childGap = 50,
+                    .childAlignment = {.x = CLAY_ALIGN_X_CENTER},
+                    .layoutDirection = CLAY_TOP_TO_BOTTOM,
+                },
+        }) {
+            CLAY({.id = CLAY_ID("Bouton 1"),
+                  .layout = {.padding = CLAY_PADDING_ALL(15)},
+                  .backgroundColor = {200, 200, 200, 255},
+                  .cornerRadius = {12, 12, 12, 12}}) {
+                CLAY_TEXT(
+                    CLAY_STRING("Bouton 1"),
+                    CLAY_TEXT_CONFIG(
+                        {.textColor = Clay_Hovered() ? COLOR_RED : COLOR_BLACK,
+                         .fontSize = 50}));
+            }
+            CLAY({.id = CLAY_ID("Bouton 2"),
+                  .layout = {.padding = CLAY_PADDING_ALL(15)},
+                  .backgroundColor = {200, 200, 200, 255},
+                  .cornerRadius = {12, 12, 12, 12}}) {
+                CLAY_TEXT(
+                    CLAY_STRING("Bouton 2"),
+                    CLAY_TEXT_CONFIG(
+                        {.textColor = Clay_Hovered() ? COLOR_RED : COLOR_BLACK,
+                         .fontSize = 50}));
+            }
+            CLAY({.id = CLAY_ID("Bouton 3"),
+                  .layout = {.padding = CLAY_PADDING_ALL(15)},
+                  .backgroundColor = {200, 200, 200, 255},
+                  .cornerRadius = {12, 12, 12, 12}}) {
+                CLAY_TEXT(
+                    CLAY_STRING("Bouton avec un text long"),
+                    CLAY_TEXT_CONFIG(
+                        {.textColor = Clay_Hovered() ? COLOR_RED : COLOR_BLACK,
+                         .fontSize = 50}));
+            }
         }
     }
 #pragma GCC diagnostic pop
