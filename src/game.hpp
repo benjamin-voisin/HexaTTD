@@ -19,7 +19,6 @@ struct Game {
     std::binary_semaphore _start_sema;
     bool _is_fast;
     void set_fullscreen();
-    Music _music;
 
   public:
     void update();
