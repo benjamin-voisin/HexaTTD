@@ -3,6 +3,7 @@
 enum class State {
     Menu,
     Settings,
+    NewGame,
     Game,
     Quit,
 };

@@ -17,6 +17,10 @@ void Game::update() {
         if (_settings.state == State::Quit) {
             _grid->stop();
         }
+        if (_settings.state == State::NewGame) {
+            new_game(GetScreenWidth(), GetScreenHeight());
+            _settings.state = State::Game;
+        }
     }
 }
 

@@ -50,6 +50,10 @@ void HandleButtonInteraction(Clay_ElementId elementId,
             Settings *settings = reinterpret_cast<Settings *>(userData);
             settings->state = State::Quit;
         }
+        if (elementId.id == CLAY_ID("NEW GAME BUTTON").id) {
+            Settings *settings = reinterpret_cast<Settings *>(userData);
+            settings->state = State::NewGame;
+        }
     }
 }
 
@@ -120,12 +124,14 @@ void Gui::draw_menu() {
                     .layoutDirection = CLAY_TOP_TO_BOTTOM,
                 },
         }) {
-            CLAY({.id = CLAY_ID("Bouton 1"),
+            CLAY({.id = CLAY_ID("NEW GAME BUTTON"),
                   .layout = {.padding = CLAY_PADDING_ALL(15)},
                   .backgroundColor = {200, 200, 200, 255},
                   .cornerRadius = {12, 12, 12, 12}}) {
+                Clay_OnHover(HandleButtonInteraction,
+                             reinterpret_cast<intptr_t>(_settings));
                 CLAY_TEXT(
-                    CLAY_STRING("Bouton 1"),
+                    CLAY_STRING("New game"),
                     CLAY_TEXT_CONFIG(
                         {.textColor = Clay_Hovered() ? COLOR_RED : COLOR_BLACK,
                          .fontSize = 50}));
