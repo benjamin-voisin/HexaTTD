@@ -51,6 +51,7 @@ void Game::draw() {
 
     char *texte = static_cast<char *>(calloc(1000, sizeof(char)));
     while (!WindowShouldClose() && _grid->is_running()) {
+        UpdateMusicStream(_music);
         BeginDrawing();
         ClearBackground(DARKGREEN);
         // Move the map
@@ -187,6 +188,9 @@ Game::Game(int width, int height, std::string name)
     _grid->add_rail(Hex(0, 0), 1, 3, 5);
 
     _grid->add_train(0, 6);
+    Music _music = LoadMusicStream("./music.mp3");
+    SetMusicVolume(_music, 1.0);
+    PlayMusicStream(_music);
 }
 
 #ifdef PLATFORM_WEB
@@ -219,4 +223,7 @@ void Game::wait() {
     _update_thread.join();
 }
 
-Game::~Game() { delete _grid; }
+Game::~Game() {
+    delete _grid;
+    UnloadMusicStream(_music);
+}
