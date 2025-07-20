@@ -10,7 +10,7 @@
 struct Game {
   private:
     Settings _settings;
-    Grid _grid;
+    Grid *_grid;
     std::thread _update_thread;
     std::thread _draw_thread;
     bool _running;
@@ -26,4 +26,6 @@ struct Game {
     void start();
     Game(int width, int height, std::string name);
     void wait();
+    void new_game(float width, float height);
+    ~Game();
 };

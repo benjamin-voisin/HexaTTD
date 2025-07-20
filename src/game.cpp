@@ -6,8 +6,8 @@ void Game::update() {
     auto target = std::chrono::milliseconds(16);
     auto target_fast = std::chrono::milliseconds(1);
 
-    while (_grid.is_running()) {
-        _grid.update();
+    while (_grid->is_running()) {
+        _grid->update();
 
         if (_is_fast) {
             std::this_thread::sleep_for(target_fast);
@@ -15,7 +15,7 @@ void Game::update() {
             std::this_thread::sleep_for(target);
         }
         if (_settings.state == State::Quit) {
-            _grid.stop();
+            _grid->stop();
         }
     }
 }
@@ -40,21 +40,21 @@ void Game::set_fullscreen() {
 
 void Game::draw() {
 
-    Hex last_cursor = _grid.xy_to_hex(GetMouseX(), GetMouseY());
-    Hex last_cursor_pers = _grid.xy_to_hex(GetMouseX(), GetMouseY());
+    Hex last_cursor = _grid->xy_to_hex(GetMouseX(), GetMouseY());
+    Hex last_cursor_pers = _grid->xy_to_hex(GetMouseX(), GetMouseY());
 
-    Hex start_construct = _grid.xy_to_hex(GetMouseX(), GetMouseY());
+    Hex start_construct = _grid->xy_to_hex(GetMouseX(), GetMouseY());
 
     char *texte = static_cast<char *>(calloc(1000, sizeof(char)));
-    while (!WindowShouldClose() && _grid.is_running()) {
+    while (!WindowShouldClose() && _grid->is_running()) {
         BeginDrawing();
         ClearBackground(DARKGREEN);
         // Move the map
         if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) &&
             _settings.state == State::Game) {
             Vector2 delta = GetMouseDelta();
-            _grid.layout.origin.x += delta.x;
-            _grid.layout.origin.y += delta.y;
+            _grid->layout.origin.x += delta.x;
+            _grid->layout.origin.y += delta.y;
         }
 
         // Change speed of the game
@@ -72,38 +72,38 @@ void Game::draw() {
 #endif // DEBUG
        // Update the zoom level
         if (_settings.state == State::Game) {
-            _grid.update_zoom(WHEEL_FACTOR, true);
+            _grid->update_zoom(WHEEL_FACTOR, true);
         }
 
         // Draw the main thing
-        _grid.draw();
+        _grid->draw();
         _gui.draw();
 
         // Draw hightlighted hex
-        Hex under_cursor = _grid.xy_to_hex(GetMouseX(), GetMouseY());
+        Hex under_cursor = _grid->xy_to_hex(GetMouseX(), GetMouseY());
 
         // Draw hightlighted rails
         Vector pos = {(float)GetMouseX(), (float)GetMouseY()};
-        if (_grid.on_grid(under_cursor) && _settings.state == State::Game) {
-            Tile *t = _grid.tile_from_hex(under_cursor);
+        if (_grid->on_grid(under_cursor) && _settings.state == State::Game) {
+            Tile *t = _grid->tile_from_hex(under_cursor);
             std::set<int> on_tile_tracks = t->get_rails_on_tile();
             std::vector<int> selected_rails = {};
             for (auto n = on_tile_tracks.begin(); n != on_tile_tracks.end();
                  ++n) {
-                Rail *r = _grid.get_rail(*n);
-                if (r->is_on_track(&_grid.layout, pos)) {
+                Rail *r = _grid->get_rail(*n);
+                if (r->is_on_track(&_grid->layout, pos)) {
                     selected_rails.push_back(*n);
                 }
             }
             if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
                 for (long unsigned i = 0; i < selected_rails.size(); ++i) {
-                    _grid.del_rail(selected_rails[i]);
+                    _grid->del_rail(selected_rails[i]);
                 }
             } else {
                 for (long unsigned i = 0; i < selected_rails.size(); ++i) {
-                    Rail *r = _grid.get_rail(selected_rails[i]);
+                    Rail *r = _grid->get_rail(selected_rails[i]);
                     if (!r->deleted)
-                        r->draw(&_grid.layout, ORANGE, 1);
+                        r->draw(&_grid->layout, ORANGE, 1);
                 }
             }
         }
@@ -125,8 +125,8 @@ void Game::draw() {
                     Hex diff_dst = under_cursor - last_cursor_pers;
                     if ((diff_src.direction() != diff_dst.direction()) &&
                         !(start_construct.is_neighbor(under_cursor))) {
-                        _grid.add_rail(last_cursor_pers, diff_src.direction(),
-                                       diff_dst.direction(), 4);
+                        _grid->add_rail(last_cursor_pers, diff_src.direction(),
+                                        diff_dst.direction(), 4);
                         start_construct = last_cursor_pers;
                     }
                 }
@@ -134,7 +134,7 @@ void Game::draw() {
         }
 
         if (_settings.state == State::Game) {
-            _grid.hightlight(under_cursor, GREEN);
+            _grid->hightlight(under_cursor, GREEN);
         }
 
         last_cursor = under_cursor;
@@ -143,23 +143,32 @@ void Game::draw() {
     free(texte);
 }
 
+void Game::new_game(float width, float height) {
+    // _grid = Grid();
+    delete _grid;
+    _grid =
+        new Grid(layout_flat, Vector2{100, 100}, Vector2{width / 2, height / 2},
+                 -10, 10, -10, 10, &_settings);
+}
+
 Game::Game(int width, int height, std::string name)
-    : _settings{Settings()}, _grid{Grid(layout_flat, Vector2{100, 100},
-                                        Vector2{static_cast<float>(width) / 2,
-                                                static_cast<float>(height) / 2},
-                                        -10, 10, -10, 10, &_settings)},
+    : _settings{Settings()},
+      _grid{new Grid(layout_flat, Vector2{100, 100},
+                     Vector2{static_cast<float>(width) / 2,
+                             static_cast<float>(height) / 2},
+                     -10, 10, -10, 10, &_settings)},
       _name{name}, _gui{Gui(static_cast<float>(width),
                             static_cast<float>(height), &_settings)},
       _start_sema{0} {
     _is_fast = false;
     // _gui = Gui(static_cast<float>(width), static_cast<float>(height));
-    _grid.add_rail(Hex(0, 0), 1, 5, 5);
-    _grid.add_rail(Hex(1, -1), 2, 5, 5);
-    _grid.add_rail(Hex(1, -1) + Hex(1, -1), 2, 0, 5);
-    _grid.add_rail(Hex(0, 1), 1, 4, 5);
-    _grid.add_train(0, 6);
+    _grid->add_rail(Hex(0, 0), 1, 5, 5);
+    _grid->add_rail(Hex(1, -1), 2, 5, 5);
+    _grid->add_rail(Hex(1, -1) + Hex(1, -1), 2, 0, 5);
+    _grid->add_rail(Hex(0, 1), 1, 4, 5);
+    _grid->add_train(0, 6);
 
-    _grid.add_station(0, "Test");
+    _grid->add_station(0, "Test");
 }
 
 #ifdef PLATFORM_WEB
@@ -168,7 +177,7 @@ void Game::start() {
     InitWindow(1920, 1080, this->_name.c_str());
     SetTargetFPS(60);
     draw();
-    _grid.stop();
+    _grid->stop();
 }
 #else
 void Game::start() {
@@ -182,7 +191,7 @@ void Game::start() {
         // set_fullscreen();
         _start_sema.release();
         draw();
-        this->_grid.stop();
+        this->_grid->stop();
     });
 }
 #endif
@@ -191,3 +200,5 @@ void Game::wait() {
     _draw_thread.join();
     _update_thread.join();
 }
+
+Game::~Game() { delete _grid; }
