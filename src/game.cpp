@@ -165,14 +165,28 @@ Game::Game(int width, int height, std::string name)
                             static_cast<float>(height), &_settings)},
       _start_sema{0} {
     _is_fast = false;
-    // _gui = Gui(static_cast<float>(width), static_cast<float>(height));
     _grid->add_rail(Hex(0, 0), 1, 5, 5);
     _grid->add_rail(Hex(1, -1), 2, 5, 5);
     _grid->add_rail(Hex(1, -1) + Hex(1, -1), 2, 0, 5);
     _grid->add_rail(Hex(0, 1), 1, 4, 5);
-    _grid->add_train(0, 6);
+    _grid->add_rail(Hex(2, -2), 0, 2, 5);
+    _grid->add_rail(Hex(3, -2), 1, 3, 5);
+    _grid->add_rail(Hex(3, -1), 2, 4, 5);
+    _grid->add_rail(Hex(2, 0), 1, 5, 5);
+    _grid->add_rail(Hex(2, 1), 2, 4, 5);
+    _grid->add_rail(Hex(1, 2), 3, 5, 5);
+    _grid->add_rail(Hex(0, 2), 0, 4, 5);
+    _grid->add_rail(Hex(-1, 0), 0, 3, 5);
+    _grid->add_rail(Hex(-2, 0), 0, 2, 5);
+    _grid->add_rail(Hex(-3, 1), 1, 5, 5);
+    _grid->add_rail(Hex(-3, 2), 0, 4, 5);
+    _grid->add_rail(Hex(-2, 2), 1, 3, 5);
+    _grid->add_rail(Hex(-2, 3), 0, 4, 5);
+    _grid->add_rail(Hex(-1, 3), 3, 5, 5);
+    _grid->add_rail(Hex(0, 2), 2, 4, 5);
+    _grid->add_rail(Hex(0, 0), 1, 3, 5);
 
-    _grid->add_station(0, "Test");
+    _grid->add_train(0, 6);
 }
 
 #ifdef PLATFORM_WEB
