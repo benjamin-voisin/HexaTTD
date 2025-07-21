@@ -34,9 +34,10 @@ endif
 ifeq ($(MODE),DEBUG) # Debug mode puts address sanitizer and debug info
 	CXXFLAGS += $(DEBUGFLAGS)
 	CUSTOM_CFLAGS += $(DEBUGFLAGS) # we add our flags to raylib
+	RAYLIB_BUILD_MODE = DEBUG
 else # Release mode compile in -O3 with link time optimization
 	CXXFLAGS += $(RELEASEFLAGS)
-	CUSTOM_CFLAGS += $(RELEASEFLAGS) # we add our flags to raylib
+	RAYLIB_BUILD_MODE = RELEASE
 endif
 
 # This part allows us to print progress of the compilation
@@ -58,6 +59,7 @@ default: $(NAME)
 RAYLIB_RELEASE_PATH = $(CURDIR)/$(BUILD_DIR)
 LIBRAYLIB = $(BUILD_DIR)/libraylib.a
 export RAYLIB_RELEASE_PATH
+export RAYLIB_BUILD_MODE
 
 # Here we get all the source files and define our objects and makefiles associated
 SOURCES = $(shell find $(SRC_DIR) -name '*.cpp')
