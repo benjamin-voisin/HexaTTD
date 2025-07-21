@@ -110,13 +110,25 @@ $(RAYLIB_SRC_PATH)/raylib.h:
 
 
 $(CLAY_PATH):
-	curl -L $(CLAY_SOURCE) -o src/gui/clay.h
+	curl -L $(CLAY_SOURCE) -o $(CLAY_PATH)
 
+MUSIC_DIR = openmsx-0.3.1
+MUSIC_DOWNLOAD_PATH =https://bundles.openttdcoop.org/openmsx/releases/LATEST/openmsx-0.3.1.zip
 
-depends: $(RAYLIB_SRC_PATH)/raylib.h $(CLAY_PATH)
-	$(MAKE) -B $< -C $(PWD)
-	$(MAKE) -B $(CLAY_PATH) -C $(PWD)
+$(MUSIC_DIR):
+	curl -L $(MUSIC_DOWNLOAD_PATH) -o $(MUSIC_DIR).zip
+	unzip $(MUSIC_DIR).zip
+	rm $(MUSIC_DIR).zip
 
+MUSIC_FILES = $(wildcard $(MUSIC_DIR)/*.mid)
+
+%.wav: %.mid
+	timidity -Ow -o $@ $<
+
+music: $(MUSIC_DIR) $(MUSIC_FILES:%.mid=%.wav)
+	$(MAKE) $(MUSIC_FILES:%.mid=%.wav)
+
+depends: $(RAYLIB_SRC_PATH)/raylib.h $(CLAY_PATH) music
 
 clean:
 	$(RM) $(NAME)
