@@ -39,6 +39,7 @@ class Grid {
          int q_max, int r_min, int r_max, Settings *settings);
     Hex xy_to_hex(float x, float y);
 
+    int tileid_from_hex(Hex hex);
     Tile *tile_from_hex(Hex hex);
     void add_rail(Hex tile, int src_side, int dst_side, int width);
     void add_train(int track_id, std::size_t size);

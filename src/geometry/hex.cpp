@@ -137,13 +137,6 @@ bool Hex::is_visible(Layout *layout) {
     return true;
 }
 
-void Hex::draw(Layout *layout, Color color) {
-    if (is_visible(layout)) {
-        std::vector<Vector2> corners_list = corners(layout);
-        DrawLineStrip(&corners_list[0], 7, color);
-    }
-}
-
 #ifdef DEBUG
 
 HexTest::HexTest() : TestInstance("hex.cpp") {}

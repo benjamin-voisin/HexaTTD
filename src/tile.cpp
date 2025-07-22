@@ -2,7 +2,10 @@
 
 #include <assert.h>
 
-Tile::Tile() {};
+#include "graphics/display_station.hpp"
+#include "graphics/display_tile.hpp"
+
+Tile::Tile(Hex hex) : hex{hex} {};
 
 std::set<int> Tile::get_rails(int direction) {
     assert((0 <= direction) && (direction < 6));
@@ -22,6 +25,16 @@ void Tile::add_on_tile_track(int id_rail) {
 }
 void Tile::del_on_tile_track(int id_rail) {
     this->on_tile_tracks.erase(id_rail);
+}
+
+void Tile::draw(Layout *layout, Color c) {
+    assert(hex.is_visible(layout));
+
+    DrawTile tile = DrawTile(hex, layout, c);
+    tile.draw();
+
+    DrawStation station = DrawStation(hex.center(layout));
+    station.draw();
 }
 
 void Tile::pp(FILE *f) {

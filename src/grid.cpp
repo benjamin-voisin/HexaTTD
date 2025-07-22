@@ -6,19 +6,39 @@
 #include <assert.h>
 #include <math.h>
 
+int Grid::tileid_from_hex(Hex hex) {
+    return (hex.get_q() - q_min) * (q_max - q_min) + (hex.get_r() - r_min);
+}
+
 Grid::Grid(Orientation orientation, Vector2 size, Vector2 origin, int q_min,
            int q_max, int r_min, int r_max, Settings *settings)
     : q_min{q_min}, q_max{q_max}, r_min{r_min}, r_max{r_max},
-      tiles((r_max - r_min) * (q_max - q_min)), _settings{settings},
+      _settings{settings},
       _running{true},
-      layout{orientation, size, origin, GetScreenWidth(), GetScreenHeight()} {}
+      layout{orientation, size, origin, GetScreenWidth(), GetScreenHeight()} {
+
+    tiles = std::vector<Tile>();
+    
+    for (int r = r_min; r <= r_max; r++) {
+        for (int q = q_min; q <= q_max; q++) {
+            tiles.push_back(Tile(Hex(0, 0)));
+        }
+    }
+
+    for (int r = r_min; r <= r_max; r++) {
+        for (int q = q_min; q <= q_max; q++) {
+            Hex hex = Hex(q, r);
+            tiles[tileid_from_hex(hex)] = Tile(hex);
+        }
+    }
+}
 
 Grid::~Grid() {}
 
 void Grid::draw() {
     for (int q = q_min; q <= q_max; q++) {
         for (int r = r_min; r <= r_max; r++) {
-            Hex(q, r).draw(&layout, BLACK);
+            tile_from_hex(Hex(q, r))->draw(&layout, BLACK);
         }
     }
     int n_classes = graph.get_max_class();
@@ -48,7 +68,7 @@ void Grid::draw() {
     }
 }
 
-void Grid::hightlight(Hex hex, Color c) { hex.draw(&layout, c); }
+void Grid::hightlight(Hex hex, Color c) { tile_from_hex(hex)->draw(&layout, c); }
 
 Hex round(float q, float r, float s) {
     double rx = round(q);
@@ -92,8 +112,7 @@ bool Grid::on_grid(Hex hex) {
 Tile *Grid::tile_from_hex(Hex hex) {
     assert((q_min <= hex.get_q()) && (hex.get_q() <= q_max));
     assert((r_min <= hex.get_r()) && (hex.get_r() <= r_max));
-    return &tiles[(hex.get_q() - q_min) * (q_max - q_min) +
-                  (hex.get_r() - r_min)];
+    return &tiles[tileid_from_hex(hex)];
 }
 
 void Grid::del_rail(int track_id) {
