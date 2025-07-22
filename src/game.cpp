@@ -50,7 +50,8 @@ void Game::draw() {
     Hex start_construct = _grid->xy_to_hex(GetMouseX(), GetMouseY());
 
     char *texte = static_cast<char *>(calloc(1000, sizeof(char)));
-    while (!WindowShouldClose() && _grid->is_running()) {
+    while (!WindowShouldClose() && _settings.state != State::Quit) {
+		if (_settings.state == State::NewGame) continue;
         BeginDrawing();
         ClearBackground(DARKGREEN);
         // Move the map
