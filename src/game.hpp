@@ -2,6 +2,7 @@
 
 #include "grid.hpp"
 #include "gui/gui.hpp"
+#include "jukebox.hpp"
 #include "settings.hpp"
 
 #include <semaphore>
@@ -19,6 +20,7 @@ struct Game {
     std::binary_semaphore _start_sema;
     bool _is_fast;
     void set_fullscreen();
+    Jukebox _jukebox;
 
   public:
     void update();

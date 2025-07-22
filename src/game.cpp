@@ -1,4 +1,5 @@
 #include "game.hpp"
+#include "jukebox.hpp"
 #include "raylib.h"
 
 void Game::update() {
@@ -51,12 +52,7 @@ void Game::draw() {
 
     char *texte = static_cast<char *>(calloc(1000, sizeof(char)));
 
-    Music music = LoadMusicStream("./music.mp3");
-    SetMusicVolume(music, 1.0);
-    PlayMusicStream(music);
-
     while (!WindowShouldClose() && _grid->is_running()) {
-        UpdateMusicStream(music);
         BeginDrawing();
         ClearBackground(DARKGREEN);
         // Move the map
@@ -151,7 +147,6 @@ void Game::draw() {
         EndDrawing();
     }
     free(texte);
-    UnloadMusicStream(music);
 }
 
 void Game::new_game(float width, float height) {
@@ -170,7 +165,7 @@ Game::Game(int width, int height, std::string name)
                      -10, 10, -10, 10, &_settings)},
       _name{name}, _gui{Gui(static_cast<float>(width),
                             static_cast<float>(height), &_settings)},
-      _start_sema{0} {
+      _start_sema{0}, _jukebox{Jukebox("openmsx-0.3.1", &_settings)} {
     _is_fast = false;
     _grid->add_rail(Hex(0, 0), 1, 5, 5);
     _grid->add_rail(Hex(1, -1), 2, 5, 5);
