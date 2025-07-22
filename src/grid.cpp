@@ -7,7 +7,7 @@
 #include <math.h>
 
 int Grid::tileid_from_hex(Hex hex) {
-    return (hex.get_q() - q_min) * (q_max - q_min) + (hex.get_r() - r_min);
+    return (hex.get_q() - q_min) * (r_max - r_min + 1) + (hex.get_r() - r_min);
 }
 
 Grid::Grid(Orientation orientation, Vector2 size, Vector2 origin, int q_min,
@@ -40,12 +40,12 @@ void Grid::draw() {
     Hex top_right = xy_to_hex(layout.screen_width, 0.);
     Hex bot_left = xy_to_hex(0., layout.screen_height);
     Hex bot_right = xy_to_hex(layout.screen_width, layout.screen_height);
-    int current_q_min = top_left.get_q();
-    int current_q_max = bot_right.get_q();
-    int current_r_min = top_right.get_r();
-    int current_r_max = bot_left.get_r();
-    for (int q = current_q_min; q <= current_q_max; q++) {
-        for (int r = current_r_min; r <= current_r_max; r++) {
+    int current_q_min = std::max(top_left.get_q(), q_min);
+    int current_q_max = std::min(bot_right.get_q(), q_max);
+    int current_r_min = std::max(top_right.get_r(), r_min);
+    int current_r_max = std::min(bot_left.get_r(), r_max);
+    for (int q = current_q_min ; q <= current_q_max; q++) {
+        for (int r = current_r_min ; r <= current_r_max; r++) {
             auto hex = Hex(q, r);
             if (hex.is_visible(&layout)) {
                 tile_from_hex(hex)->draw(&layout, BLACK);
