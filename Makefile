@@ -124,11 +124,11 @@ $(MUSIC_DIR):
 
 MUSIC_FILES = $(wildcard $(MUSIC_DIR)/*.mid)
 
-%.wav: %.mid
-	timidity -Ow -o $@ $<
+%.ogg: %.mid
+	timidity -Ow -o - $< | ffmpeg -i - $@
 
-music: $(MUSIC_DIR) $(MUSIC_FILES:%.mid=%.wav)
-	$(MAKE) $(MUSIC_FILES:%.mid=%.wav)
+music: $(MUSIC_DIR) $(MUSIC_FILES:%.mid=%.ogg)
+	$(MAKE) $(MUSIC_FILES:%.mid=%.ogg)
 
 depends: $(RAYLIB_SRC_PATH)/raylib.h $(CLAY_PATH) music
 
