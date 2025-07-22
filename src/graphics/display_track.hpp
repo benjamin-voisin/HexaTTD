@@ -1,7 +1,7 @@
 #pragma once
 
-#define GAUGE_FACTOR 100
-#define N_TRAVERSES 20
+#define GAUGE_FACTOR 200
+#define N_TRAVERSES 40
 
 #include "../geometry/layout.hpp"
 #include "../geometry/vector.hpp"

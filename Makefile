@@ -34,9 +34,10 @@ endif
 ifeq ($(MODE),DEBUG) # Debug mode puts address sanitizer and debug info
 	CXXFLAGS += $(DEBUGFLAGS)
 	CUSTOM_CFLAGS += $(DEBUGFLAGS) # we add our flags to raylib
+	RAYLIB_BUILD_MODE = DEBUG
 else # Release mode compile in -O3 with link time optimization
 	CXXFLAGS += $(RELEASEFLAGS)
-	CUSTOM_CFLAGS += $(RELEASEFLAGS) # we add our flags to raylib
+	RAYLIB_BUILD_MODE = RELEASE
 endif
 
 # This part allows us to print progress of the compilation
@@ -58,6 +59,7 @@ default: $(NAME)
 RAYLIB_RELEASE_PATH = $(CURDIR)/$(BUILD_DIR)
 LIBRAYLIB = $(BUILD_DIR)/libraylib.a
 export RAYLIB_RELEASE_PATH
+export RAYLIB_BUILD_MODE
 
 # Here we get all the source files and define our objects and makefiles associated
 SOURCES = $(shell find $(SRC_DIR) -name '*.cpp')
@@ -110,13 +112,26 @@ $(RAYLIB_SRC_PATH)/raylib.h:
 
 
 $(CLAY_PATH):
-	curl -L $(CLAY_SOURCE) -o src/gui/clay.h
+	curl -L $(CLAY_SOURCE) -o $(CLAY_PATH)
 
+MUSIC_DIR = openmsx-0.3.1
+MUSIC_DOWNLOAD_PATH =https://bundles.openttdcoop.org/openmsx/releases/LATEST/openmsx-0.3.1.zip
 
-depends: $(RAYLIB_SRC_PATH)/raylib.h $(CLAY_PATH)
-	$(MAKE) -B $< -C $(PWD)
-	$(MAKE) -B $(CLAY_PATH) -C $(PWD)
+$(MUSIC_DIR):
+	curl -L $(MUSIC_DOWNLOAD_PATH) -o $(MUSIC_DIR).zip
+	unzip $(MUSIC_DIR).zip
+	rm $(MUSIC_DIR).zip
 
+MUSIC_FILES = $(wildcard $(MUSIC_DIR)/*.mid)
+
+%.ogg: %.mid
+	(timidity -Ow -o - $< | ffmpeg -i - $@ ) ||\
+		(echo -e "\033[31mTo convert the music, you need both the timidity and ffmpeg utilities\033[0m\n"; exit 1)
+
+music: $(MUSIC_DIR) $(MUSIC_FILES:%.mid=%.ogg)
+	$(MAKE) $(MUSIC_FILES:%.mid=%.ogg)
+
+depends: $(RAYLIB_SRC_PATH)/raylib.h $(CLAY_PATH) music
 
 clean:
 	$(RM) $(NAME)

@@ -1,4 +1,5 @@
 #include "game.hpp"
+#include "jukebox.hpp"
 #include "raylib.h"
 
 void Game::update() {
@@ -164,7 +165,7 @@ Game::Game(int width, int height, std::string name)
                      -10, 10, -10, 10, &_settings)},
       _name{name}, _gui{Gui(static_cast<float>(width),
                             static_cast<float>(height), &_settings)},
-      _start_sema{0} {
+      _start_sema{0}, _jukebox{Jukebox("openmsx-0.3.1", &_settings)} {
     _is_fast = false;
     _grid->add_rail(Hex(0, 0), 1, 5, 5);
     _grid->add_rail(Hex(1, -1), 2, 5, 5);

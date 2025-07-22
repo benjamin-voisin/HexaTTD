@@ -12,3 +12,4 @@ build/
 raylib
 src/gui/clay.h
 .vscode
+openmsx-0.3.1
