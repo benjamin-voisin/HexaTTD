@@ -34,7 +34,7 @@ void Tile::draw(Layout *layout, Color c) {
     tile.draw();
 
     DrawStation station = DrawStation(hex.center(layout));
-    station.draw();
+    station.draw(layout);
 }
 
 void Tile::pp(FILE *f) {
