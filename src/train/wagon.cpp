@@ -6,7 +6,7 @@ void Wagon::draw(Layout *layout, std::vector<Rail> &rails, int rail_id,
     if (rails[rail_id].get_hex().is_visible(layout)) {
         auto position = rails[rail_id].get_position(layout, _progression);
         DrawTrain train =
-            DrawTrain(position.position, Vector(30, 70) * layout->size.x / 100,
+            DrawTrain(position.position, Vector(15, 50) * layout->size.x / 100,
                       position.direction);
         train.draw();
     }
@@ -24,7 +24,7 @@ void Locomotive::draw(Layout *layout, std::vector<Rail> &rails, int rail_id,
     if (rails[rail_id].get_hex().is_visible(layout)) {
         auto position = rails[rail_id].get_position(layout, _progression);
         DrawTrain train =
-            DrawTrain(position.position, Vector(50, 70) * layout->size.x / 100,
+            DrawTrain(position.position, Vector(20, 50) * layout->size.x / 100,
                       position.direction);
         train.draw();
     }
