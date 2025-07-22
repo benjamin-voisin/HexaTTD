@@ -125,7 +125,8 @@ $(MUSIC_DIR):
 MUSIC_FILES = $(wildcard $(MUSIC_DIR)/*.mid)
 
 %.ogg: %.mid
-	timidity -Ow -o - $< | ffmpeg -i - $@
+	(timidity -Ow -o - $< | ffmpeg -i - $@ ) ||\
+		(echo -e "\033[31mTo convert the music, you need both the timidity and ffmpeg utilities\033[0m\n"; exit 1)
 
 music: $(MUSIC_DIR) $(MUSIC_FILES:%.mid=%.ogg)
 	$(MAKE) $(MUSIC_FILES:%.mid=%.ogg)
