@@ -36,9 +36,20 @@ Grid::Grid(Orientation orientation, Vector2 size, Vector2 origin, int q_min,
 Grid::~Grid() {}
 
 void Grid::draw() {
-    for (int q = q_min; q <= q_max; q++) {
-        for (int r = r_min; r <= r_max; r++) {
-            tile_from_hex(Hex(q, r))->draw(&layout, BLACK);
+	Hex top_left = xy_to_hex(0., 0.);
+    Hex top_right = xy_to_hex(layout.screen_width, 0.);
+    Hex bot_left = xy_to_hex(0., layout.screen_height);
+    Hex bot_right = xy_to_hex(layout.screen_width, layout.screen_height);
+    int current_q_min = top_left.get_q();
+    int current_q_max = bot_right.get_q();
+    int current_r_min = top_right.get_r();
+    int current_r_max = bot_left.get_r();
+    for (int q = current_q_min; q <= current_q_max; q++) {
+        for (int r = current_r_min; r <= current_r_max; r++) {
+            auto hex = Hex(q, r);
+            if (hex.is_visible(&layout)) {
+                tile_from_hex(hex)->draw(&layout, BLACK);
+            }
         }
     }
     int n_classes = graph.get_max_class();
