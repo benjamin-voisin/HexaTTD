@@ -25,6 +25,14 @@ Grid::Grid(Orientation orientation, Vector2 size, Vector2 origin, int q_min,
         }
     }
 
+	// This code allows to make an hexagonal map
+	// for (int q = q_min; q <= q_max; q++) {
+	// 	for (int r = std::max(r_min, -q+r_min); r <= std::min(r_max, -q+r_max); r++) {
+            // Hex hex = Hex(q, r);
+            // tiles[tileid_from_hex(hex)] = Tile(hex);
+	// 	}
+	// }
+
     for (int r = r_min; r <= r_max; r++) {
         for (int q = q_min; q <= q_max; q++) {
             Hex hex = Hex(q, r);
