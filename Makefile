@@ -9,7 +9,7 @@ VPATH += $(BUILD_DIR)
 RAYLIB_PATH ?= ./raylib#path to raylib source code
 RAYLIB_SRC_PATH = $(RAYLIB_PATH)/src
 RAYLIB_SOURCE = "https://github.com/raysan5/raylib/archive/refs/tags/5.5.tar.gz"
-CLAY_SOURCE = "https://raw.githubusercontent.com/nicbarker/clay/a9e94e3be0b146bdb4a1d6cd4ad746912d1de771/clay.h"
+CLAY_SOURCE = "https://raw.githubusercontent.com/nicbarker/clay/91c6d0577409908e4bfa1e6930e8f3cea82ec7f0/clay.h"
 CLAY_PATH = $(SRC_DIR)/gui/clay.h
 
 # This allows the preprocessor to also generate the dependencies in the *.d files
