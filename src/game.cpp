@@ -141,7 +141,7 @@ void Game::draw() {
             }
         }
 
-        if (_settings.state == State::Game) {
+        if (_grid->on_grid(under_cursor) && _settings.state == State::Game) {
             _grid->hightlight(under_cursor, GREEN);
         }
 
