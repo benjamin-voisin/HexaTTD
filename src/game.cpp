@@ -159,6 +159,31 @@ void Game::new_game(float width, float height) {
                  -10, 10, -10, 10, &_settings);
 }
 
+void make_butterfly(Grid *grid) {
+    grid->add_rail(Hex(0, 0), 1, 5, 5);
+    grid->add_rail(Hex(1, -1), 2, 5, 5);
+    grid->add_rail(Hex(1, -1) + Hex(1, -1), 2, 0, 5);
+    grid->add_rail(Hex(0, 1), 1, 4, 5);
+    grid->add_rail(Hex(2, -2), 0, 2, 5);
+    grid->add_rail(Hex(3, -2), 1, 3, 5);
+    grid->add_rail(Hex(3, -1), 2, 4, 5);
+    grid->add_rail(Hex(2, 0), 1, 5, 5);
+    grid->add_rail(Hex(2, 1), 2, 4, 5);
+    grid->add_rail(Hex(1, 2), 3, 5, 5);
+    grid->add_rail(Hex(0, 2), 0, 4, 5);
+    grid->add_rail(Hex(-1, 0), 0, 3, 5);
+    grid->add_rail(Hex(-2, 0), 0, 2, 5);
+    grid->add_rail(Hex(-3, 1), 1, 5, 5);
+    grid->add_rail(Hex(-3, 2), 0, 4, 5);
+    grid->add_rail(Hex(-2, 2), 1, 3, 5);
+    grid->add_rail(Hex(-2, 3), 0, 4, 5);
+    grid->add_rail(Hex(-1, 3), 3, 5, 5);
+    grid->add_rail(Hex(0, 2), 2, 4, 5);
+    grid->add_rail(Hex(0, 0), 1, 3, 5);
+
+    grid->add_train(0, 6);
+}
+
 Game::Game(int width, int height, std::string name)
     : _settings{Settings()},
       _grid{new Grid(layout_flat, Vector2{100, 100},
@@ -168,28 +193,7 @@ Game::Game(int width, int height, std::string name)
       _name{name}, _jukebox{Jukebox("openmsx-0.3.1", &_settings)},
 	  _gui{Gui(static_cast<float>(width), static_cast<float>(height), &_settings, &_jukebox)}, _start_sema{0} {
     _is_fast = false;
-    _grid->add_rail(Hex(0, 0), 1, 5, 5);
-    _grid->add_rail(Hex(1, -1), 2, 5, 5);
-    _grid->add_rail(Hex(1, -1) + Hex(1, -1), 2, 0, 5);
-    _grid->add_rail(Hex(0, 1), 1, 4, 5);
-    _grid->add_rail(Hex(2, -2), 0, 2, 5);
-    _grid->add_rail(Hex(3, -2), 1, 3, 5);
-    _grid->add_rail(Hex(3, -1), 2, 4, 5);
-    _grid->add_rail(Hex(2, 0), 1, 5, 5);
-    _grid->add_rail(Hex(2, 1), 2, 4, 5);
-    _grid->add_rail(Hex(1, 2), 3, 5, 5);
-    _grid->add_rail(Hex(0, 2), 0, 4, 5);
-    _grid->add_rail(Hex(-1, 0), 0, 3, 5);
-    _grid->add_rail(Hex(-2, 0), 0, 2, 5);
-    _grid->add_rail(Hex(-3, 1), 1, 5, 5);
-    _grid->add_rail(Hex(-3, 2), 0, 4, 5);
-    _grid->add_rail(Hex(-2, 2), 1, 3, 5);
-    _grid->add_rail(Hex(-2, 3), 0, 4, 5);
-    _grid->add_rail(Hex(-1, 3), 3, 5, 5);
-    _grid->add_rail(Hex(0, 2), 2, 4, 5);
-    _grid->add_rail(Hex(0, 0), 1, 3, 5);
-
-    _grid->add_train(0, 6);
+	make_butterfly(_grid);
 }
 
 #ifdef PLATFORM_WEB
@@ -207,7 +211,11 @@ void Game::start() {
         update();
     });
     _draw_thread = std::thread([this]() {
+#ifdef DEBUG
+        InitWindow(1400, 1000, this->_name.c_str());
+#else
         InitWindow(1000, 1000, this->_name.c_str());
+#endif
         SetTargetFPS(144);
         // set_fullscreen();
         _start_sema.release();
