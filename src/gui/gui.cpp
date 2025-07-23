@@ -1,4 +1,5 @@
 // This file will contain the implementation of Raygui, and only this file
+#include <memory>
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 #define CLAY_IMPLEMENTATION
@@ -23,7 +24,8 @@ void HandleClayErrors(Clay_ErrorData errorData) {
     // See the Clay_ErrorData struct for more information
     Log::Error << errorData.errorText.chars;
 }
-Gui::Gui(float width, float height, Settings *settings, Jukebox *jukebox) : _settings{settings}, _jukebox{jukebox}, _slider(Slider("MASTER VOLUME SLIDER")) {
+Gui::Gui(float width, float height, Settings *settings, Jukebox *jukebox) : _settings{settings}, _jukebox{jukebox} {
+	_custom_elements["MASTER VOLUME SLIDER"] = new Slider("MASTER VOLUME SLIDER");
     uint64_t clayRequiredMemory = Clay_MinMemorySize();
     Clay_Arena clayMemory = Clay_CreateArenaWithCapacityAndMemory(
         clayRequiredMemory, malloc(clayRequiredMemory));
@@ -126,7 +128,7 @@ void Gui::draw_settings() {
           .backgroundColor = {100, 100, 100, 150}},) {
 		CLAY({.id = CLAY_ID("SETTINGS WINDOW"),
 				.layout = {.sizing = {.width = CLAY_SIZING_PERCENT(0.7), .height = CLAY_SIZING_PERCENT(0.7)},
-					.padding = {10,10,10,10},
+					.padding = CLAY_PADDING_ALL(20),
 					.childGap = 10,
                     .layoutDirection = CLAY_TOP_TO_BOTTOM,
 				},
@@ -134,10 +136,11 @@ void Gui::draw_settings() {
 				.cornerRadius = {32,32,32,32},
 				.clip = {.vertical = true, .childOffset = Clay_GetScrollOffset()},
 				}) {
-			CLAY({}) {
+			CLAY({.layout = {.sizing = {.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)}, .childGap = 10, .layoutDirection = CLAY_LEFT_TO_RIGHT}}) {
 				CLAY_TEXT(CLAY_STRING("Master volume"),
-						CLAY_TEXT_CONFIG({.textColor = COLOR_BLACK, .fontSize = 50}));
-				CLAY({ .id = CLAY_ID("MASTER VOLUME SLIDER"), .layout {.sizing = {.width = CLAY_SIZING_FIXED(200), .height = CLAY_SIZING_FIXED(100)}}, .custom = { .customData = reinterpret_cast<void*>(&_slider) } }) {
+						CLAY_TEXT_CONFIG({.textColor = COLOR_BLACK, .fontSize = 30}));
+				CLAY({.layout = {.sizing = {.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)}}}) {};
+				CLAY({ .id = CLAY_ID("MASTER VOLUME SLIDER"), .layout {.sizing = {.width = CLAY_SIZING_PERCENT(0.5), .height = CLAY_SIZING_GROW(0)}}, .custom = { .customData = (_custom_elements["MASTER VOLUME SLIDER"]) } }) {
 				}
 			}
             CLAY({.id = CLAY_ID("EXIT GAME BUTTON"),

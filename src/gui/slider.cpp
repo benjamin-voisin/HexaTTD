@@ -12,3 +12,5 @@ void Slider::draw() {
 	auto elementData = Clay_GetElementData(_id);
 	DrawRectangle(elementData.boundingBox.x, elementData.boundingBox.y, elementData.boundingBox.width, elementData.boundingBox.height, BLACK);
 }
+
+Slider::~Slider() {};

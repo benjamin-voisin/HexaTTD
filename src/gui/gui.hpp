@@ -22,7 +22,9 @@ class Gui {
     Settings *_settings;
 	Jukebox *_jukebox;
 
-	Slider _slider;
+	// Slider _slider;
+	// std::unordered_map<std::string, std::unique_ptr<GuiElement>> _custom_elements;
+	std::unordered_map<std::string, GuiElement*> _custom_elements;
 
     void render(Clay_RenderCommandArray);
     static Clay_Dimensions measure_text(Clay_StringSlice text,

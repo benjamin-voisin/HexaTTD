@@ -5,11 +5,12 @@
 
 #include <string>
 
-class Slider : GuiElement {
+class Slider : public GuiElement {
 	private:
 		Clay_ElementId _id;
 
 	public:
 		Slider(std::string id);
 		void draw() override;
+		~Slider() override;
 };
