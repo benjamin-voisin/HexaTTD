@@ -15,12 +15,12 @@ void Game::update() {
         } else {
             std::this_thread::sleep_for(target);
         }
-        if (_settings.state == State::Quit) {
+        if (_settings.get_state() == State::Quit) {
             _grid->stop();
         }
-        if (_settings.state == State::NewGame) {
+        if (_settings.get_state() == State::NewGame) {
             new_game(GetScreenWidth(), GetScreenHeight());
-            _settings.state = State::Game;
+			_settings.set_state(State::Game);
         }
     }
 }
@@ -51,20 +51,20 @@ void Game::draw() {
     Hex start_construct = _grid->xy_to_hex(GetMouseX(), GetMouseY());
 
     char *texte = static_cast<char *>(calloc(1000, sizeof(char)));
-    while (!WindowShouldClose() && _settings.state != State::Quit) {
-		if (_settings.state == State::NewGame) continue;
+    while (!WindowShouldClose() && _settings.get_state() != State::Quit) {
+		if (_settings.get_state() == State::NewGame) continue;
         BeginDrawing();
         ClearBackground(DARKGREEN);
         // Move the map
         if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) &&
-            _settings.state == State::Game) {
+            _settings.get_state() == State::Game) {
             Vector2 delta = GetMouseDelta();
             _grid->layout.origin.x += delta.x;
             _grid->layout.origin.y += delta.y;
         }
 
         // Change speed of the game
-        if (IsKeyDown(KEY_TAB) && _settings.state == State::Game) {
+        if (IsKeyDown(KEY_TAB) && _settings.get_state() == State::Game) {
             _is_fast = true;
         } else {
             _is_fast = false;
@@ -77,7 +77,7 @@ void Game::draw() {
         }
 #endif // DEBUG
        // Update the zoom level
-        if (_settings.state == State::Game) {
+        if (_settings.get_state() == State::Game) {
             _grid->update_zoom(WHEEL_FACTOR, true);
         }
 
@@ -90,7 +90,7 @@ void Game::draw() {
 
         // Draw hightlighted rails
         Vector pos = {(float)GetMouseX(), (float)GetMouseY()};
-        if (_grid->on_grid(under_cursor) && _settings.state == State::Game) {
+        if (_grid->on_grid(under_cursor) && _settings.get_state() == State::Game) {
             Tile *t = _grid->tile_from_hex(under_cursor);
             std::set<int> on_tile_tracks = t->get_rails_on_tile();
             std::vector<int> selected_rails = {};
@@ -123,7 +123,7 @@ void Game::draw() {
 
         // Build rails
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) &&
-            _settings.state == State::Game) {
+            _settings.get_state() == State::Game) {
             if (last_cursor_pers.is_neighbor(start_construct) &&
                 last_cursor_pers.is_neighbor(under_cursor)) {
                 if ((start_construct != last_cursor_pers) &&
@@ -141,7 +141,7 @@ void Game::draw() {
             }
         }
 
-        if (_grid->on_grid(under_cursor) && _settings.state == State::Game) {
+        if (_grid->on_grid(under_cursor) && _settings.get_state() == State::Game) {
             _grid->hightlight(under_cursor, GREEN);
         }
 

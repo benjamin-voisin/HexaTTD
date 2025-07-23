@@ -53,13 +53,13 @@ void HandleButtonInteraction(Clay_ElementId elementId,
             args->settings->toggle_debug();
         }
         if (elementId.id == CLAY_ID("EXIT GAME BUTTON").id) {
-            args->settings->state = State::Quit;
+			args->settings->set_state(State::Quit);
         }
         if (elementId.id == CLAY_ID("NEW GAME BUTTON").id) {
-            args->settings->state = State::NewGame;
+			args->settings->set_state(State::NewGame);
         }
 		if (elementId.id == CLAY_ID("SETTINGS BUTTON").id) {
-			args->settings->state = State::Settings;
+			args->settings->set_state(State::Settings);
 		}
     }
 }
@@ -203,7 +203,7 @@ void Gui::draw() {
     Clay_UpdateScrollContainers(true, {scrollDelta.x, scrollDelta.y},
                                 GetFrameTime());
 
-    switch (_settings->state) {
+    switch (_settings->get_state()) {
     case State::Menu:
         draw_menu();
         break;

@@ -1,7 +1,7 @@
 #include "settings.hpp"
 
 Settings::Settings() {
-    state = State::Menu;
+    _state = State::Menu;
 #ifdef NDEBUG
     _is_debug = false;
 #else
@@ -12,3 +12,7 @@ Settings::Settings() {
 void Settings::toggle_debug() { _is_debug = !_is_debug; }
 
 bool Settings::is_debug() { return _is_debug; };
+
+State Settings::get_state() { return _state; };
+
+void Settings::set_state(State state) { _state = state; };

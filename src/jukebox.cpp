@@ -28,7 +28,7 @@ void Jukebox::update() {
 	}
 
 
-    while (_settings->state != State::Quit) {
+    while (_settings->get_state() != State::Quit) {
 		// Update the music
         UpdateMusicStream(_musics[_current_music]);
         std::this_thread::sleep_for(std::chrono::milliseconds(6));
@@ -64,7 +64,7 @@ void Jukebox::play_sound(std::string sound) {
 #include "log.hpp"
 
 Jukebox::~Jukebox() {
-    _settings->state = State::Quit;
+	_settings->set_state(State::Quit);
     _update_thread.join();
     StopMusicStream(_musics[_current_music]);
     for (Music music : _musics) {
