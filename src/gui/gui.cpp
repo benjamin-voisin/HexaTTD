@@ -23,7 +23,7 @@ void HandleClayErrors(Clay_ErrorData errorData) {
     // See the Clay_ErrorData struct for more information
     Log::Error << errorData.errorText.chars;
 }
-Gui::Gui(float width, float height, Settings *settings, Jukebox *jukebox) : _settings{settings}, _jukebox{jukebox} {
+Gui::Gui(float width, float height, Settings *settings, Jukebox *jukebox) : _settings{settings}, _jukebox{jukebox}, _slider(Slider("MASTER VOLUME SLIDER")) {
     uint64_t clayRequiredMemory = Clay_MinMemorySize();
     Clay_Arena clayMemory = Clay_CreateArenaWithCapacityAndMemory(
         clayRequiredMemory, malloc(clayRequiredMemory));
@@ -60,6 +60,9 @@ void HandleButtonInteraction(Clay_ElementId elementId,
         }
 		if (elementId.id == CLAY_ID("SETTINGS BUTTON").id) {
 			args->settings->set_state(State::Settings);
+		}
+		if (elementId.id == CLAY_ID("BACK SETTINGS BUTTON").id) {
+			args->settings->set_state(State::Menu);
 		}
     }
 }
@@ -122,10 +125,45 @@ void Gui::draw_settings() {
                                         .y = CLAY_ALIGN_Y_CENTER}},
           .backgroundColor = {100, 100, 100, 150}},) {
 		CLAY({.id = CLAY_ID("SETTINGS WINDOW"),
-				.layout = {.sizing = {.width = CLAY_SIZING_PERCENT(0.7), .height = CLAY_SIZING_PERCENT(0.7)}},
+				.layout = {.sizing = {.width = CLAY_SIZING_PERCENT(0.7), .height = CLAY_SIZING_PERCENT(0.7)},
+					.padding = {10,10,10,10},
+					.childGap = 10,
+                    .layoutDirection = CLAY_TOP_TO_BOTTOM,
+				},
 				.backgroundColor = {150, 150, 150, 255},
 				.cornerRadius = {32,32,32,32},
+				.clip = {.vertical = true, .childOffset = Clay_GetScrollOffset()},
 				}) {
+			CLAY({}) {
+				CLAY_TEXT(CLAY_STRING("Master volume"),
+						CLAY_TEXT_CONFIG({.textColor = COLOR_BLACK, .fontSize = 50}));
+				CLAY({ .id = CLAY_ID("MASTER VOLUME SLIDER"), .layout {.sizing = {.width = CLAY_SIZING_FIXED(200), .height = CLAY_SIZING_FIXED(100)}}, .custom = { .customData = reinterpret_cast<void*>(&_slider) } }) {
+				}
+			}
+            CLAY({.id = CLAY_ID("EXIT GAME BUTTON"),
+                  .layout = {.padding = CLAY_PADDING_ALL(15)},
+                  .backgroundColor = {200, 200, 200, 255},
+                  .cornerRadius = {12, 12, 12, 12}}) {
+                Clay_OnHover(HandleButtonInteraction,
+                             reinterpret_cast<intptr_t>(&_button_pressed_data));
+                CLAY_TEXT(
+                    CLAY_STRING("Exit"),
+                    CLAY_TEXT_CONFIG(
+                        {.textColor = Clay_Hovered() ? COLOR_RED : COLOR_BLACK,
+                         .fontSize = 50}));
+            }
+            CLAY({.id = CLAY_ID("BACK SETTINGS BUTTON"),
+                  .layout = {.padding = CLAY_PADDING_ALL(15)},
+                  .backgroundColor = {200, 200, 200, 255},
+                  .cornerRadius = {12, 12, 12, 12}}) {
+                Clay_OnHover(HandleButtonInteraction,
+                             reinterpret_cast<intptr_t>(&_button_pressed_data));
+                CLAY_TEXT(
+                    CLAY_STRING("Back"),
+                    CLAY_TEXT_CONFIG(
+                        {.textColor = Clay_Hovered() ? COLOR_RED : COLOR_BLACK,
+                         .fontSize = 50}));
+            }
 		}
 	}
 	render(Clay_EndLayout());
@@ -218,7 +256,7 @@ void Gui::draw() {
     }
 }
 
-GuiElement::GuiElement(float x, float y, float width, float heigt)
-    : _x{x}, _y{y}, _width{width}, _height{heigt} {}
+// GuiElement::GuiElement(float x, float y, float width, float heigt)
+//     : _x{x}, _y{y}, _width{width}, _height{heigt} {}
 
-void GuiElement::draw() {}
+// void GuiElement::draw() {}

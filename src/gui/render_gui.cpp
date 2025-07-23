@@ -239,8 +239,12 @@ void Gui::render(Clay_RenderCommandArray renderCommands) {
             }
             break;
         }
-
-        default: {
+		case CLAY_RENDER_COMMAND_TYPE_CUSTOM : {
+			GuiElement *element = reinterpret_cast<GuiElement*>(renderCommand->renderData.custom.customData);
+			element->draw();
+			break;
+		}
+		default: {
             Log::Error << "Error: unhandled render command.";
             exit(1);
         }

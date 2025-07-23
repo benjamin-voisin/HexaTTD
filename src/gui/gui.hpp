@@ -5,6 +5,8 @@
 #include "settings.hpp"
 #include "jukebox.hpp"
 
+#include "slider.hpp"
+
 struct button_pressed_data {
 	Settings *settings;
 	Jukebox *jukebox;
@@ -19,6 +21,8 @@ class Gui {
 
     Settings *_settings;
 	Jukebox *_jukebox;
+
+	Slider _slider;
 
     void render(Clay_RenderCommandArray);
     static Clay_Dimensions measure_text(Clay_StringSlice text,
@@ -35,14 +39,3 @@ class Gui {
     void draw();
 };
 
-class GuiElement {
-  protected:
-    float _x;
-    float _y;
-    float _width;
-    float _height;
-
-  public:
-    GuiElement(float x, float y, float width, float height);
-    virtual void draw();
-};
