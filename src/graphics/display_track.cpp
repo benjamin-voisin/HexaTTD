@@ -30,7 +30,7 @@ void ArcTrack::draw_traverse(Layout *layout) {
     float display_gauge = get_display_gauge(layout);
     int delta = get_delta(layout);
 
-    if (layout->size.x > 100) {
+    if (layout->size.x > 50) {
         for (float i = 0; i < N_TRAVERSES; ++i) {
             float angle =
                 (i / N_TRAVERSES) * (angle_max - angle_min) + angle_min;
@@ -38,7 +38,7 @@ void ArcTrack::draw_traverse(Layout *layout) {
                      radius + display_gauge / 2 + delta, angle, angle + 1, 1,
                      color);
         }
-    } else if (layout->size.x > 40) {
+    } else if (layout->size.x > 20) {
         for (float i = 0; i <= N_TRAVERSES; ++i) {
             float angle =
                 (i / N_TRAVERSES) * (angle_max - angle_min) + angle_min;
@@ -126,14 +126,14 @@ void StraighTrack::draw_traverse(Layout *layout) {
 
     Vector ortho = (dst - src).orthogonal().normalise();
     int delta_traverses = layout->size.x / 40;
-    if (layout->size.x > 100) {
+    if (layout->size.x > 50) {
         for (float i = 0; i <= N_TRAVERSES; ++i) {
             Vector v = (dst - src) * (i / N_TRAVERSES) + src;
             DrawLineEx((v + ortho * (display_gauge / 2 + delta)).to_Vector2(),
                        (v - ortho * (display_gauge / 2 + delta)).to_Vector2(),
                        delta_traverses, color);
         }
-    } else if (layout->size.x > 40) {
+    } else if (layout->size.x > 20) {
         for (float i = 0; i <= N_TRAVERSES; ++i) {
             Vector v = (dst - src) * (i / N_TRAVERSES) + src;
             DrawLineEx((v + ortho * (display_gauge / 2 + delta)).to_Vector2(),
