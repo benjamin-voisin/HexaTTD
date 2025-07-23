@@ -26,6 +26,7 @@ class Gui {
                                         void *userData);
     void draw_game();
     void draw_menu();
+	void draw_settings();
 	button_pressed_data _button_pressed_data;
 
   public:

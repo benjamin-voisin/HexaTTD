@@ -58,6 +58,9 @@ void HandleButtonInteraction(Clay_ElementId elementId,
         if (elementId.id == CLAY_ID("NEW GAME BUTTON").id) {
             args->settings->state = State::NewGame;
         }
+		if (elementId.id == CLAY_ID("SETTINGS BUTTON").id) {
+			args->settings->state = State::Settings;
+		}
     }
 }
 
@@ -109,6 +112,25 @@ void Gui::draw_game() {
     render(Clay_EndLayout());
 }
 
+void Gui::draw_settings() {
+    Clay_BeginLayout();
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+    CLAY({.id = CLAY_ID("OuterContainer"),
+          .layout = {.sizing = {CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0)},
+                     .childAlignment = {.x = CLAY_ALIGN_X_CENTER,
+                                        .y = CLAY_ALIGN_Y_CENTER}},
+          .backgroundColor = {100, 100, 100, 150}},) {
+		CLAY({.id = CLAY_ID("SETTINGS WINDOW"),
+				.layout = {.sizing = {.width = CLAY_SIZING_PERCENT(0.7), .height = CLAY_SIZING_PERCENT(0.7)}},
+				.backgroundColor = {150, 150, 150, 255},
+				.cornerRadius = {32,32,32,32},
+				}) {
+		}
+	}
+	render(Clay_EndLayout());
+}
+
 void Gui::draw_menu() {
     Clay_BeginLayout();
 #pragma GCC diagnostic push
@@ -140,14 +162,14 @@ void Gui::draw_menu() {
                         {.textColor = Clay_Hovered() ? COLOR_RED : COLOR_BLACK,
                          .fontSize = 50}));
             }
-            CLAY({.id = CLAY_ID("Bouton 2"),
+            CLAY({.id = CLAY_ID("SETTINGS BUTTON"),
                   .layout = {.padding = CLAY_PADDING_ALL(15)},
                   .backgroundColor = {200, 200, 200, 255},
                   .cornerRadius = {12, 12, 12, 12}}) {
 				Clay_OnHover(HandleButtonInteraction,
 						reinterpret_cast<intptr_t>(&_button_pressed_data));
                 CLAY_TEXT(
-                    CLAY_STRING("Bouton 2"),
+                    CLAY_STRING("Settings"),
                     CLAY_TEXT_CONFIG(
                         {.textColor = Clay_Hovered() ? COLOR_RED : COLOR_BLACK,
                          .fontSize = 50}));
@@ -188,6 +210,9 @@ void Gui::draw() {
     case State::Game:
         draw_game();
         break;
+	case State::Settings:
+		draw_settings();
+		break;
     default:
         break;
     }
