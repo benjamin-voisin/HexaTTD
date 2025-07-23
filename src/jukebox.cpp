@@ -9,12 +9,13 @@ Jukebox::Jukebox(std::string music_path, Settings *settings)
 
 void Jukebox::update() {
     InitAudioDevice();
+	SetMasterVolume(_settings->get_master_volume());
     std::string app_directory = GetApplicationDirectory();
     FilePathList files = LoadDirectoryFilesEx(
         (app_directory + _music_path).c_str(), ".ogg", false);
     for (std::size_t i = 0; i < files.count; i++) {
         _musics.push_back(LoadMusicStream(files.paths[i]));
-		SetMusicVolume(_musics.back(), 0.3);
+		SetMusicVolume(_musics.back(), _settings->get_music_volume());
     }
     UnloadDirectoryFiles(files);
     _current_music = rand() % _musics.size();
@@ -24,7 +25,7 @@ void Jukebox::update() {
 	_sounds["rail"] = LoadSound((app_directory + sound_directory + "rail.ogg").c_str());
 	_sounds["rail_destruction"] = LoadSound((app_directory + sound_directory + "rail_destruction.ogg").c_str());
 	for (auto sound_map : _sounds) {
-		SetSoundVolume(sound_map.second, 1.);
+		SetSoundVolume(sound_map.second, _settings->get_effect_volume());
 	}
 
 
@@ -58,6 +59,19 @@ void Jukebox::play_sound(std::string sound) {
 	_to_play_lock.lock();
 	_to_play.push_back(sound);
 	_to_play_lock.unlock();
+}
+
+void Jukebox::set_master_volume(float volume) {
+	SetMasterVolume(volume);
+	_settings->set_master_volume(volume);
+}
+
+void Jukebox::set_music_volume(float volume) {
+	_settings->set_music_volume(volume);
+}
+
+void Jukebox::set_effect_volume(float volume) {
+	_settings->set_effect_volume(volume);
 }
 
 

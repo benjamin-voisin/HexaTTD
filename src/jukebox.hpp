@@ -26,5 +26,9 @@ class Jukebox {
     ~Jukebox();
     void play_random_music();
 	void play_sound(std::string sound);
+
+	void set_master_volume(float volume);
+	void set_music_volume(float volume);
+	void set_effect_volume(float volume);
     // void stop();
 };
