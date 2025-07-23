@@ -23,7 +23,7 @@ void HandleClayErrors(Clay_ErrorData errorData) {
     // See the Clay_ErrorData struct for more information
     Log::Error << errorData.errorText.chars;
 }
-Gui::Gui(float width, float height, Settings *settings) : _settings{settings} {
+Gui::Gui(float width, float height, Settings *settings, Jukebox *jukebox) : _settings{settings}, _jukebox{jukebox} {
     uint64_t clayRequiredMemory = Clay_MinMemorySize();
     Clay_Arena clayMemory = Clay_CreateArenaWithCapacityAndMemory(
         clayRequiredMemory, malloc(clayRequiredMemory));
@@ -31,28 +31,32 @@ Gui::Gui(float width, float height, Settings *settings) : _settings{settings} {
         clayMemory, {.width = width, .height = height},
         {HandleClayErrors, nullptr}); // This final argument is new since the
                                       // video was published
+#ifdef DEBUG
+	Clay_SetDebugModeEnabled(true);
+#endif
     /* Font fonts[1]; */
     /* fonts[FONT_ID_BODY_16] = LoadFontEx("resources/Roboto-Regular.ttf", 48,
      * 0, 400); */
     /* SetTextureFilter(fonts[FONT_ID_BODY_16].texture,
      * TEXTURE_FILTER_BILINEAR); */
     Clay_SetMeasureTextFunction(measure_text, _font);
+	_button_pressed_data.jukebox = _jukebox;
+	_button_pressed_data.settings = _settings;
 }
 
 void HandleButtonInteraction(Clay_ElementId elementId,
                              Clay_PointerData pointerInfo, intptr_t userData) {
+	button_pressed_data* args = reinterpret_cast<button_pressed_data*>(userData);
     if (pointerInfo.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
+		args->jukebox->play_sound("click");
         if (elementId.id == CLAY_ID("DEBUG_BUTTON").id) {
-            Settings *settings = reinterpret_cast<Settings *>(userData);
-            settings->toggle_debug();
+            args->settings->toggle_debug();
         }
         if (elementId.id == CLAY_ID("EXIT GAME BUTTON").id) {
-            Settings *settings = reinterpret_cast<Settings *>(userData);
-            settings->state = State::Quit;
+            args->settings->state = State::Quit;
         }
         if (elementId.id == CLAY_ID("NEW GAME BUTTON").id) {
-            Settings *settings = reinterpret_cast<Settings *>(userData);
-            settings->state = State::NewGame;
+            args->settings->state = State::NewGame;
         }
     }
 }
@@ -91,7 +95,7 @@ void Gui::draw_game() {
         // An orange button that turns blue when hovered
         CLAY({.id = CLAY_ID("DEBUG_BUTTON")}) {
             Clay_OnHover(HandleButtonInteraction,
-                         reinterpret_cast<intptr_t>(_settings));
+                         reinterpret_cast<intptr_t>(&_button_pressed_data));
             CLAY_TEXT(
                 _settings->is_debug() ? CLAY_STRING("Debug")
                                       : CLAY_STRING("No debug"),
@@ -129,7 +133,7 @@ void Gui::draw_menu() {
                   .backgroundColor = {200, 200, 200, 255},
                   .cornerRadius = {12, 12, 12, 12}}) {
                 Clay_OnHover(HandleButtonInteraction,
-                             reinterpret_cast<intptr_t>(_settings));
+                             reinterpret_cast<intptr_t>(&_button_pressed_data));
                 CLAY_TEXT(
                     CLAY_STRING("New game"),
                     CLAY_TEXT_CONFIG(
@@ -140,6 +144,8 @@ void Gui::draw_menu() {
                   .layout = {.padding = CLAY_PADDING_ALL(15)},
                   .backgroundColor = {200, 200, 200, 255},
                   .cornerRadius = {12, 12, 12, 12}}) {
+				Clay_OnHover(HandleButtonInteraction,
+						reinterpret_cast<intptr_t>(&_button_pressed_data));
                 CLAY_TEXT(
                     CLAY_STRING("Bouton 2"),
                     CLAY_TEXT_CONFIG(
@@ -151,7 +157,7 @@ void Gui::draw_menu() {
                   .backgroundColor = {200, 200, 200, 255},
                   .cornerRadius = {12, 12, 12, 12}}) {
                 Clay_OnHover(HandleButtonInteraction,
-                             reinterpret_cast<intptr_t>(_settings));
+                             reinterpret_cast<intptr_t>(&_button_pressed_data));
                 CLAY_TEXT(
                     CLAY_STRING("Exit"),
                     CLAY_TEXT_CONFIG(

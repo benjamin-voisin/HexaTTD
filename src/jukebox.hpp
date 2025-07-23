@@ -3,6 +3,8 @@
 #include <string>
 #include <thread>
 #include <vector>
+#include <unordered_map>
+#include <mutex>
 
 #include "raylib.h"
 #include "settings.hpp"
@@ -15,10 +17,14 @@ class Jukebox {
     std::thread _update_thread;
     std::string _music_path;
     Settings *_settings;
+	std::unordered_map<std::string, Sound> _sounds;
+	std::vector<std::string> _to_play;
+	std::mutex _to_play_lock;
 
   public:
     Jukebox(std::string music_path, Settings *settings);
     ~Jukebox();
     void play_random_music();
+	void play_sound(std::string sound);
     // void stop();
 };

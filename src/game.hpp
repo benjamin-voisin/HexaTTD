@@ -16,11 +16,11 @@ struct Game {
     std::thread _draw_thread;
     bool _running;
     std::string _name;
+    Jukebox _jukebox;
     Gui _gui;
     std::binary_semaphore _start_sema;
     bool _is_fast;
     void set_fullscreen();
-    Jukebox _jukebox;
 
   public:
     void update();
