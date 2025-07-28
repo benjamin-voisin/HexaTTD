@@ -25,7 +25,8 @@ void HandleClayErrors(Clay_ErrorData errorData) {
     Log::Error << errorData.errorText.chars;
 }
 Gui::Gui(float width, float height, Settings *settings, Jukebox *jukebox) : _settings{settings}, _jukebox{jukebox} {
-	_custom_elements["MASTER VOLUME SLIDER"] = new Slider("MASTER VOLUME SLIDER");
+	_custom_elements.resize(GuiElement::NUMBER);
+	_custom_elements[GuiElement::MASTER_VOLUME_SLIDER] = new Slider("MASTER_VOLUME_SLIDER");
     uint64_t clayRequiredMemory = Clay_MinMemorySize();
     Clay_Arena clayMemory = Clay_CreateArenaWithCapacityAndMemory(
         clayRequiredMemory, malloc(clayRequiredMemory));
@@ -69,7 +70,12 @@ void HandleButtonInteraction(Clay_ElementId elementId,
     }
 }
 
-Gui::~Gui() { free(_temp_render_buffer); }
+Gui::~Gui() {
+	free(_temp_render_buffer);
+	for (GuiElement *custom_element : _custom_elements) {
+		delete custom_element;
+	}
+}
 
 void Gui::draw_game() {
     int fps = GetFPS();
@@ -140,7 +146,7 @@ void Gui::draw_settings() {
 				CLAY_TEXT(CLAY_STRING("Master volume"),
 						CLAY_TEXT_CONFIG({.textColor = COLOR_BLACK, .fontSize = 30}));
 				CLAY({.layout = {.sizing = {.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)}}}) {};
-				CLAY({ .id = CLAY_ID("MASTER VOLUME SLIDER"), .layout {.sizing = {.width = CLAY_SIZING_PERCENT(0.5), .height = CLAY_SIZING_GROW(0)}}, .custom = { .customData = (_custom_elements["MASTER VOLUME SLIDER"]) } }) {
+				CLAY({ .id = CLAY_ID("MASTER_VOLUME_SLIDER"), .layout {.sizing = {.width = CLAY_SIZING_PERCENT(0.5), .height = CLAY_SIZING_GROW(0)}}, .custom = { .customData = (_custom_elements[GuiElement::MASTER_VOLUME_SLIDER]) } }) {
 				}
 			}
             CLAY({.id = CLAY_ID("EXIT GAME BUTTON"),

@@ -1,10 +1,16 @@
 #pragma once
 
-#include "log.hpp"
+#include "clay.h"
 
 class GuiElement {
-  public:
-    GuiElement() {};
-    virtual void draw() { Log::Error << "GuiElement parent class called"; };
-	virtual ~GuiElement() { Log::Error << "GuiElement parent class called"; };
+	public:
+		Clay_ElementId id;
+		GuiElement();
+		virtual void draw();
+		virtual ~GuiElement();
+
+		enum {
+			MASTER_VOLUME_SLIDER,
+			NUMBER,
+		};
 };
