@@ -29,6 +29,7 @@ class Jukebox {
   private:
     void update();
     std::vector<Music> _musics;
+	std::vector<std::string> _music_names;
     int _current_music;
     std::thread _update_thread;
     std::string _music_path;

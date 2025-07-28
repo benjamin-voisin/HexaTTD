@@ -1,5 +1,6 @@
 #include "jukebox.hpp"
 #include "raylib.h"
+#include "log.hpp"
 
 Jukebox::Jukebox(std::string music_path, Settings *settings)
     : _music_path{music_path}, _settings{settings} {
@@ -11,12 +12,17 @@ Jukebox::Jukebox(std::string music_path, Settings *settings)
 			FilePathList files = LoadDirectoryFilesEx(
 					(app_directory + _music_path).c_str(), ".ogg", false);
 			for (std::size_t i = 0; i < files.count; i++) {
-			_musics.push_back(LoadMusicStream(files.paths[i]));
-			SetMusicVolume(_musics.back(), _settings->get_music_volume());
+				_musics.push_back(LoadMusicStream(files.paths[i]));
+				_music_names.push_back(std::string(files.paths[i]));
+				SetMusicVolume(_musics.back(), _settings->get_music_volume());
 			}
 			UnloadDirectoryFiles(files);
 			_current_music = rand() % _musics.size();
 			PlayMusicStream(_musics[_current_music]);
+			Log::Info.log("Playing music %s. Duration : %0.fs",
+				_music_names[_current_music].c_str(),
+				GetMusicTimeLength(_musics[_current_music])
+			);
 			auto sound_directory = "assets/sounds/";
 			_sounds.resize(NUMBER);
 			_sounds[CLICK] = LoadSound((app_directory + sound_directory + "button-click.ogg").c_str());
@@ -40,8 +46,11 @@ void Jukebox::update() {
             0.05) {
             StopMusicStream(_musics[_current_music]);
             _current_music = rand() % _musics.size();
-            // SeekMusicStream(_musics[_current_music], 0.f);
             PlayMusicStream(_musics[_current_music]);
+			Log::Info.log("Playing music %s. Duration : %0.fs",
+				_music_names[_current_music].c_str(),
+				GetMusicTimeLength(_musics[_current_music])
+			);
         }
 
 		// Play the requested sounds
