@@ -51,7 +51,7 @@ void HandleButtonInteraction(Clay_ElementId elementId,
                              Clay_PointerData pointerInfo, intptr_t userData) {
 	button_pressed_data* args = reinterpret_cast<button_pressed_data*>(userData);
     if (pointerInfo.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
-		args->jukebox->play_sound("click");
+		args->jukebox->play_sound(Jukebox::CLICK);
         if (elementId.id == CLAY_ID("DEBUG_BUTTON").id) {
             args->settings->toggle_debug();
         }

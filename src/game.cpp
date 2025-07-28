@@ -102,7 +102,7 @@ void Game::draw() {
                 }
             }
             if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
-				if (selected_rails.size() > 0) _jukebox.play_sound("rail_destruction");
+				if (selected_rails.size() > 0) _jukebox.play_sound(Jukebox::RAIL_DESTRUCTION);
                 for (long unsigned i = 0; i < selected_rails.size(); ++i) {
                     _grid->del_rail(selected_rails[i]);
                 }
@@ -134,7 +134,7 @@ void Game::draw() {
                         !(start_construct.is_neighbor(under_cursor))) {
                         _grid->add_rail(last_cursor_pers, diff_src.direction(),
                                         diff_dst.direction(), 4);
-						_jukebox.play_sound("rail");
+						_jukebox.play_sound(Jukebox::RAIL);
                         start_construct = last_cursor_pers;
                     }
                 }
