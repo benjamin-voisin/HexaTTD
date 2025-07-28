@@ -45,8 +45,8 @@ void Jukebox::update() {
         }
 
 		// Play the requested sounds
+		_to_play_lock.lock();
 		if (!_to_play.empty()) {
-			_to_play_lock.lock();
 			while (!_to_play.empty()) {
 				auto sound = _sounds[_to_play.back()];
 				PlaySound(sound);
