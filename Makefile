@@ -131,7 +131,14 @@ MUSIC_FILES = $(wildcard $(MUSIC_DIR)/*.mid)
 music: $(MUSIC_DIR) $(MUSIC_FILES:%.mid=%.ogg)
 	$(MAKE) $(MUSIC_FILES:%.mid=%.ogg)
 
-depends: $(RAYLIB_SRC_PATH)/raylib.h $(CLAY_PATH) music
+ASSETS_URL = https://nextcloud.lacontrevoie.fr/s/SGdKfnoboLmGie9/download
+
+assets:
+	curl -o sounds.zip --location $(ASSETS_URL)
+	unzip sounds.zip -d $@
+	rm sounds.zip
+
+depends: $(RAYLIB_SRC_PATH)/raylib.h $(CLAY_PATH) music assets
 
 clean:
 	$(RM) $(NAME)
