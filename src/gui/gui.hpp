@@ -25,7 +25,7 @@ class Gui {
     Settings *_settings;
 	Jukebox *_jukebox;
 
-	std::vector<GuiElement*> _custom_elements;
+	std::vector<std::unique_ptr<GuiElement>> _custom_elements;
 
     void render(Clay_RenderCommandArray);
     static Clay_Dimensions measure_text(Clay_StringSlice text,
