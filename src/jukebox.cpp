@@ -46,6 +46,7 @@ void Jukebox::update() {
             0.05) {
             StopMusicStream(_musics[_current_music]);
             _current_music = rand() % _musics.size();
+			SetMusicVolume(_musics[_current_music], _settings->get_music_volume());
             PlayMusicStream(_musics[_current_music]);
 			Log::Info.log("Playing music %s. Duration : %0.fs",
 				_music_names[_current_music].c_str(),
@@ -58,6 +59,7 @@ void Jukebox::update() {
 		if (!_to_play.empty()) {
 			while (!_to_play.empty()) {
 				auto sound = _sounds[_to_play.back()];
+				SetSoundVolume(sound, _settings->get_effect_volume());
 				PlaySound(sound);
 				_to_play.pop_back();
 			}
@@ -75,14 +77,18 @@ void Jukebox::play_sound(SoundName sound) {
 void Jukebox::set_master_volume(float volume) {
 	SetMasterVolume(volume);
 	_settings->set_master_volume(volume);
+	Log::Info.log("Set master volume to %.2f", volume);
 }
 
 void Jukebox::set_music_volume(float volume) {
+	SetMusicVolume(_musics[_current_music], _settings->get_music_volume());
 	_settings->set_music_volume(volume);
+	Log::Info.log("Set music volume to %.2f", volume);
 }
 
 void Jukebox::set_effect_volume(float volume) {
 	_settings->set_effect_volume(volume);
+	Log::Info.log("Set effect volume to %.2f", volume);
 }
 
 

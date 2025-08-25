@@ -11,6 +11,8 @@ class GuiElement {
 
 		enum {
 			MASTER_VOLUME_SLIDER,
+			MUSIC_VOLUME_SLIDER,
+			EFFECT_VOLUME_SLIDER,
 			NUMBER,
 		};
 };

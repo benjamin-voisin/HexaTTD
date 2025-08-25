@@ -26,7 +26,16 @@ void HandleClayErrors(Clay_ErrorData errorData) {
 }
 Gui::Gui(float width, float height, Settings *settings, Jukebox *jukebox) : _settings{settings}, _jukebox{jukebox} {
 	_custom_elements.resize(GuiElement::NUMBER);
+	_custom_elements_data.resize(GuiElement::NUMBER);
 	_custom_elements[GuiElement::MASTER_VOLUME_SLIDER] = std::make_unique<Slider>(Slider("MASTER_VOLUME_SLIDER", settings->get_master_volume(), 0., 1.));
+	_custom_elements[GuiElement::MUSIC_VOLUME_SLIDER] = std::make_unique<Slider>(Slider("MUSIC_VOLUME_SLIDER", settings->get_music_volume(), 0., 1.));
+	_custom_elements[GuiElement::EFFECT_VOLUME_SLIDER] = std::make_unique<Slider>(Slider("EFFECT_VOLUME_SLIDER", settings->get_effect_volume(), 0., 1.));
+	button_pressed_data master_data = {settings, jukebox, _custom_elements[GuiElement::MASTER_VOLUME_SLIDER].get()};
+	button_pressed_data music_data = {settings, jukebox, _custom_elements[GuiElement::MUSIC_VOLUME_SLIDER].get()};
+	button_pressed_data effect_data = {settings, jukebox, _custom_elements[GuiElement::EFFECT_VOLUME_SLIDER].get()};
+	_custom_elements_data[GuiElement::MASTER_VOLUME_SLIDER] = std::make_unique<button_pressed_data>(master_data);
+	_custom_elements_data[GuiElement::MUSIC_VOLUME_SLIDER] = std::make_unique<button_pressed_data>(music_data);
+	_custom_elements_data[GuiElement::EFFECT_VOLUME_SLIDER] = std::make_unique<button_pressed_data>(effect_data);
     uint64_t clayRequiredMemory = Clay_MinMemorySize();
     Clay_Arena clayMemory = Clay_CreateArenaWithCapacityAndMemory(
         clayRequiredMemory, malloc(clayRequiredMemory));
@@ -72,6 +81,14 @@ void HandleButtonInteraction(Clay_ElementId elementId,
 		if (elementId.id == CLAY_ID("MASTER_VOLUME_SLIDER").id) {
 			Slider *slider = reinterpret_cast<Slider*>(args->element);
 			args->jukebox->set_master_volume(slider->click(pointerInfo.position.x));
+		}
+		if (elementId.id == CLAY_ID("MUSIC_VOLUME_SLIDER").id) {
+			Slider *slider = reinterpret_cast<Slider*>(args->element);
+			args->jukebox->set_music_volume(slider->click(pointerInfo.position.x));
+		}
+		if (elementId.id == CLAY_ID("EFFECT_VOLUME_SLIDER").id) {
+			Slider *slider = reinterpret_cast<Slider*>(args->element);
+			args->jukebox->set_effect_volume(slider->click(pointerInfo.position.x));
 		}
 	}
 }
@@ -151,9 +168,28 @@ void Gui::draw_settings() {
 				CLAY({.layout = {.sizing = {.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)}}}) {};
 				CLAY({ .id = CLAY_ID("MASTER_VOLUME_SLIDER"), .layout {.sizing = {.width = CLAY_SIZING_PERCENT(0.5), .height = CLAY_SIZING_GROW(0)}}, .custom = { .customData = (_custom_elements[GuiElement::MASTER_VOLUME_SLIDER].get()) }
 						}) {
-				_button_pressed_data.element = _custom_elements[GuiElement::MASTER_VOLUME_SLIDER].get();
                 Clay_OnHover(HandleButtonInteraction,
-                             reinterpret_cast<intptr_t>(&_button_pressed_data));
+                             reinterpret_cast<intptr_t>(_custom_elements_data[GuiElement::MASTER_VOLUME_SLIDER].get()));
+				}
+			}
+			CLAY({.layout = {.sizing = {.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)}, .childGap = 10, .layoutDirection = CLAY_LEFT_TO_RIGHT}}) {
+				CLAY_TEXT(CLAY_STRING("Music volume"),
+						CLAY_TEXT_CONFIG({.textColor = COLOR_BLACK, .fontSize = 30}));
+				CLAY({.layout = {.sizing = {.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)}}}) {};
+				CLAY({ .id = CLAY_ID("MUSIC_VOLUME_SLIDER"), .layout {.sizing = {.width = CLAY_SIZING_PERCENT(0.5), .height = CLAY_SIZING_GROW(0)}}, .custom = { .customData = (_custom_elements[GuiElement::MUSIC_VOLUME_SLIDER].get()) }
+						}) {
+					Clay_OnHover(HandleButtonInteraction,
+                             reinterpret_cast<intptr_t>(_custom_elements_data[GuiElement::MUSIC_VOLUME_SLIDER].get()));
+				}
+			}
+			CLAY({.layout = {.sizing = {.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)}, .childGap = 10, .layoutDirection = CLAY_LEFT_TO_RIGHT}}) {
+				CLAY_TEXT(CLAY_STRING("Effect volume"),
+						CLAY_TEXT_CONFIG({.textColor = COLOR_BLACK, .fontSize = 30}));
+				CLAY({.layout = {.sizing = {.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)}}}) {};
+				CLAY({ .id = CLAY_ID("EFFECT_VOLUME_SLIDER"), .layout {.sizing = {.width = CLAY_SIZING_PERCENT(0.5), .height = CLAY_SIZING_GROW(0)}}, .custom = { .customData = (_custom_elements[GuiElement::EFFECT_VOLUME_SLIDER].get()) }
+						}) {
+                Clay_OnHover(HandleButtonInteraction,
+                             reinterpret_cast<intptr_t>(_custom_elements_data[GuiElement::EFFECT_VOLUME_SLIDER].get()));
 				}
 			}
             CLAY({.id = CLAY_ID("EXIT GAME BUTTON"),
