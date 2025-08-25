@@ -26,7 +26,7 @@ void HandleClayErrors(Clay_ErrorData errorData) {
 }
 Gui::Gui(float width, float height, Settings *settings, Jukebox *jukebox) : _settings{settings}, _jukebox{jukebox} {
 	_custom_elements.resize(GuiElement::NUMBER);
-	_custom_elements[GuiElement::MASTER_VOLUME_SLIDER] = std::make_unique<Slider>(Slider("MASTER_VOLUME_SLIDER", 0.5124341, 0., 1.));
+	_custom_elements[GuiElement::MASTER_VOLUME_SLIDER] = std::make_unique<Slider>(Slider("MASTER_VOLUME_SLIDER", settings->get_master_volume(), 0., 1.));
     uint64_t clayRequiredMemory = Clay_MinMemorySize();
     Clay_Arena clayMemory = Clay_CreateArenaWithCapacityAndMemory(
         clayRequiredMemory, malloc(clayRequiredMemory));
