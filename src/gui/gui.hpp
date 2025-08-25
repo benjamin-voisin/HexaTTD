@@ -10,6 +10,7 @@
 struct button_pressed_data {
 	Settings *settings;
 	Jukebox *jukebox;
+	void *element;
 };
 
 

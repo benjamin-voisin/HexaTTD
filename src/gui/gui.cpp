@@ -68,6 +68,12 @@ void HandleButtonInteraction(Clay_ElementId elementId,
 			args->settings->set_state(State::Menu);
 		}
     }
+	if (pointerInfo.state == CLAY_POINTER_DATA_PRESSED) {
+		if (elementId.id == CLAY_ID("MASTER_VOLUME_SLIDER").id) {
+			Slider *slider = reinterpret_cast<Slider*>(args->element);
+			args->jukebox->set_master_volume(slider->click(pointerInfo.position.x));
+		}
+	}
 }
 
 Gui::~Gui() {
@@ -143,7 +149,11 @@ void Gui::draw_settings() {
 				CLAY_TEXT(CLAY_STRING("Master volume"),
 						CLAY_TEXT_CONFIG({.textColor = COLOR_BLACK, .fontSize = 30}));
 				CLAY({.layout = {.sizing = {.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)}}}) {};
-				CLAY({ .id = CLAY_ID("MASTER_VOLUME_SLIDER"), .layout {.sizing = {.width = CLAY_SIZING_PERCENT(0.5), .height = CLAY_SIZING_GROW(0)}}, .custom = { .customData = (_custom_elements[GuiElement::MASTER_VOLUME_SLIDER].get()) } }) {
+				CLAY({ .id = CLAY_ID("MASTER_VOLUME_SLIDER"), .layout {.sizing = {.width = CLAY_SIZING_PERCENT(0.5), .height = CLAY_SIZING_GROW(0)}}, .custom = { .customData = (_custom_elements[GuiElement::MASTER_VOLUME_SLIDER].get()) }
+						}) {
+				_button_pressed_data.element = _custom_elements[GuiElement::MASTER_VOLUME_SLIDER].get();
+                Clay_OnHover(HandleButtonInteraction,
+                             reinterpret_cast<intptr_t>(&_button_pressed_data));
 				}
 			}
             CLAY({.id = CLAY_ID("EXIT GAME BUTTON"),
