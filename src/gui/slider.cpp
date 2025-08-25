@@ -13,7 +13,7 @@ Slider::Slider(std::string ids, float current, float min, float max) : _current{
 
 void Slider::draw() {
 	auto elementData = Clay_GetElementData(id);
-	int value_size = MeasureText(_value_text.c_str(), 20);
+	int value_size = MeasureText("100%", 20);
 	auto v_middle = elementData.boundingBox.y + (elementData.boundingBox.height / 2);
 	auto h_text = elementData.boundingBox.x + elementData.boundingBox.width - value_size;
 	int padding = 10;
@@ -29,7 +29,7 @@ void Slider::draw() {
 
 float Slider::click(float x) {
 	auto elementData = Clay_GetElementData(id);
-	int value_size = MeasureText(_value_text.c_str(), 20);
+	int value_size = MeasureText("100%", 20);
 	auto h_text = elementData.boundingBox.x + elementData.boundingBox.width - value_size;
 	if (elementData.boundingBox.x <= x && x <= h_text) {
 		// The click is on the slider itself
